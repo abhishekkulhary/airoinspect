@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.github.mikephil.charting.utils.Utils;
 import com.weather.air_o_inspect.service.LoadWeatherService;
+import com.weather.air_o_inspect.settings.SettingsFragment;
 
 @SuppressWarnings("ALL")
 public class MainActivity extends AppCompatActivity{
@@ -68,6 +69,9 @@ public class MainActivity extends AppCompatActivity{
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.xml.root_preferences, new SettingsFragment());
+            fragmentTransaction.commit();
             return true;
         }
 

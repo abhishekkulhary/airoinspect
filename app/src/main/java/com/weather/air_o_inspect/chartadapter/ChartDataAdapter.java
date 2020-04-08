@@ -82,15 +82,11 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
             leftAxis.setMinWidth(35f);
             leftAxis.setMaxWidth(40f);
 
-            if (data.getYMin() > (0 + (data.getYMax() + data.getYMin()) / 2)) {
-                leftAxis.setAxisMinimum(0);
-                rightAxis.setAxisMinimum(0);
-            } else {
-                leftAxis.setAxisMinimum(data.getYMin() - (data.getYMax() + data.getYMin()) / 2);
-                rightAxis.setAxisMinimum(data.getYMin() - (data.getYMax() + data.getYMin()) / 2);
-            }
             rightAxis.setAxisMaximum(data.getYMax() + (data.getYMax() + data.getYMin()) / 2);
             leftAxis.setAxisMaximum(data.getYMax() + (data.getYMax() + data.getYMin()) / 2);
+
+            leftAxis.setAxisMinimum(0f);
+            rightAxis.setAxisMinimum(0f);
 
             Legend legend = holder.chart.getLegend();
             legend.setEnabled(false);
