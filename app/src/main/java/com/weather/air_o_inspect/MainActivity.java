@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity{
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.xml.root_preferences, new SettingsFragment());
+            fragmentTransaction.replace(R.id.nav_host_fragment, new SettingsFragment());
             fragmentTransaction.commit();
             return true;
         }
