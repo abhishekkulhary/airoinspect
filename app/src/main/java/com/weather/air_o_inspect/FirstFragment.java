@@ -74,7 +74,7 @@ public class FirstFragment extends Fragment {
         allCharts.setHasFixedSize(true);
         allCharts.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        String filename = "forecast1.csv";
+        String filename = myApp.getFilename()[0];
         final UtilsWeatherDataRead utilsWeatherDataRead = new UtilsWeatherDataRead(filename, getContext());
 
         Observable<ArrayList<ChartsData>> observable = Observable.defer(new Callable<ObservableSource<ArrayList<ChartsData>>>() {

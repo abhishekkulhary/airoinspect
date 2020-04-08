@@ -18,7 +18,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -44,15 +43,14 @@ public class UtilsWeatherDataRead {
     }
 
     //TODO: 3. Separate the Data Retrivel from API and Chart creation.
+    //TODO: 5. Important UI UPDATE Time and date show on x-axis(UtilsWeatherDataRead, ChartDataAdapter)
     public Map<String, ArrayList<Float>> getChartItems() {
         ArrayList<String[]> weatherData = readWeatherData();
         Map<String, ArrayList<Float>> yLabelValues = new HashMap<>();
         List<String> titleLine;
         if (!weatherData.isEmpty()) {
             titleLine = Arrays.asList(weatherData.remove(0));
-
-            String xColumn = "time";
-            int indexTime = titleLine.indexOf(xColumn);
+            int indexTime = titleLine.indexOf(myApp.getxColumn());
             boolean flag = true;
             for (String[] columns : myApp.getCOLUMNS()) {
                 for (String column : columns) {
@@ -94,7 +92,7 @@ public class UtilsWeatherDataRead {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             } else {
-                reader = new BufferedReader(new InputStreamReader(is, Charset.forName("UTF-8")));
+                reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
             }
             String line;
             while ((line = reader.readLine()) != null) {

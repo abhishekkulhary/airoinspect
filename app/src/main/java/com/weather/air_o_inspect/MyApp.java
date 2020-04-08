@@ -15,6 +15,7 @@ public class MyApp extends Application {
     private static String query = "units=si";
     private static Long timeDelay = 5L; // Time in mins
     private final Integer REQUEST_CODE = 15;
+    private final String xColumn = "time";
 
     private final String[][] COLUMNS = {{"precipIntensity"}, {"precipProbability"}, {"temperature"}, {"pressure"},
             {"windSpeed"}, {"windGust"}, {"cloudCover"}, {"visibility"}};
@@ -28,6 +29,10 @@ public class MyApp extends Application {
         super.onCreate();
 
 
+    }
+
+    public String getxColumn() {
+        return xColumn;
     }
 
     public String[] getFilename() {
