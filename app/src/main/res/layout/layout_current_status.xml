@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:background="@color/colorPrimary">
 
     <TextView
         android:id="@+id/current_fly_status"
@@ -12,8 +13,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:text="@string/fly"
-        android:gravity="center"
-        android:background="@color/greenStatus">
+        android:gravity="center">
 
     </TextView>
     <LinearLayout
@@ -85,7 +85,6 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="@string/time_and_place"
             android:gravity="center">
 
         </TextView>

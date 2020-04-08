@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#03A9F4</color>
     <color name="colorAccent">#40C4FF</color>
     <color name="greenStatus">#00C853</color>
+    <color name="tab_indicator">#ffffff</color>
 </resources>

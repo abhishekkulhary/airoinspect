@@ -52,27 +52,40 @@ public class Utils {
     }
 
     public void saveCSVFile(Context context, String result, String[] filename) {
-        FileOutputStream fos = null;
+        FileOutputStream[] fos = null;
         try {
-            String[] data = convertJsonToCSV(result);
+            String[] data = convertJsonToCSV(result, filename.length);
+            Log.i("indexTime1", "Reached");
 
-            File file = new File(context.getExternalFilesDir(null), filename[0]);
-            Log.i("saveCSVFile 1", "after file");
-            fos = new FileOutputStream(file);
-            fos.write(data[0].getBytes());
+            File[] file = new File[data.length];
 
-            File file1 = new File(context.getExternalFilesDir(null), filename[1]);
-            Log.i("saveCSVFile 1", "after file");
-            fos = new FileOutputStream(file1);
-            fos.write(data[1].getBytes());
-            Log.i("saveCSVFile 2", "after outputstream");
+            fos = new FileOutputStream[data.length];
+
+            for (int i = 0; i < data.length; i++) {
+                if (i < filename.length) {
+                    file[i] = new File(context.getExternalFilesDir(null), filename[i]);
+                    Log.i("saveCSVFile 1", "after file");
+                } else {
+                    file[i] = new File(context.getExternalFilesDir(null), "Currentforecast.csv");
+                    Log.i("saveCSVFile 1", "after file");
+                }
+            }
+
+            for (int i = 0; i < file.length; i++) {
+                fos[i] = new FileOutputStream(file[i]);
+                fos[i].write(data[i].getBytes());
+                Log.i("saveCSVFile 3", "after file write");
+            }
+
         } catch (Exception e) {
             Log.d("saveCSVFile 1", e.toString());
         } finally {
             try {
                 if (fos != null) {
-                    fos.flush();
-                    fos.close();
+                    for (FileOutputStream f : fos) {
+                        f.flush();
+                        f.close();
+                    }
                 }
             } catch (IOException e) {
                 Log.d("saveCSVFile 2", e.toString());
@@ -80,24 +93,32 @@ public class Utils {
         }
     }
 
-    public String[] convertJsonToCSV(String result) {
+    public String[] convertJsonToCSV(String result, Integer filenameLength) {
         String[] resultCSV = null;
         String convertedCSV;
+        String currentConvertedCSV;
         try {
             JSONObject resultJson = new JSONObject(result);
+            JSONObject jsonObject = resultJson.getJSONObject("currently");
+            jsonObject.remove("precipType");
+            String currentWeather = "[" + jsonObject.toString() + "]";
+            JSONArray currentWeatherJson = new JSONArray(currentWeather);
             JSONArray finalResultJson = resultJson.getJSONObject("hourly").getJSONArray("data");
             convertedCSV = CDL.toString(finalResultJson);
+            currentConvertedCSV = CDL.toString(currentWeatherJson);
 
-            resultCSV = new String[]{"", ""};
+            resultCSV = new String[filenameLength + 1];
 
             String[] csvRows = convertedCSV.split("\n");
+            String[] currentWeatherCSV = currentConvertedCSV.split("\n");
 
             int halfNoRows = (csvRows.length - 1) / 2;
 
             int i;
 
-            resultCSV[0] += csvRows[0] + "\n";
-            resultCSV[1] += csvRows[0] + "\n";
+            resultCSV[0] = csvRows[0] + "\n";
+            resultCSV[1] = csvRows[0] + "\n";
+            resultCSV[2] = currentWeatherCSV[0] + "\n" + currentWeatherCSV[1];
 
             for (i = 1; i < halfNoRows + 1; i++) {
 
@@ -125,7 +146,7 @@ public class Utils {
             }
 
         } catch (JSONException e) {
-            Log.d("convertJsonToCSV", "" + e);
+            Log.e("convertJsonToCSV", "" , e);
         }
         return resultCSV;
     }
