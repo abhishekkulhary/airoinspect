@@ -1,10 +1,8 @@
 package com.weather.air_o_inspect.chartadapter;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -13,10 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
-
 import com.github.mikephil.charting.data.BarData;
-
-import com.github.mikephil.charting.data.CombinedData;
 import com.weather.air_o_inspect.R;
 import com.weather.air_o_inspect.viewholders.ChartViewHolder;
 import com.weather.air_o_inspect.viewholders.ChartsData;
@@ -25,12 +20,10 @@ import java.util.List;
 
 public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
 
-    private Context context;
     private List<ChartsData> chartDataList;
 
 
-    public ChartDataAdapter(Context context, List<ChartsData> objects) {
-        this.context = context;
+    public ChartDataAdapter(List<ChartsData> objects) {
         this.chartDataList = objects;
     }
 
@@ -41,8 +34,7 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
         // create a new view
         CardView v = (CardView) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.layout_listitem_chart, parent, false);
-        ChartViewHolder ch = new ChartViewHolder(v);
-        return ch;
+        return new ChartViewHolder(v);
     }
 
     @Override

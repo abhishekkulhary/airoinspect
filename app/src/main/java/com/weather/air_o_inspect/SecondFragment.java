@@ -1,13 +1,12 @@
 package com.weather.air_o_inspect;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,17 +14,26 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.weather.air_o_inspect.asynctask.AsyncWeatherDataRetrieval;
+import com.github.mikephil.charting.data.BarData;
+import com.weather.air_o_inspect.datareadutil.UtilsWeatherDataRead;
+import com.weather.air_o_inspect.chartadapter.ChartDataAdapter;
 import com.weather.air_o_inspect.horizontallistview.HorizontalListView;
+import com.weather.air_o_inspect.viewholders.ChartsData;
 
-import java.util.concurrent.TimeUnit;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.Callable;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
 
 public class SecondFragment extends Fragment {
 
-    @SuppressLint("StaticFieldLeak")
-    private static MainActivity mainActivity;
-    @SuppressLint("StaticFieldLeak")
-    private static Context context;
     private TextView currentFlyStatus;
     private TextView currentTemperature;
     private TextView currentRainStatus;
@@ -39,12 +47,14 @@ public class SecondFragment extends Fragment {
 
     private RecyclerView allCharts;
 
-    static SecondFragment getInstance(Context context, MainActivity activity) {
+    private MyApp myApp;
 
-        SecondFragment.context = context;
-        SecondFragment.mainActivity = activity;
-//
-        return new SecondFragment();
+    private final CompositeDisposable disposables = new CompositeDisposable();
+
+    public SecondFragment() {
+
+        this.myApp = new MyApp();
+
     }
 
     @Override
@@ -62,12 +72,54 @@ public class SecondFragment extends Fragment {
 
         allCharts = view.findViewById(R.id.all_charts);
         allCharts.setHasFixedSize(true);
-        allCharts.setLayoutManager(new LinearLayoutManager(context));
-        allCharts.invalidate();
-
+        allCharts.setLayoutManager(new LinearLayoutManager(getContext()));
 
         String filename = "forecast2.csv";
-        new AsyncWeatherDataRetrieval(context, filename, getAllCharts()).execute();
+        final UtilsWeatherDataRead utilsWeatherDataRead = new UtilsWeatherDataRead(filename, getContext());
+
+        Observable<ArrayList<ChartsData>> observable = Observable.defer(new Callable<ObservableSource<ArrayList<ChartsData>>>() {
+            @Override
+            public ObservableSource<ArrayList<ChartsData>> call() {
+                Map<String, ArrayList<Float>> yLabelValues = utilsWeatherDataRead.getChartItems();
+                Map<String, Object> mappedArrayEntries = utilsWeatherDataRead.getMappedArrayListOfEntries(yLabelValues);
+                ArrayList<BarData> mappedBarData = utilsWeatherDataRead.generateBarData(mappedArrayEntries);
+                ArrayList<ChartsData> chartsDataList = new ArrayList<>();
+                if (mappedBarData != null) {
+                    for (int i = 0; i < mappedBarData.size(); i++) {
+                        chartsDataList.add(new ChartsData(mappedBarData.get(i), myApp.getLABELS()[i], "UNIT"));
+                    }
+
+                    return Observable.just(chartsDataList);
+                }
+                return null;
+            }
+        });
+
+        DisposableObserver<ArrayList<ChartsData>> disposableObserver = new DisposableObserver<ArrayList<ChartsData>>() {
+            @Override
+            public void onNext(ArrayList<ChartsData> chartsDataList) {
+                ChartDataAdapter cda = new ChartDataAdapter(chartsDataList);
+                allCharts.setAdapter(cda);
+                Log.i("postAsync", "Size of chartsdatalist " + chartsDataList.size());
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e("error", "error:  ", e);
+
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        };
+
+        disposables.add(
+                observable.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(disposableObserver));
+
+        allCharts.invalidate();
 
         nextPage = view.findViewById(R.id.go_back);
 
@@ -76,7 +128,7 @@ public class SecondFragment extends Fragment {
         nextPage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SecondFragment.mainActivity.loadFragment(FirstFragment.getInstance(SecondFragment.context, SecondFragment.mainActivity));
+                ((MainActivity) Objects.requireNonNull(getActivity())).loadFragment(new FirstFragment());
             }
         });
 
@@ -152,5 +204,31 @@ public class SecondFragment extends Fragment {
 
     public void setAllCharts(RecyclerView allCharts) {
         this.allCharts = allCharts;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        disposables.clear();
     }
 }

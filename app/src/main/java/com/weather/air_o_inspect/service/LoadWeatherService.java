@@ -1,9 +1,7 @@
 package com.weather.air_o_inspect.service;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -19,25 +17,29 @@ import androidx.core.app.ActivityCompat;
 
 import com.weather.air_o_inspect.MyApp;
 
+import java.util.concurrent.Callable;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 public class LoadWeatherService extends Service implements LocationListener {
 
-    Context context;
 
     boolean isGPSEnable = false;
     boolean isNetworkEnable = false;
     double latitude, longitude;
     LocationManager locationManager;
     Location location;
+
+    private final CompositeDisposable disposables = new CompositeDisposable();
+
     MyApp myApp = new MyApp();
+    Utils utils = new Utils();
 
-    public LoadWeatherService(Context applicationContext) {
-        super();
-        context = applicationContext;
-        Log.i("HERE", "here service created!");
-    }
-
-    public LoadWeatherService() {
-    }
+    //TODO: 1. Try Combining Handler, and thread within CompositeDisposable disposables.
 
     Handler handler = new Handler();
     public Runnable periodicUpdate = new Runnable() {
@@ -50,8 +52,35 @@ public class LoadWeatherService extends Service implements LocationListener {
                 myApp.setLongLat(location.getLatitude() + "," + location.getLongitude());
             }
 
-            AsyncBackgroundTask asyncBackgroundTask = new AsyncBackgroundTask(myApp.getLongLat(), myApp.getQuery(), myApp.getFilename(), getApplicationContext());
-            asyncBackgroundTask.execute();
+            Observable<String> observable = Observable.defer(new Callable<ObservableSource<String>>() {
+                @Override
+                public ObservableSource<String> call() throws Exception {
+                    return Observable.just(utils.getDataFromUrlWriteToCSV(myApp.getLongLat(), myApp.getQuery()));
+                }
+            });
+
+            DisposableObserver<String> disposableObserver = new DisposableObserver<String>() {
+                @Override
+                public void onNext(String data) {
+                    if (data != null) {
+                        utils.saveCSVFile(getApplicationContext(), data, myApp.getFilename());
+                    }
+                }
+
+                @Override
+                public void onError(Throwable e) {
+
+                }
+
+                @Override
+                public void onComplete() {
+                }
+            };
+
+            disposables.add(
+                    observable.subscribeOn(Schedulers.io())
+                            .subscribeWith(disposableObserver));
+
         }
     };
 
@@ -164,5 +193,11 @@ public class LoadWeatherService extends Service implements LocationListener {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        disposables.clear();
     }
 }

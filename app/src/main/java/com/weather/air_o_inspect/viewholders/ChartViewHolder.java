@@ -7,7 +7,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.CombinedChart;
 import com.weather.air_o_inspect.R;
 
 public class ChartViewHolder extends RecyclerView.ViewHolder {

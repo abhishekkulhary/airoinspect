@@ -1,10 +1,6 @@
 package com.weather.air_o_inspect.viewholders;
 
-import android.widget.TextView;
-
-import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.data.BarData;
-import com.github.mikephil.charting.data.CombinedData;
 
 public class ChartsData {
     private BarData data;

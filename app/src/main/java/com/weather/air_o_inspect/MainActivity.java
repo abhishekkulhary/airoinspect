@@ -1,12 +1,9 @@
 package com.weather.air_o_inspect;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,20 +16,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.github.mikephil.charting.utils.Utils;
-import com.weather.air_o_inspect.service.AsyncBackgroundTask;
 import com.weather.air_o_inspect.service.LoadWeatherService;
 
 @SuppressWarnings("ALL")
 public class MainActivity extends AppCompatActivity{
 
-    private final Integer REQUEST_CODE = 15;
-
-    private Context context = this;
-
-    private static Parcelable state;
-
-    private FirstFragment firstFragment;
-    private SecondFragment secondFragment;
+    private MyApp myApp = new MyApp();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +42,13 @@ public class MainActivity extends AppCompatActivity{
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE}, myApp.getREQUEST_CODE());
         }
 
         startService(new Intent(getApplicationContext(), LoadWeatherService.class));
         Utils.init(this);
 
-        firstFragment = FirstFragment.getInstance(this, this);
-        loadFragment(firstFragment);
+        loadFragment(new FirstFragment());
 
     }
 
@@ -88,7 +76,7 @@ public class MainActivity extends AppCompatActivity{
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_CODE) {
+        if (requestCode == myApp.getREQUEST_CODE()) {
             for (int result : grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
                     Log.d("onRequestPermissionsRe:", "Permission Not Granted");
@@ -134,37 +122,5 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public void onStop() {
         super.onStop();
-    }
-
-    public static Parcelable getState() {
-        return state;
-    }
-
-    public void setState(Parcelable state) {
-        MainActivity.state = state;
-    }
-
-    public Context getContext() {
-        return context;
-    }
-
-    public void setContext(Context context) {
-        this.context = context;
-    }
-
-    public FirstFragment getFirstFragment() {
-        return firstFragment;
-    }
-
-    public void setFirstFragment(FirstFragment firstFragment) {
-        this.firstFragment = firstFragment;
-    }
-
-    public SecondFragment getSecondFragment() {
-        return secondFragment;
-    }
-
-    public void setSecondFragment(SecondFragment secondFragment) {
-        this.secondFragment = secondFragment;
     }
 }
