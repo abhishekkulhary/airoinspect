@@ -110,7 +110,6 @@ public class PlaceholderFragment extends Fragment {
 
         allCharts.invalidate();
 
-        view.invalidate();
         return view;
     }
 

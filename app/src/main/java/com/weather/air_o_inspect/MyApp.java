@@ -1,13 +1,22 @@
 package com.weather.air_o_inspect;
 
 
+import android.Manifest;
 import android.app.Application;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.util.Log;
+
+import androidx.core.app.ActivityCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class MyApp extends Application {
+public class MyApp extends Application implements LocationListener {
     // Called when the application is starting, before any other application objects have been created.
     // Overriding this method is totally optional!
     private static String[] filename = new String[]{"forecast1.csv", "forecast2.csv"};
@@ -16,6 +25,11 @@ public class MyApp extends Application {
     private static Long timeDelay = 5L; // Time in mins
     private final Integer REQUEST_CODE = 15;
     private final String xColumn = "time";
+    boolean isGPSEnable = false;
+    boolean isNetworkEnable = false;
+    double latitude, longitude;
+    LocationManager locationManager;
+    Location location;
 
     private final String[][] COLUMNS = {{"precipIntensity"}, {"precipProbability"}, {"temperature"}, {"pressure"},
             {"windSpeed"}, {"windGust"}, {"cloudCover"}, {"visibility"}};
@@ -27,9 +41,84 @@ public class MyApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        fn_getlocation();
+        if (location != null) {
+            longLat = location.getLatitude() + "," + location.getLongitude();
+        }
+    }
 
+    @Override
+    public void onLocationChanged(Location location) {
+        fn_getlocation();
+    }
 
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
 
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
+    }
+
+    public void fn_getlocation() {
+        locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
+        assert locationManager != null;
+        isGPSEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        isNetworkEnable = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        if (!isGPSEnable && !isNetworkEnable) {
+
+        } else {
+
+            if (isNetworkEnable) {
+                location = null;
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, this);
+                if (locationManager!=null){
+                    location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    if (location!=null){
+
+                        Log.e("latitude",location.getLatitude()+"");
+                        Log.e("longitude",location.getLongitude()+"");
+
+                        latitude = location.getLatitude();
+                        longitude = location.getLongitude();
+                        fn_update(location);
+                    }
+                }
+
+            }
+
+            if (isGPSEnable){
+                location = null;
+                assert locationManager != null;
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,0,this);
+                if (locationManager!=null){
+                    location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    if (location!=null){
+                        Log.e("latitude",location.getLatitude()+"");
+                        Log.e("longitude",location.getLongitude()+"");
+                        latitude = location.getLatitude();
+                        longitude = location.getLongitude();
+                        fn_update(location);
+                    }
+                }
+            }
+        }
+
+    }
+
+    private void fn_update(Location location){
+        longLat = location.getLatitude() + "," + location.getLongitude();
     }
 
     public String getxColumn() {

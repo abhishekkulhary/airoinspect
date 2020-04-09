@@ -49,10 +49,14 @@ public class MainActivity extends AppCompatActivity{
     private TextView currentTimePlace;
     private final CompositeDisposable disposables = new CompositeDisposable();
 
+    private Integer count = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+
+        startService(new Intent(getApplicationContext(), LoadWeatherService.class));
 
         super.onCreate(savedInstanceState);
 
@@ -70,8 +74,6 @@ public class MainActivity extends AppCompatActivity{
         }
 
         utilsWeatherDataRead  = new UtilsWeatherDataRead(this);
-
-        startService(new Intent(getApplicationContext(), LoadWeatherService.class));
 
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
