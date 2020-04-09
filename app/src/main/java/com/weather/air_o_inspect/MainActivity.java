@@ -93,7 +93,8 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void run() {
 
-                SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getApplicationContext(), getSupportFragmentManager(), utilsWeatherDataRead);
+                SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getApplicationContext(), myApp.getFilename().length,
+                        getSupportFragmentManager(), utilsWeatherDataRead, myApp);
                 ViewPager viewPager = findViewById(R.id.view_pager);
                 viewPager.setAdapter(sectionsPagerAdapter);
                 TabLayout tabs = findViewById(R.id.tabs);
@@ -150,7 +151,7 @@ public class MainActivity extends AppCompatActivity{
             }
         };
 
-        handler.postDelayed(periodicUpdate, 500); // 1 Second delay in updating the Main UI.
+        handler.postDelayed(periodicUpdate, 1000); // 1 Second delay in updating the Main UI.
 
     }
 

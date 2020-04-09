@@ -26,7 +26,7 @@
     <style name="TextviewStyleFly" parent="@android:style/Widget.TextView">
         <item name="android:textColor">@color/greenStatus</item>
         <item name="android:textStyle">italic</item>
-        <item name="android:textSize">35sp</item>
+        <item name="android:textSize">40sp</item>
     </style>
 
 </resources>

@@ -2,6 +2,7 @@ package com.weather.air_o_inspect.ui.main;
 
 import android.content.Context;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -22,16 +23,18 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @StringRes
     private static int[] TAB_TITLES;
     private final Context mContext;
-    private MyApp myApp = new MyApp();
+    private MyApp myApp;
     private UtilsWeatherDataRead utilsWeatherDataRead;
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm, UtilsWeatherDataRead utilsWeatherDataRead) {
-        super(fm);
+    public SectionsPagerAdapter(Context context, int count, FragmentManager fm, UtilsWeatherDataRead utilsWeatherDataRead, MyApp myApp) {
+        super(fm, count);
         mContext = context;
         TAB_TITLES = new int[]{R.string.tab_1, R.string.tab_2};
         this.utilsWeatherDataRead = utilsWeatherDataRead;
+        this.myApp = myApp;
     }
 
+    @NonNull
     @Override
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
