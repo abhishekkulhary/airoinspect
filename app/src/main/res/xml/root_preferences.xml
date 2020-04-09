@@ -1,65 +1,47 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="@string/messages_header">
-
-        <EditTextPreference
-            app:key="signature"
-            app:title="@string/signature_title"
-            app:useSimpleSummaryProvider="true" />
-
-        <ListPreference
-            app:defaultValue="reply"
-            app:entries="@array/reply_entries"
-            app:entryValues="@array/reply_values"
-            app:key="reply"
-            app:title="@string/reply_title"
-            app:useSimpleSummaryProvider="true" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="@string/sync_header">
-
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
-
-    </PreferenceCategory>
-
     <PreferenceCategory app:title="Activate for Decision">
+        <SwitchPreferenceCompat
+            app:key="wind_switch"
+            app:title="Wind" />
 
         <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
-
+            app:key="wind_gust_switch"
+            app:title="Wind Gust" />
         <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
-
+            app:key="sunshine_switch"
+            app:title="Sunshine" />
+        <SwitchPreferenceCompat
+            app:key="precipitation_switch"
+            app:title="Precipation" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="Threshold">
 
-        <SwitchPreferenceCompat
-            app:key="sync"
-            app:title="@string/sync_title" />
+        <SeekBarPreference
+            android:key="wind"
+            android:title="Wind"
+            android:summary="Max. Wind Speed allowed for Flight."
+            android:max="25"
+            android:min="0"
+            android:defaultValue="10" />
 
-        <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="attachment"
-            app:summaryOff="@string/attachment_summary_off"
-            app:summaryOn="@string/attachment_summary_on"
-            app:title="@string/attachment_title" />
+        <SeekBarPreference
+            android:key="wind_gust"
+            android:title="Wind Gust"
+            android:summary="Max. Wind Gust Speed allowed for Flight."
+            android:max="25"
+            android:min="0"
+            android:defaultValue="15" />
+
+        <SeekBarPreference
+            android:key="precipitation"
+            android:title="Precipitation"
+            android:summary="Max. Precipitation allowed for Flight."
+            android:max="1"
+            android:min="0"
+            android:defaultValue="0" />
 
     </PreferenceCategory>
 
