@@ -34,9 +34,9 @@
                     android:background="?attr/colorPrimary"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-                        <include layout="@layout/layout_current_status"
-                            android:layout_width="match_parent"
-                            android:layout_height="150dp" />
+                <include layout="@layout/layout_current_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp" />
             </LinearLayout>
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
