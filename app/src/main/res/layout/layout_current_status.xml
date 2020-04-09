@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:layout_marginTop="10dp">
 
     <TextView
         android:id="@+id/current_fly_status"
@@ -13,7 +14,7 @@
         android:layout_weight="1"
         android:text="@string/fly"
         android:gravity="center"
-        android:background="@color/greenStatus">
+        style="@style/TextviewStyleFly">
 
     </TextView>
     <LinearLayout
@@ -35,7 +36,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/temperature"
-                android:gravity="center">
+                android:gravity="bottom|start"
+                style="@style/TextviewStyle">
 
             </TextView>
 
@@ -45,7 +47,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/precipitation"
-                android:gravity="center">
+                android:gravity="bottom|start"
+                style="@style/TextviewStyle">
 
             </TextView>
 
@@ -64,7 +67,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/wind"
-                android:gravity="center">
+                android:gravity="bottom|start"
+                style="@style/TextviewStyle">
 
             </TextView>
 
@@ -74,7 +78,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/sun_or_visibility"
-                android:gravity="center">
+                android:gravity="bottom|start"
+                style="@style/TextviewStyle">
 
             </TextView>
 
@@ -85,8 +90,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:text="@string/time_and_place"
-            android:gravity="center">
+            android:gravity="center"
+            style="@style/TextviewStyle">
 
         </TextView>
 

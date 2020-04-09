@@ -29,6 +29,7 @@ public class MyApp extends Application {
         super.onCreate();
 
 
+
     }
 
     public String getxColumn() {
