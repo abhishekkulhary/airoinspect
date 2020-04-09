@@ -4,34 +4,57 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager.widget.ViewPager;
 
 import com.github.mikephil.charting.utils.Utils;
+import com.google.android.material.tabs.TabLayout;
+import com.weather.air_o_inspect.datareadutil.UtilsWeatherDataRead;
 import com.weather.air_o_inspect.service.LoadWeatherService;
 import com.weather.air_o_inspect.settings.SettingsFragment;
+import com.weather.air_o_inspect.ui.main.SectionsPagerAdapter;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.observers.DisposableObserver;
+import io.reactivex.schedulers.Schedulers;
+
 
 @SuppressWarnings("ALL")
 public class MainActivity extends AppCompatActivity{
 
-    private MyApp myApp = new MyApp();
+    private final MyApp myApp = new MyApp();
+    private UtilsWeatherDataRead utilsWeatherDataRead;
+
+    private TextView currentFlyStatus;
+    private TextView currentTemperature;
+    private TextView currentRainStatus;
+    private TextView currentWind;
+    private TextView currentVisibility;
+    private TextView currentTimePlace;
+    private final CompositeDisposable disposables = new CompositeDisposable();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -46,10 +69,86 @@ public class MainActivity extends AppCompatActivity{
                     Manifest.permission.WRITE_EXTERNAL_STORAGE}, myApp.getREQUEST_CODE());
         }
 
+        utilsWeatherDataRead  = new UtilsWeatherDataRead(this);
+
         startService(new Intent(getApplicationContext(), LoadWeatherService.class));
+
+        setContentView(R.layout.activity_main);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         Utils.init(this);
 
-        loadFragment(new FirstFragment());
+        currentFlyStatus = findViewById(R.id.current_fly_status);
+        currentTemperature = findViewById(R.id.current_temperature);
+        currentRainStatus = findViewById(R.id.current_rain_status);
+        currentWind = findViewById(R.id.current_wind);
+        currentVisibility = findViewById(R.id.current_visibility);
+        currentTimePlace = findViewById(R.id.current_time_place);
+
+        final Handler handler = new Handler();
+        Runnable periodicUpdate = new Runnable() {
+            @Override
+            public void run() {
+
+                SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(getApplicationContext(), getSupportFragmentManager(), utilsWeatherDataRead);
+                ViewPager viewPager = findViewById(R.id.view_pager);
+                viewPager.setAdapter(sectionsPagerAdapter);
+                TabLayout tabs = findViewById(R.id.tabs);
+                tabs.setupWithViewPager(viewPager);
+
+                Observable<Map<String, List<String>>> observable = Observable.defer(new Callable<Observable<Map<String, List<String>>>>() {
+                    @Override
+                    public Observable<Map<String, List<String>>> call() throws Exception {
+                        ArrayList<String[]> weatherData = utilsWeatherDataRead.readWeatherData("Currentforecast.csv");
+                        Map<String, List<String>> currentWeatherCondition = utilsWeatherDataRead.getCurrentWeatherConditions(weatherData);
+                        return Observable.just(currentWeatherCondition);
+                    }
+                });
+
+                DisposableObserver<Map<String, List<String>>> disposableObserver = new DisposableObserver<Map<String, List<String>>>() {
+                    @Override
+                    public void onNext(Map<String, List<String>> currentWeatherCondition) {
+                        // TODO
+// TODO 1. Add Units for each item
+                        // TODO
+                        currentTimePlace.setText(
+                                myApp.getSimpleDateFormat().format(Long.parseLong(currentWeatherCondition.get("values")
+                                        .get(currentWeatherCondition.get("titles").indexOf("time"))))
+                                        + " " + myApp.getSimpleTimesFormat().format(Long.parseLong(
+                                        currentWeatherCondition.get("values")
+                                                .get(currentWeatherCondition.get("titles").indexOf("time"))) * 1000));
+                        //currentFlyStatus.setText(currentWeatherCondition.get("values")
+                        // .get(currentWeatherCondition.get("titles").indexOf("time")));
+                        currentRainStatus.setText("Precipitation: " + currentWeatherCondition.get("values")
+                                .get(currentWeatherCondition.get("titles").indexOf("precipIntensity")));
+                        currentTemperature.setText("Temperature: " + currentWeatherCondition.get("values")
+                                .get(currentWeatherCondition.get("titles").indexOf("temperature")));
+                        currentVisibility.setText("Sun or Visibility: " + currentWeatherCondition.get("values")
+                                .get(currentWeatherCondition.get("titles").indexOf("visibility")));
+                        currentWind.setText("Wind Speed: " + currentWeatherCondition.get("values")
+                                .get(currentWeatherCondition.get("titles").indexOf("windSpeed")));
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+                };
+
+                disposables.add(
+                        observable.subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribeWith(disposableObserver));
+
+            }
+        };
+
+        handler.postDelayed(periodicUpdate, 1000 * 2); // 2 Second delay in updating the Main UI.
 
     }
 
@@ -92,30 +191,14 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
-    protected void loadFragment(Fragment fragment) {
-        FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.nav_host_fragment, fragment);
-        fragmentTransaction.commit();
-    }
-
-    public void reload() {
-        Fragment currentFragment = this.getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
-        FragmentTransaction fragTransaction =   this.getSupportFragmentManager().beginTransaction();
-        fragTransaction.detach(currentFragment);
-        fragTransaction.attach(currentFragment);
-        fragTransaction.commit();
-    }
-
     @Override
     public void onStart() {
         super.onStart();
-        reload();
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        reload();
     }
 
     @Override
@@ -126,5 +209,11 @@ public class MainActivity extends AppCompatActivity{
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        disposables.clear();
     }
 }

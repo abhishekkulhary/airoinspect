@@ -11,7 +11,7 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="fly">FLY</string>
     <string name="time_and_place">Time and Place</string>
-    <string name="wind">Wind</string>
+    <string name="wind">Wind Speed</string>
     <string name="sun_or_visibility">Sun or Visibility</string>
     <string name="temperature">Temperature</string>
     <string name="precipitation">Precipitation</string>
@@ -34,4 +34,7 @@
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="action_reload">Reload</string>
+
+    <string name="tab_1">Forecast1</string>
+    <string name="tab_2">Forecast2</string>
 </resources>

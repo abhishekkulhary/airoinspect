@@ -39,6 +39,31 @@ public class LoadWeatherService extends Service implements LocationListener {
     MyApp myApp = new MyApp();
     Utils utils = new Utils();
 
+    Observable<String> observable = Observable.defer(new Callable<ObservableSource<String>>() {
+        @Override
+        public ObservableSource<String> call() throws Exception {
+            return Observable.just(utils.getDataFromUrlWriteToCSV(myApp.getLongLat(), myApp.getQuery()));
+        }
+    });
+
+    DisposableObserver<String> disposableObserver = new DisposableObserver<String>() {
+        @Override
+        public void onNext(String data) {
+            if (data != null) {
+                utils.saveCSVFile(getApplicationContext(), data, myApp.getFilename());
+            }
+        }
+
+        @Override
+        public void onError(Throwable e) {
+
+        }
+
+        @Override
+        public void onComplete() {
+        }
+    };
+
     //TODO: 1. Try Combining Handler, and thread within CompositeDisposable disposables.
 
     Handler handler = new Handler();
@@ -46,36 +71,6 @@ public class LoadWeatherService extends Service implements LocationListener {
         @Override
         public void run() {
             handler.postDelayed(periodicUpdate, 1000 * 60 * myApp.getTimeDelay()); // schedule next wake up every X mins
-
-            fn_getlocation();
-            if (location != null) {
-                myApp.setLongLat(location.getLatitude() + "," + location.getLongitude());
-            }
-
-            Observable<String> observable = Observable.defer(new Callable<ObservableSource<String>>() {
-                @Override
-                public ObservableSource<String> call() throws Exception {
-                    return Observable.just(utils.getDataFromUrlWriteToCSV(myApp.getLongLat(), myApp.getQuery()));
-                }
-            });
-
-            DisposableObserver<String> disposableObserver = new DisposableObserver<String>() {
-                @Override
-                public void onNext(String data) {
-                    if (data != null) {
-                        utils.saveCSVFile(getApplicationContext(), data, myApp.getFilename());
-                    }
-                }
-
-                @Override
-                public void onError(Throwable e) {
-
-                }
-
-                @Override
-                public void onComplete() {
-                }
-            };
 
             disposables.add(
                     observable.subscribeOn(Schedulers.io())
@@ -87,6 +82,10 @@ public class LoadWeatherService extends Service implements LocationListener {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        fn_getlocation();
+        if (location != null) {
+            myApp.setLongLat(location.getLatitude() + "," + location.getLongitude());
+        }
         handler.post(periodicUpdate);
         return START_STICKY;
     }
