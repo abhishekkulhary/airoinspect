@@ -20,6 +20,7 @@ import com.github.mikephil.charting.utils.Utils;
 import com.google.android.material.tabs.TabLayout;
 import com.weather.air_o_inspect.datareadutil.UtilsWeatherDataRead;
 import com.weather.air_o_inspect.service.LoadWeatherService;
+import com.weather.air_o_inspect.settings.SettingsFragment;
 import com.weather.air_o_inspect.ui.main.SectionsPagerAdapter;
 
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
+
 
 @SuppressWarnings("ALL")
 public class MainActivity extends AppCompatActivity{
@@ -166,6 +168,9 @@ public class MainActivity extends AppCompatActivity{
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
+            fragmentTransaction.replace(R.id.nav_host_fragment, new SettingsFragment());
+            fragmentTransaction.commit();
             return true;
         }
 
