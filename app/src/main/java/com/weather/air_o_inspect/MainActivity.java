@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
+//        getSupportActionBar().setIcon(R.mipmap.weather_app);
 
         Utils.init(this);
 
@@ -148,7 +150,7 @@ public class MainActivity extends AppCompatActivity{
             }
         };
 
-        handler.postDelayed(periodicUpdate, 1000 * 2); // 2 Second delay in updating the Main UI.
+        handler.postDelayed(periodicUpdate, 500); // 1 Second delay in updating the Main UI.
 
     }
 
@@ -168,9 +170,10 @@ public class MainActivity extends AppCompatActivity{
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            FragmentTransaction fragmentTransaction = this.getSupportFragmentManager().beginTransaction();
-            fragmentTransaction.replace(R.id.nav_host_fragment, new SettingsFragment());
-            fragmentTransaction.commit();
+            getSupportFragmentManager().beginTransaction()
+                    .replace(android.R.id.content, new SettingsFragment())
+                    .addToBackStack(null)
+                    .commit();
             return true;
         }
 
