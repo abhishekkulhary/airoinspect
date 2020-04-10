@@ -19,13 +19,8 @@ import com.weather.air_o_inspect.viewholders.ChartsData;
 
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
-import io.reactivex.Observable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -39,14 +34,14 @@ public class PlaceholderFragment extends Fragment {
     private RecyclerView allCharts;
 
     private final CompositeDisposable disposables = new CompositeDisposable();
-    private String filename;
     private String[] LABELS;
     private UtilsWeatherDataRead utilsWeatherDataRead;
+    private Map<String, ArrayList<Float>> weatherData;
 
-    public static PlaceholderFragment newInstance(int index, String filename, String[] LABELS, UtilsWeatherDataRead utilsWeatherDataRead) {
+    public static PlaceholderFragment newInstance(int index, Map<String, ArrayList<Float>> weatherData, String[] LABELS, UtilsWeatherDataRead utilsWeatherDataRead) {
 
         PlaceholderFragment placeholderFragment = new PlaceholderFragment();
-        placeholderFragment.filename = filename;
+        placeholderFragment.weatherData = weatherData;
         placeholderFragment.LABELS = LABELS;
         placeholderFragment.utilsWeatherDataRead = utilsWeatherDataRead;
         Bundle bundle = new Bundle();
@@ -63,14 +58,13 @@ public class PlaceholderFragment extends Fragment {
             Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_first, container, false);
 
-        allCharts =  view.findViewById(R.id.all_charts);
+        allCharts = view.findViewById(R.id.all_charts);
 
         allCharts.setHasFixedSize(true);
         allCharts.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        ArrayList<String[]> weatherData = utilsWeatherDataRead.readWeatherData(filename);
-        Map<String, ArrayList<Float>> yLabelValues = utilsWeatherDataRead.getChartItems(weatherData);
-        Map<String, Object> mappedArrayEntries = utilsWeatherDataRead.getMappedArrayListOfEntries(yLabelValues);
+        Map<String, ArrayList<Float>> weatherDataRefined = utilsWeatherDataRead.getChartItems(weatherData);
+        Map<String, Object> mappedArrayEntries = utilsWeatherDataRead.getMappedArrayListOfEntries(weatherDataRefined);
         ArrayList<BarData> mappedBarData = utilsWeatherDataRead.generateBarData(mappedArrayEntries);
         final ArrayList<ChartsData> chartsDataList = new ArrayList<>();
 
@@ -142,7 +136,9 @@ public class PlaceholderFragment extends Fragment {
 
     public void setAllCharts(RecyclerView allCharts) {
         this.allCharts = allCharts;
-    }@Override
+    }
+
+    @Override
 
     public void onStart() {
         super.onStart();

@@ -25,12 +25,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 public class UtilsWeatherDataRead {
 
-    private ArrayList<String> xLabelValues = new ArrayList<>();
     private Context context;
-    private StringBuffer currentDate = new StringBuffer(" ");
     private MyApp myApp;
 
     public UtilsWeatherDataRead(Context context) {
@@ -39,80 +38,136 @@ public class UtilsWeatherDataRead {
         this.myApp = new MyApp();
     }
 
-    public Map<String, List<String>> getCurrentWeatherConditions(ArrayList<String[]> weatherData) {
+    public Map<String, List<String>> getCurrentWeatherConditions(Map<String, Map<String, ArrayList<Float>>> weatherData) {
+        Log.i("getCurrentWeatherCond1", "start");
         Map<String, List<String>> currentWeatherCondition = new HashMap<>();
 
-        List<String> titleLine;
+        List<String> titleLine = new ArrayList<>();
+
+        titleLine.add(myApp.getxColumn());
+
         if (!weatherData.isEmpty()) {
-            titleLine = Arrays.asList(weatherData.remove(0));
-            List<String> currentStatus = Arrays.asList(weatherData.remove(0));
+
+
+            titleLine.addAll(Arrays.asList(myApp.getCOLUMNS()));
+
+            Set<String> keys = weatherData.keySet();
+
+            Map<String, ArrayList<Float>> currentStatus = weatherData.get("" + keys.toArray()[0]);
+
+            List<String> values = new ArrayList<>();
+
+            assert currentStatus != null;
+            values.add((String) currentStatus.keySet().toArray()[0]);
+
+            for (Float i : currentStatus.get(currentStatus.keySet().toArray()[0])) {
+
+                values.add("" + i);
+
+            }
 
             currentWeatherCondition.put("titles", titleLine);
-            currentWeatherCondition.put("values", currentStatus);
+            currentWeatherCondition.put("values", values);
         }
+        Log.i("getCurrentWeatherCond2", "end");
 
         return currentWeatherCondition;
     }
 
     //TODO: 3. Separate the Data Retrivel from API and Chart creation.
     //TODO: 5. Important UI UPDATE Time and date show on x-axis(UtilsWeatherDataRead, ChartDataAdapter)
-    public Map<String, ArrayList<Float>> getChartItems(ArrayList<String[]> weatherData) {
+    public Map<String, ArrayList<Float>> getChartItems(Map<String, ArrayList<Float>> weatherData) {
+
+        Log.i("getChartItems 1", "start");
         Map<String, ArrayList<Float>> yLabelValues = new HashMap<>();
+
         List<String> titleLine;
 
         if (!weatherData.isEmpty()) {
-            titleLine = Arrays.asList(weatherData.remove(0));
 
-            int indexTime = titleLine.indexOf(myApp.getxColumn());
-            boolean flag = true;
-            for (String[] columns : myApp.getCOLUMNS()) {
-                for (String column : columns) {
-                    int index = titleLine.indexOf(column);
-                    ArrayList<Float> colValues = new ArrayList<>();
-                    for (int j = 0; j < weatherData.size(); j++) {
-                        String tmpTime = myApp.getSimpleTimeFormat().format(new Timestamp(Long.parseLong(weatherData.get(j)[indexTime]) * 1000));
-                        if (flag) {
-                            String tmpDate = myApp.getSimpleDateFormat().format(new Timestamp(Long.parseLong(weatherData.get(j)[indexTime]) * 1000));
-                            if (!currentDate.toString().contains(tmpDate)) {
-                                if (j == 0) {
-                                    currentDate = new StringBuffer(tmpDate);
-                                } else {
-                                    currentDate.append(", ").append(tmpDate);
-                                }
-                            }
-                        }
-                        if (tmpTime.matches("[0-2][0-9]:00:00:000")) {
-                            if (flag) {
-                                xLabelValues.add(myApp.getSimpleTimesFormat().format(new Timestamp(Long.parseLong(weatherData.get(j)[indexTime]) * 1000)));
-                            }
-                            colValues.add(Float.parseFloat(weatherData.get(j)[index]));
-                        }
-                    }
-                    yLabelValues.put(column, colValues);
-                    flag = false;
+            titleLine = Arrays.asList(myApp.getCOLUMNS());
+
+            for (String column : myApp.getCOLUMNS()) {
+
+                int index = titleLine.indexOf(column);
+
+                ArrayList<Float> colValues = new ArrayList<>();
+
+                for (Map.Entry<String, ArrayList<Float>> string : weatherData.entrySet()) {
+
+                    colValues.add(string.getValue().get(index));
+
                 }
+
+                yLabelValues.put(column, colValues);
             }
         }
 
         return yLabelValues;
     }
 
-    public ArrayList<String[]> readWeatherData(String filename) {
-        ArrayList<String[]> weatherData = new ArrayList<>();
+    public Map<String, Map<String, ArrayList<Float>>> readWeatherData(String filename) {
+        Map<String, Map<String, ArrayList<Float>>> weatherData = new HashMap<>();
         FileInputStream is = null;
         BufferedReader reader = null;
         try {
             File file = new File(context.getExternalFilesDir(null), filename);
+            int i = 0;
+
+            String[] titleLine = null;
+
             if (file.exists()) {
                 is = new FileInputStream(file);
                 reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
                 String line;
+
+                Map<String, ArrayList<Float>> dayWiseData = null;
+                String tmpDate = null;
+
                 while ((line = reader.readLine()) != null) {
                     // read, split data, and add to weather data
-                    String[] strings = line.split(",");
-                    weatherData.add(strings);
+                    if (i == 0) {
+                        dayWiseData = new HashMap<>();
+                        titleLine = line.split(",");
+                        i++;
+                    } else {
+                        String[] strings = line.split(",");
+                        ArrayList<Float> utilModel = new ArrayList<>();
+
+                        for (int j = 0; j < myApp.getCOLUMNS().length; j++) {
+                            for (int k = 0; k < titleLine.length; k++) {
+                                if (myApp.getCOLUMNS()[j].equals(titleLine[k])) {
+                                    System.out.println(myApp.getCOLUMNS()[j]);
+                                    utilModel.add(j, Float.parseFloat(strings[k]));
+                                    break;
+                                }
+                            }
+                        }
+
+                        for (int j = 0; j < titleLine.length; j++) {
+                            if (titleLine[j].equals(myApp.getxColumn())) {
+
+                                tmpDate = myApp.getSimpleDateFormat().format(new Timestamp(Long.parseLong(strings[j]) * 1000));
+
+                                if (weatherData.containsKey(tmpDate)) {
+                                    dayWiseData = weatherData.get(tmpDate);
+                                    assert dayWiseData != null;
+                                    dayWiseData.put(strings[j], utilModel);
+                                    weatherData.put(tmpDate, dayWiseData);
+                                } else {
+                                    dayWiseData = new HashMap<>();
+                                    dayWiseData.put(strings[j], utilModel);
+                                    weatherData.put(tmpDate, dayWiseData);
+                                }
+
+                                break;
+                            }
+                        }
+                    }
+
                 }
             }
+            Log.i("readWeatherData 3", "DOne");
         } catch (FileNotFoundException e) {
             Log.d("readWeatherData 1", "Error reading data file" + e);
         } catch (IOException e) {
@@ -140,28 +195,26 @@ public class UtilsWeatherDataRead {
 
 
         if (values != null && !values.isEmpty()) {
-            for (String[] label_array : myApp.getCOLUMNS()) {
+            for (String label : myApp.getCOLUMNS()) {
                 ArrayList<IBarDataSet> barDataSets = new ArrayList<>();
-                for (String s : label_array) {
-                    List<Integer> colors = new ArrayList<>();
-                    ArrayList<BarEntry> yValues = ((Map<String, ArrayList<BarEntry>>) Objects.requireNonNull(values.get("bar"))).get(s);
-                    assert yValues != null;
-                    for (BarEntry data : yValues) {
-                        if (data.getY() > 2) {
-                            colors.add(green);
-                        } else {
-                            colors.add(red);
-                        }
+                List<Integer> colors = new ArrayList<>();
+                ArrayList<BarEntry> yValues = ((Map<String, ArrayList<BarEntry>>) Objects.requireNonNull(values.get("bar"))).get(label);
+                assert yValues != null;
+                for (BarEntry data : yValues) {
+                    if (data.getY() > 2) {
+                        colors.add(green);
+                    } else {
+                        colors.add(red);
                     }
-                    Log.d("generateBarDaata", s);
-                    // Here each dataset would be processed, temp, sunshine etc.
-                    BarDataSet barDataSet = new BarDataSet(yValues, s);
-                    barDataSet.setColors(colors);
-                    // set.setValueTextColors(colors);
-                    barDataSet.setDrawValues(false);
-                    barDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-                    barDataSets.add(barDataSet);
                 }
+                Log.d("generateBarDaata", label);
+                // Here each dataset would be processed, temp, sunshine etc.
+                BarDataSet barDataSet = new BarDataSet(yValues, label);
+                barDataSet.setColors(colors);
+                // set.setValueTextColors(colors);
+                barDataSet.setDrawValues(false);
+                barDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+                barDataSets.add(barDataSet);
                 BarData data = new BarData(barDataSets);
                 bardata_arraylist.add(data);
             }

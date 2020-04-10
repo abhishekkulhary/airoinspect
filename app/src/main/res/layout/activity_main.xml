@@ -47,7 +47,9 @@
         android:layout_height="wrap_content"
         app:tabGravity="fill"
         app:tabIndicatorColor="@color/tab_indicator"
-        app:tabMode="fixed" />
+        app:tabMode="fixed" >
+
+    </com.google.android.material.tabs.TabLayout>
 
 </com.google.android.material.appbar.AppBarLayout>
 

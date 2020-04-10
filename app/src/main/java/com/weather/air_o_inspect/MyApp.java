@@ -2,34 +2,30 @@ package com.weather.air_o_inspect;
 
 
 import android.app.Application;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.weather.air_o_inspect.service.LoadWeatherService;
-
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-@SuppressWarnings("ALL")
 public class MyApp extends Application implements LocationListener, Serializable {
     // Called when the application is starting, before any other application objects have been created.
     // Overriding this method is totally optional!
-    private static final String[] filename = new String[]{"forecast1.csv", "forecast2.csv"};
+    private static final String[] filename = new String[]{"currentforecast.csv", "forecast.csv"};
     private static String longLat = "52.307108,10.530236";
     private static String query = "units=si";
-    private static Long timeDelay = 10L; // Time in mins
+    private static Long timeDelay = 20L; // Time in mins
     private final Integer REQUEST_CODE = 15;
     private final String xColumn = "time";
-    private final String[][] COLUMNS = {{"precipIntensity"}, {"precipProbability"}, {"temperature"}, {"pressure"},
-            {"windSpeed"}, {"windGust"}, {"cloudCover"}, {"visibility"}};
+    private final String[] COLUMNS = {"precipIntensity", "precipProbability", "temperature", "pressure",
+            "windSpeed", "windGust", "cloudCover", "visibility"};
+    private final String[] TAB_SUBTEXT = {"Today", "Tomorrow", "Day After"};
     private final String[] LABELS = {"Precipitation Intensity", "Precipitation Probability", "Temperature", "Pressure", "Wind Speed", "Wind Gust", "Cloud Cover", "Visibility"};
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
     private final SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm:ss:SSS", Locale.US);
@@ -80,7 +76,7 @@ public class MyApp extends Application implements LocationListener, Serializable
         MyApp.timeDelay = timeDelay;
     }
 
-    public String[][] getCOLUMNS() {
+    public String[] getCOLUMNS() {
         return COLUMNS;
     }
 
@@ -139,5 +135,9 @@ public class MyApp extends Application implements LocationListener, Serializable
     @Override
     public void onProviderDisabled(String provider) {
 
+    }
+
+    public String[] getTAB_SUBTEXT() {
+        return TAB_SUBTEXT;
     }
 }

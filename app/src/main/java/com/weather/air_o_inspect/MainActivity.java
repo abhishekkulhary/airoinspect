@@ -7,18 +7,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.viewpager.widget.ViewPager;
@@ -26,12 +29,10 @@ import androidx.viewpager.widget.ViewPager;
 import com.github.mikephil.charting.utils.Utils;
 import com.google.android.material.tabs.TabLayout;
 import com.weather.air_o_inspect.datareadutil.UtilsWeatherDataRead;
-import com.weather.air_o_inspect.service.LoadWeatherNoLimitService;
 import com.weather.air_o_inspect.service.LoadWeatherService;
 import com.weather.air_o_inspect.settings.SettingsFragment;
 import com.weather.air_o_inspect.ui.main.SectionsPagerAdapter;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +61,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private ViewPager viewPager;
     private TabLayout tabs;
     private final CompositeDisposable disposables = new CompositeDisposable();
-    public static final String mBroadcastOneTimeAction = "com.weather.air_o_inspect.onetime";
     public static final String mBroadcastRepeatAction = "com.weather.air_o_inspect.repeat";
     private Integer count = 0;
 
@@ -72,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     Location location;
     private IntentFilter mIntentFilter;
     private SectionsPagerAdapter sectionsPagerAdapter;
+    private Map<String, Map<String, ArrayList<Float>>> weatherData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +94,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         currentTimePlace = findViewById(R.id.current_time_place);
         tabs = findViewById(R.id.tabs);
         viewPager = findViewById(R.id.view_pager);
+
+        utilsWeatherDataRead = new UtilsWeatherDataRead(getApplicationContext());
+
         mIntentFilter = new IntentFilter();
-        mIntentFilter.addAction(mBroadcastOneTimeAction);
         mIntentFilter.addAction(mBroadcastRepeatAction);
 
         if (ActivityCompat.checkSelfPermission(this,
@@ -106,98 +109,149 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 && ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
 
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
-                                Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                        myApp.getREQUEST_CODE());
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
+                            Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                    myApp.getREQUEST_CODE());
         }
-        utilsWeatherDataRead = new UtilsWeatherDataRead(this);
-        sectionsPagerAdapter = new SectionsPagerAdapter(getApplicationContext(), myApp.getFilename().length,
-                getSupportFragmentManager(), utilsWeatherDataRead, myApp);
 
         fn_getlocation();
 
-        Intent startIntent = new Intent(MainActivity.this,
-                LoadWeatherNoLimitService.class);
-        startService(startIntent);
+        Utils.init(this);
+
+        Intent intent = new Intent(getApplicationContext(), LoadWeatherService.class);
+        intent.putExtra("isRepeat", true);
+        startService(intent);
 
         inflateUI();
-
-        Utils.init(this);
     }
 
     private void inflateUI() {
         Log.i("MainActivity:inflateUI:", "Start");
-        ArrayList<String[]> weatherData = utilsWeatherDataRead.readWeatherData("Currentforecast.csv");
-        Map<String, List<String>> currentWeatherCondition = utilsWeatherDataRead.getCurrentWeatherConditions(weatherData);
-        viewPager.setAdapter(sectionsPagerAdapter);
-        tabs.setupWithViewPager(viewPager);
 
-        // TODO
+        Observable<Map<String, List<String>>> observable = Observable.defer(new Callable<Observable<Map<String, List<String>>>>() {
+            @Override
+            public Observable<Map<String, List<String>>> call() throws Exception {
+                Log.i("In Observable", "Hello done till here");
+                Map<String, Map<String, ArrayList<Float>>> currentWeatherData = utilsWeatherDataRead.readWeatherData(myApp.getFilename()[0]);
+                Map<String, List<String>> currentWeatherCondition = utilsWeatherDataRead.getCurrentWeatherConditions(currentWeatherData);
+
+                Log.i("In Observable2", "Hello done till here");
+
+                weatherData = utilsWeatherDataRead.readWeatherData(myApp.getFilename()[1]);
+
+                return Observable.just(currentWeatherCondition);
+            }
+        });
+
+        DisposableObserver<Map<String, List<String>>> disposableObserver = new DisposableObserver<Map<String, List<String>>>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onNext(Map<String, List<String>> currentWeatherCondition) {
+                sectionsPagerAdapter = new SectionsPagerAdapter(getApplicationContext(), weatherData.keySet().size(),
+                        getSupportFragmentManager(), utilsWeatherDataRead, myApp, weatherData);
+                viewPager.setAdapter(sectionsPagerAdapter);
+                tabs.setupWithViewPager(viewPager);
+
+                for (int i = 0; i < tabs.getTabCount(); i++) {
+                    TabLayout.Tab tab = tabs.getTabAt(i);
+                    tab.setCustomView(sectionsPagerAdapter.getTabView(i));
+                }
+
+                tabs.addOnTabSelectedListener(new TabListner());
+                // TODO
 // TODO 1. Add Units for each item
-        // TODO
-        if (currentWeatherCondition != null && !currentWeatherCondition.isEmpty()) {
-            currentTimePlace.setText(
-                    myApp.getSimpleDateFormat().format(Long.parseLong(currentWeatherCondition.get("values")
-                            .get(currentWeatherCondition.get("titles").indexOf("time"))))
-                            + " " + myApp.getSimpleTimesFormat().format(Long.parseLong(
-                            currentWeatherCondition.get("values")
-                                    .get(currentWeatherCondition.get("titles").indexOf("time"))) * 1000));
-            //currentFlyStatus.setText(currentWeatherCondition.get("values")
-            // .get(currentWeatherCondition.get("titles").indexOf("time")));
-            currentRainStatus.setText("Precipitation: " + currentWeatherCondition.get("values")
-                    .get(currentWeatherCondition.get("titles").indexOf("precipIntensity")));
-            currentTemperature.setText("Temperature: " + currentWeatherCondition.get("values")
-                    .get(currentWeatherCondition.get("titles").indexOf("temperature")));
-            currentVisibility.setText("Sun or Visibility: " + currentWeatherCondition.get("values")
-                    .get(currentWeatherCondition.get("titles").indexOf("visibility")));
-            currentWind.setText("Wind Speed: " + currentWeatherCondition.get("values")
-                    .get(currentWeatherCondition.get("titles").indexOf("windSpeed")));
+                // TODO
+                if (currentWeatherCondition != null && !currentWeatherCondition.isEmpty()) {
+                    Long currentTime = Long.parseLong(currentWeatherCondition.get("values")
+                            .get(currentWeatherCondition.get("titles").indexOf("time")));
+
+                    if ((SystemClock.currentThreadTimeMillis() - currentTime * 1000) > 43200000) {
+                        Intent stopIntent = new Intent(MainActivity.this,
+                                LoadWeatherService.class);
+                        stopService(stopIntent);
+                        Intent intent = new Intent(getApplicationContext(), LoadWeatherService.class);
+                        intent.putExtra("isRepeat", false);
+                        startService(intent);
+                        return;
+                    }
+
+                    currentTimePlace.setText(
+                            myApp.getSimpleDateFormat().format(Long.parseLong(currentWeatherCondition.get("values")
+                                    .get(currentWeatherCondition.get("titles").indexOf("time"))) * 1000)
+                                    + " " + myApp.getSimpleTimesFormat().format(Long.parseLong(
+                                    currentWeatherCondition.get("values")
+                                            .get(currentWeatherCondition.get("titles").indexOf("time"))) * 1000));
+                    //currentFlyStatus.setText(currentWeatherCondition.get("values")
+                    // .get(currentWeatherCondition.get("titles").indexOf("time")));
+                    currentRainStatus.setText("Precipitation: " + currentWeatherCondition.get("values")
+                            .get(currentWeatherCondition.get("titles").indexOf("precipIntensity")));
+                    currentTemperature.setText("Temperature: " + currentWeatherCondition.get("values")
+                            .get(currentWeatherCondition.get("titles").indexOf("temperature")));
+                    currentVisibility.setText("Sun or Visibility: " + currentWeatherCondition.get("values")
+                            .get(currentWeatherCondition.get("titles").indexOf("visibility")));
+                    currentWind.setText("Wind Speed: " + currentWeatherCondition.get("values")
+                            .get(currentWeatherCondition.get("titles").indexOf("windSpeed")));
+                }
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+            }
+        };
+
+        disposables.add(
+                observable.subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(disposableObserver));
+    }
+
+    private final class TabListner implements TabLayout.OnTabSelectedListener {
+
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            View view = tab.getCustomView();
+            if (view instanceof LinearLayout) {
+                for (int i = 0; i < ((LinearLayout) view).getChildCount(); i++) {
+                    ((AppCompatTextView) ((LinearLayout) view).getChildAt(i)).setTypeface(Typeface.DEFAULT_BOLD);
+                    ((AppCompatTextView) ((LinearLayout) view).getChildAt(i)).setTextAppearance(getApplicationContext(),
+                            android.R.style.TextAppearance_DeviceDefault_Widget_TabWidget);
+
+                }
+            }
         }
 
-//        Observable<Map<String, List<String>>> observable = Observable.defer(new Callable<Observable<Map<String, List<String>>>>() {
-//            @Override
-//            public Observable<Map<String, List<String>>> call() throws Exception {
-//                return Observable.just(currentWeatherCondition);
-//            }
-//        });
-//
-//        DisposableObserver<Map<String, List<String>>> disposableObserver = new DisposableObserver<Map<String, List<String>>>() {
-//            @SuppressLint("SetTextI18n")
-//            @Override
-//            public void onNext(Map<String, List<String>> currentWeatherCondition) {
-//
-//
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//
-//            }
-//
-//            @Override
-//            public void onComplete() {
-//            }
-//        };
-//
-//        disposables.add(
-//                observable.subscribeOn(Schedulers.io())
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .subscribeWith(disposableObserver));
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+            View view = tab.getCustomView();
+            if (view instanceof LinearLayout) {
+                for (int i = 0; i < ((LinearLayout) view).getChildCount(); i++) {
+                    ((AppCompatTextView) ((LinearLayout) view).getChildAt(i)).setTypeface(Typeface.DEFAULT);
+                    ((AppCompatTextView) ((LinearLayout) view).getChildAt(i)).setTextAppearance(getApplicationContext(),
+                            android.R.style.TextAppearance_DeviceDefault_Widget_TabWidget);
+                }
+            }
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+
+        }
     }
 
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            if (Objects.equals(intent.getAction(), mBroadcastOneTimeAction)) {
-                Log.i("MainActivity:mReceiver:", "If Start");
-                inflateUI();
-                Intent stopIntent = new Intent(MainActivity.this,
-                        LoadWeatherService.class);
-                stopService(stopIntent);
-            } else if (Objects.equals(intent.getAction(), mBroadcastRepeatAction)) {
+            if (Objects.equals(intent.getAction(), mBroadcastRepeatAction)) {
                 Log.i("MainActivity:mReceiver:", "Else If Start");
+                disposables.clear();
                 inflateUI();
             }
         }
@@ -304,7 +358,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
         fn_getlocation();
+        Intent stopIntent = new Intent(MainActivity.this,
+                LoadWeatherService.class);
+        stopService(stopIntent);
         Intent intent = new Intent(getApplicationContext(), LoadWeatherService.class);
+        intent.putExtra("isRepeat", false);
         startService(intent);
     }
 
