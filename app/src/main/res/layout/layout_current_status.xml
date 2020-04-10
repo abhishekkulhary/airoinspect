@@ -1,12 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="175dp">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+    android:layout_height="175dp"
+    android:orientation="horizontal">
 
         <TextView
             android:id="@+id/current_fly_status"
@@ -21,9 +17,8 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="175dp"
+            android:layout_height="match_parent"
             android:layout_weight="2"
-
             android:orientation="vertical">
 
             <LinearLayout
@@ -31,40 +26,61 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="horizontal"
-                tools:ignore="NestedWeights">
+                tools:ignore="NestedWeights"
+                android:baselineAligned="false">
 
-                <ImageView
-                    android:id="@+id/imageTemp"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/temp_icon" />
-                <TextView
-                    android:id="@+id/current_temperature"
-                    style="@style/TextviewStyle"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="bottom|start"
-                    android:text="@string/temperature">
+                    android:orientation="horizontal"
+                    tools:ignore="NestedWeights,UseCompoundDrawables">
+
+                    <ImageView
+                        android:id="@+id/imageTemp"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:src="@drawable/temp_icon" />
+                    <TextView
+                        android:id="@+id/current_temperature"
+                        style="@style/TextviewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:gravity="center"
+                        android:text="@string/temperature">
 
 
-                </TextView>
+                    </TextView>
+                </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/imageRain"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/rain_icon" />
-                <TextView
-                    android:id="@+id/current_rain_status"
-                    style="@style/TextviewStyle"
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="bottom|start"
-                    android:text="@string/precipitation">
+                    android:orientation="horizontal"
+                    tools:ignore="NestedWeights,UseCompoundDrawables">
 
-                </TextView>
+                    <ImageView
+                        android:id="@+id/imageRain"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:src="@drawable/rain_icon" />
+                    <TextView
+                        android:id="@+id/current_rain_status"
+                        style="@style/TextviewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:gravity="center"
+                        android:text="@string/precipitation">
+
+                    </TextView>
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -73,37 +89,55 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="horizontal"
-                tools:ignore="NestedWeights">
-                <ImageView
-                    android:id="@+id/imageWind"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/wind_icon" />
-                <TextView
-                    android:id="@+id/current_wind"
-                    style="@style/TextviewStyle"
+                tools:ignore="NestedWeights"
+                android:baselineAligned="false">
+
+                <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:gravity="bottom|start"
-                    android:text="@string/wind">
-                </TextView>
-                <ImageView
-                    android:id="@+id/imageVisibility"
-                    android:layout_width="25dp"
-                    android:layout_height="25dp"
-                    android:src="@drawable/visibility_icon" />
-                <TextView
-                    android:id="@+id/current_visibility"
-                    style="@style/TextviewStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="bottom|start"
-                    android:text="@string/sun_or_visibility">
+                    android:orientation="horizontal"
+                    tools:ignore="NestedWeights,UseCompoundDrawables">
+                    <ImageView
+                        android:id="@+id/imageWind"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:src="@drawable/wind_icon" />
+                    <TextView
+                        android:id="@+id/current_wind"
+                        style="@style/TextviewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:gravity="center"
+                        android:text="@string/wind">
+                    </TextView>
+                </LinearLayout>
+                <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal"
+                tools:ignore="NestedWeights,UseCompoundDrawables">
+                    <ImageView
+                        android:id="@+id/imageVisibility"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:src="@drawable/visibility_icon" />
 
-
-                </TextView>
+                    <TextView
+                        android:id="@+id/current_visibility"
+                        style="@style/TextviewStyle"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="4"
+                        android:gravity="center"
+                        android:text="@string/sun_or_visibility" />
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -119,5 +153,4 @@
 
 
         </LinearLayout>
-    </LinearLayout>
 </LinearLayout>
