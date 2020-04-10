@@ -72,13 +72,13 @@ public class CurrentStatusData {
                             + " " + myApp.getSimpleTimesFormat().format(Long.parseLong(
                             currentWeatherCondition.get("values")
                                     .get(currentWeatherCondition.get("titles").indexOf("time"))) * 1000));
-            this.setCurrent_rain_status("Precipitation: " + currentWeatherCondition.get("values")
+            this.setCurrent_rain_status("" + currentWeatherCondition.get("values")
                     .get(currentWeatherCondition.get("titles").indexOf("precipIntensity")));
-            this.setCurrent_temperature("Temperature: " + currentWeatherCondition.get("values")
+            this.setCurrent_temperature("" + currentWeatherCondition.get("values")
                     .get(currentWeatherCondition.get("titles").indexOf("temperature")));
-            this.setCurrent_visibility("Sun or Visibility: " + currentWeatherCondition.get("values")
+            this.setCurrent_visibility("" + currentWeatherCondition.get("values")
                     .get(currentWeatherCondition.get("titles").indexOf("visibility")));
-            this.setCurrent_wind("Wind Speed: " + currentWeatherCondition.get("values")
+            this.setCurrent_wind("" + currentWeatherCondition.get("values")
                     .get(currentWeatherCondition.get("titles").indexOf("windSpeed")));
 
         }

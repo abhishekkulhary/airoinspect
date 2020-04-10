@@ -177,11 +177,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     currentVisibility = findViewById(R.id.current_visibility);
                     currentTimePlace = findViewById(R.id.current_time_place);
 //                    currentFlyStatus.setText(currentStatusData.getCurrent_fly_status());
-                    Log.i("Rain", currentStatusData.getCurrent_rain_status());
-                    Log.i("Temp", currentStatusData.getCurrent_temperature());
-                    Log.i("TimePlace", currentStatusData.getCurrent_time_place());
-                    Log.i("visibility", currentStatusData.getCurrent_visibility());
-                    Log.i("Wind", currentStatusData.getCurrent_wind());
                     currentTemperature.setText(currentStatusData.getCurrent_temperature());
                     currentRainStatus.setText(currentStatusData.getCurrent_rain_status());
                     currentWind.setText(currentStatusData.getCurrent_wind());
