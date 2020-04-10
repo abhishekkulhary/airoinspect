@@ -47,11 +47,8 @@ public class UtilsWeatherDataRead {
             titleLine = Arrays.asList(weatherData.remove(0));
             List<String> currentStatus = Arrays.asList(weatherData.remove(0));
 
-
-            int indexTime = titleLine.indexOf(myApp.getxColumn());
             currentWeatherCondition.put("titles", titleLine);
             currentWeatherCondition.put("values", currentStatus);
-            Log.i("current sttus", "" + currentWeatherCondition.get("titles"));
         }
 
         return currentWeatherCondition;
@@ -73,7 +70,6 @@ public class UtilsWeatherDataRead {
                     int index = titleLine.indexOf(column);
                     ArrayList<Float> colValues = new ArrayList<>();
                     for (int j = 0; j < weatherData.size(); j++) {
-                        Log.i("indexTime", indexTime + "");
                         String tmpTime = myApp.getSimpleTimeFormat().format(new Timestamp(Long.parseLong(weatherData.get(j)[indexTime]) * 1000));
                         if (flag) {
                             String tmpDate = myApp.getSimpleDateFormat().format(new Timestamp(Long.parseLong(weatherData.get(j)[indexTime]) * 1000));

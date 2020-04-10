@@ -23,7 +23,7 @@ import io.reactivex.observers.DisposableObserver;
 import io.reactivex.schedulers.Schedulers;
 
 @SuppressWarnings("All")
-public class LoadWeatherService extends Service {
+public class LoadWeatherNoLimitService extends Service {
 
     private final CompositeDisposable disposables = new CompositeDisposable();
 
@@ -36,7 +36,7 @@ public class LoadWeatherService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        Log.i("LoadWeatherService:", "onStartCommand");
+        Log.i("LoadWeatherNoLimitService:", "onStartCommand");
         //TODO: 1. Try Combining Handler, and thread within CompositeDisposable disposables.
 
         myApp = new MyApp();
@@ -45,7 +45,6 @@ public class LoadWeatherService extends Service {
             @Override
             public ObservableSource<String> call() throws Exception {
                 String data = utils.getDataFromUrlWriteToCSV(myApp.getLongLat(), myApp.getQuery());
-                Log.i("Runnable data:", data);
                 return Observable.just(data);
             }
         });
@@ -58,7 +57,7 @@ public class LoadWeatherService extends Service {
                 }
 
                 Intent broadcastIntent = new Intent();
-                broadcastIntent.setAction(MainActivity.mBroadcastOneTimeAction);
+                broadcastIntent.setAction(MainActivity.mBroadcastRepeatAction);
                 sendBroadcast(broadcastIntent);
             }
 
@@ -72,39 +71,49 @@ public class LoadWeatherService extends Service {
             }
         };
 
+
         final Handler handler = new Handler();
         periodicUpdate = new Runnable() {
             @Override
             public void run() {
+
+                handler.postDelayed(periodicUpdate, 1000 * 60 * myApp.getTimeDelay()); // schedule next wake up every X mins
+
                 disposables.add(
                         observable.subscribeOn(Schedulers.io())
                                 .subscribeWith(disposableObserver));
+
+
+
             }
         };
-
-        handler.post(periodicUpdate);
+        handler.postDelayed(periodicUpdate, 1000 * 60 * myApp.getTimeDelay());
 
         return START_STICKY;
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
+        Log.i("LoadWeatherNoLimitService:", "onTaskRemoved");
+        Intent restartServiceIntent = new Intent(getApplicationContext(), this.getClass());
+        restartServiceIntent.setPackage(getPackageName());
+        startService(restartServiceIntent);
         super.onTaskRemoved(rootIntent);
-
-        Log.i("LoadWeatherService:", "onTaskRemoved");
     }
+
+
 
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.i("LoadWeatherService:", "onBind");
+        Log.i("LoadWeatherNoLimitService:", "onBind");
         return null;
     }
 
     @Override
     public void onDestroy() {
+        Log.i("LoadWeatherNoLimitService:", "onDestroy");
         super.onDestroy();
-        Log.i("LoadWeatherService:", "onDestroy");
         disposables.clear();
     }
 }

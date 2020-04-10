@@ -19,6 +19,7 @@ import java.net.URL;
 public class Utils {
 
     public String getDataFromUrlWriteToCSV(String longLat, String query) {
+
         Log.i("BackgroundTask","Getting data from url");
         HttpURLConnection connection = null;
         BufferedReader br = null;
@@ -37,7 +38,7 @@ public class Utils {
                 result.append(line);
             }
         } catch (Exception e) {
-            Log.d("getDataFromUrlWrit 1", e.toString());
+            Log.e("getDataFromUrlWrit 1", "dgdgdg", e);
         } finally {
             try {
                 if (br != null)

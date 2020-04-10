@@ -29,6 +29,9 @@
         <service android:name=".service.LoadWeatherService"
             android:enabled="true"
             android:exported="true" />
+        <service android:name=".service.LoadWeatherNoLimitService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

@@ -23,6 +23,10 @@
     <string name="messages_header">Messages</string>
     <string name="sync_header">Sync</string>
 
+    <string name="location_access_required">Location access is required to receive the location.</string>
+    <string name="location_unavailable">Location access is required to receive the location.</string>
+    <string name="ok">OK</string>
+
     <!-- Messages Preferences -->
     <string name="signature_title">Your signature</string>
     <string name="reply_title">Default reply action</string>
@@ -37,4 +41,8 @@
 
     <string name="tab_1">Forecast1</string>
     <string name="tab_2">Forecast2</string>
+    <string name="write_access_required">Write access is required.</string>
+    <string name="write_access_unavailable">Write Access is not available.</string>
+    <string name="read_access_required">Read access to external storage is required.</string>
+    <string name="read_access_unavailable">Read access is not available.</string>
 </resources>

@@ -1,9 +1,8 @@
 package com.weather.air_o_inspect;
 
 
-import android.Manifest;
 import android.app.Application;
-import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationListener;
@@ -11,26 +10,24 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.core.app.ActivityCompat;
+import androidx.annotation.NonNull;
 
+import com.weather.air_o_inspect.service.LoadWeatherService;
+
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class MyApp extends Application implements LocationListener {
+@SuppressWarnings("ALL")
+public class MyApp extends Application implements LocationListener, Serializable {
     // Called when the application is starting, before any other application objects have been created.
     // Overriding this method is totally optional!
-    private static String[] filename = new String[]{"forecast1.csv", "forecast2.csv"};
+    private static final String[] filename = new String[]{"forecast1.csv", "forecast2.csv"};
     private static String longLat = "52.307108,10.530236";
     private static String query = "units=si";
-    private static Long timeDelay = 5L; // Time in mins
+    private static Long timeDelay = 10L; // Time in mins
     private final Integer REQUEST_CODE = 15;
     private final String xColumn = "time";
-    boolean isGPSEnable = false;
-    boolean isNetworkEnable = false;
-    double latitude, longitude;
-    LocationManager locationManager;
-    Location location;
-
     private final String[][] COLUMNS = {{"precipIntensity"}, {"precipProbability"}, {"temperature"}, {"pressure"},
             {"windSpeed"}, {"windGust"}, {"cloudCover"}, {"visibility"}};
     private final String[] LABELS = {"Precipitation Intensity", "Precipitation Probability", "Temperature", "Pressure", "Wind Speed", "Wind Gust", "Cloud Cover", "Visibility"};
@@ -40,85 +37,15 @@ public class MyApp extends Application implements LocationListener {
 
     @Override
     public void onCreate() {
+        Log.i("MyApp: OnCreate: ", "Start");
         super.onCreate();
-        fn_getlocation();
-        if (location != null) {
-            longLat = location.getLatitude() + "," + location.getLongitude();
-        }
+        Log.i("MyApp: OnCreate: ", "End");
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        fn_getlocation();
-    }
-
-    @Override
-    public void onStatusChanged(String provider, int status, Bundle extras) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String provider) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String provider) {
-
-    }
-
-    public void fn_getlocation() {
-        locationManager = (LocationManager) getApplicationContext().getSystemService(LOCATION_SERVICE);
-        assert locationManager != null;
-        isGPSEnable = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-        isNetworkEnable = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-        if (!isGPSEnable && !isNetworkEnable) {
-
-        } else {
-
-            if (isNetworkEnable) {
-                location = null;
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, this);
-                if (locationManager!=null){
-                    location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                    if (location!=null){
-
-                        Log.e("latitude",location.getLatitude()+"");
-                        Log.e("longitude",location.getLongitude()+"");
-
-                        latitude = location.getLatitude();
-                        longitude = location.getLongitude();
-                        fn_update(location);
-                    }
-                }
-
-            }
-
-            if (isGPSEnable){
-                location = null;
-                assert locationManager != null;
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,0,this);
-                if (locationManager!=null){
-                    location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                    if (location!=null){
-                        Log.e("latitude",location.getLatitude()+"");
-                        Log.e("longitude",location.getLongitude()+"");
-                        latitude = location.getLatitude();
-                        longitude = location.getLongitude();
-                        fn_update(location);
-                    }
-                }
-            }
-        }
-
-    }
-
-    private void fn_update(Location location){
+    void fn_update(Location location) {
+        Log.i("MyApp: fn_update: ", "Start");
         longLat = location.getLatitude() + "," + location.getLongitude();
+        Log.i("MyApp: fn_update: ", "End");
     }
 
     public String getxColumn() {
@@ -127,10 +54,6 @@ public class MyApp extends Application implements LocationListener {
 
     public String[] getFilename() {
         return filename;
-    }
-
-    public void setFilename(String[] filename) {
-        MyApp.filename = filename;
     }
 
     public String getLongLat() {
@@ -180,7 +103,7 @@ public class MyApp extends Application implements LocationListener {
     // Called by the system when the device configuration changes while your component is running.
     // Overriding this method is totally optional!
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
 
@@ -194,5 +117,27 @@ public class MyApp extends Application implements LocationListener {
 
     public Integer getREQUEST_CODE() {
         return REQUEST_CODE;
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.i("MyApp: onLocationChanged: ", "Start");
+        fn_update(location);
+        Log.i("MyApp: onLocationChanged: ", "End");
+    }
+
+    @Override
+    public void onStatusChanged(String provider, int status, Bundle extras) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+
     }
 }
