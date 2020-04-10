@@ -68,7 +68,7 @@ public class CurrentStatusData {
             Log.i("pupulateCurrentstatus","value not null");
             this.setCurrent_time_place(
                     myApp.getSimpleDateFormat().format(Long.parseLong(currentWeatherCondition.get("values")
-                            .get(currentWeatherCondition.get("titles").indexOf("time"))))
+                            .get(currentWeatherCondition.get("titles").indexOf("time")))*1000)
                             + " " + myApp.getSimpleTimesFormat().format(Long.parseLong(
                             currentWeatherCondition.get("values")
                                     .get(currentWeatherCondition.get("titles").indexOf("time"))) * 1000));
