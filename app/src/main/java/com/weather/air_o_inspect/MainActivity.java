@@ -28,7 +28,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.github.mikephil.charting.utils.Utils;
 import com.google.android.material.tabs.TabLayout;
-import com.weather.air_o_inspect.datareadutil.UtilsWeatherDataRead;
+import com.weather.air_o_inspect.CurrentStatus.CurrentStatusData;
+import com.weather.air_o_inspect.Utils.UtilsWeatherDataRead;
 import com.weather.air_o_inspect.service.LoadWeatherService;
 import com.weather.air_o_inspect.settings.SettingsFragment;
 import com.weather.air_o_inspect.ui.main.SectionsPagerAdapter;
@@ -52,19 +53,18 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     private final MyApp myApp = new MyApp();
     private UtilsWeatherDataRead utilsWeatherDataRead;
 
-    private TextView currentFlyStatus;
-    private TextView currentTemperature;
-    private TextView currentRainStatus;
-    private TextView currentWind;
-    private TextView currentVisibility;
-    private TextView currentTimePlace;
     private ViewPager viewPager;
     private TabLayout tabs;
     private final CompositeDisposable disposables = new CompositeDisposable();
     public static final String mBroadcastRepeatAction = "com.weather.air_o_inspect.repeat";
     private Integer count = 0;
 
-
+    private TextView currentFlyStatus;
+    private TextView currentTemperature;
+    private TextView currentRainStatus;
+    private TextView currentWind;
+    private TextView currentVisibility;
+    private TextView currentTimePlace;
     boolean isGPSEnable = false;
     boolean isNetworkEnable = false;
     double latitude, longitude;
@@ -83,15 +83,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayShowHomeEnabled(true);
-//        getSupportActionBar().setIcon(R.mipmap.weather_app);
-
-        currentFlyStatus = findViewById(R.id.current_fly_status);
-        currentTemperature = findViewById(R.id.current_temperature);
-        currentRainStatus = findViewById(R.id.current_rain_status);
-        currentWind = findViewById(R.id.current_wind);
-        currentVisibility = findViewById(R.id.current_visibility);
-        currentTimePlace = findViewById(R.id.current_time_place);
         tabs = findViewById(R.id.tabs);
         viewPager = findViewById(R.id.view_pager);
 
@@ -157,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     TabLayout.Tab tab = tabs.getTabAt(i);
                     tab.setCustomView(sectionsPagerAdapter.getTabView(i));
                 }
-
                 tabs.addOnTabSelectedListener(new TabListner());
                 // TODO
 // TODO 1. Add Units for each item
@@ -165,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 if (currentWeatherCondition != null && !currentWeatherCondition.isEmpty()) {
                     Long currentTime = Long.parseLong(currentWeatherCondition.get("values")
                             .get(currentWeatherCondition.get("titles").indexOf("time")));
-
+                    Log.i("currentstatusdata", "inside if cond");
                     if ((SystemClock.currentThreadTimeMillis() - currentTime * 1000) > 43200000) {
                         Intent stopIntent = new Intent(MainActivity.this,
                                 LoadWeatherService.class);
@@ -175,24 +165,31 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         startService(intent);
                         return;
                     }
+                    CurrentStatusData currentStatusData = new CurrentStatusData();
+                    currentStatusData.populatateCurrentStatus(currentWeatherCondition, myApp);
+//                    RecyclerView currentStatusView = findViewById(R.id.current_status_view);
+//                    CurrentStatusViewAdapter currentStatusViewAdapter = new CurrentStatusViewAdapter(currentStatusData);
+//                    currentStatusView.setAdapter(currentStatusViewAdapter);
+                    currentFlyStatus = findViewById(R.id.current_fly_status);
+                    currentTemperature = findViewById(R.id.current_temperature);
+                    currentRainStatus = findViewById(R.id.current_rain_status);
+                    currentWind = findViewById(R.id.current_wind);
+                    currentVisibility = findViewById(R.id.current_visibility);
+                    currentTimePlace = findViewById(R.id.current_time_place);
+//                    currentFlyStatus.setText(currentStatusData.getCurrent_fly_status());
+                    Log.i("Rain", currentStatusData.getCurrent_rain_status());
+                    Log.i("Temp", currentStatusData.getCurrent_temperature());
+                    Log.i("TimePlace", currentStatusData.getCurrent_time_place());
+                    Log.i("visibility", currentStatusData.getCurrent_visibility());
+                    Log.i("Wind", currentStatusData.getCurrent_wind());
+                    currentTemperature.setText(currentStatusData.getCurrent_temperature());
+                    currentRainStatus.setText(currentStatusData.getCurrent_rain_status());
+                    currentWind.setText(currentStatusData.getCurrent_wind());
+                    currentVisibility.setText(currentStatusData.getCurrent_visibility());
+                    currentTimePlace.setText(currentStatusData.getCurrent_time_place());
 
-                    currentTimePlace.setText(
-                            myApp.getSimpleDateFormat().format(Long.parseLong(currentWeatherCondition.get("values")
-                                    .get(currentWeatherCondition.get("titles").indexOf("time"))) * 1000)
-                                    + " " + myApp.getSimpleTimesFormat().format(Long.parseLong(
-                                    currentWeatherCondition.get("values")
-                                            .get(currentWeatherCondition.get("titles").indexOf("time"))) * 1000));
-                    //currentFlyStatus.setText(currentWeatherCondition.get("values")
-                    // .get(currentWeatherCondition.get("titles").indexOf("time")));
-                    currentRainStatus.setText("Precipitation: " + currentWeatherCondition.get("values")
-                            .get(currentWeatherCondition.get("titles").indexOf("precipIntensity")));
-                    currentTemperature.setText("Temperature: " + currentWeatherCondition.get("values")
-                            .get(currentWeatherCondition.get("titles").indexOf("temperature")));
-                    currentVisibility.setText("Sun or Visibility: " + currentWeatherCondition.get("values")
-                            .get(currentWeatherCondition.get("titles").indexOf("visibility")));
-                    currentWind.setText("Wind Speed: " + currentWeatherCondition.get("values")
-                            .get(currentWeatherCondition.get("titles").indexOf("windSpeed")));
                 }
+
 
             }
 

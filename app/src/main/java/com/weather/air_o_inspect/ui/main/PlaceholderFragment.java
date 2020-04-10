@@ -12,10 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.data.BarData;
 import com.weather.air_o_inspect.R;
-import com.weather.air_o_inspect.chartadapter.ChartDataAdapter;
-import com.weather.air_o_inspect.datareadutil.UtilsWeatherDataRead;
-import com.weather.air_o_inspect.horizontallistview.HorizontalListView;
-import com.weather.air_o_inspect.viewholders.ChartsData;
+import com.weather.air_o_inspect.charts.ChartDataAdapter;
+import com.weather.air_o_inspect.Utils.UtilsWeatherDataRead;
+import com.weather.air_o_inspect.Utils.HorizontalListView;
+import com.weather.air_o_inspect.charts.ChartsData;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -75,47 +75,6 @@ public class PlaceholderFragment extends Fragment {
         }
         ChartDataAdapter cda = new ChartDataAdapter(chartsDataList);
         allCharts.setAdapter(cda);
-
-
-//        Observable<ArrayList<ChartsData>> observable = Observable.defer(new Callable<Observable<ArrayList<ChartsData>>>() {
-//            @Override
-//            public Observable<ArrayList<ChartsData>> call() throws Exception {
-//                ArrayList<String[]> weatherData = utilsWeatherDataRead.readWeatherData(filename);
-//                Map<String, ArrayList<Float>> yLabelValues = utilsWeatherDataRead.getChartItems(weatherData);
-//                Map<String, Object> mappedArrayEntries = utilsWeatherDataRead.getMappedArrayListOfEntries(yLabelValues);
-//                ArrayList<BarData> mappedBarData = utilsWeatherDataRead.generateBarData(mappedArrayEntries);
-//                final ArrayList<ChartsData> chartsDataList = new ArrayList<>();
-//
-//                if (mappedBarData != null) {
-//                    for (int i = 0; i < mappedBarData.size(); i++) {
-//                        chartsDataList.add(new ChartsData(mappedBarData.get(i), LABELS[i], "UNIT"));
-//                    }
-//                }
-//                return Observable.just(chartsDataList);
-//            }
-//        });
-//
-//        DisposableObserver<ArrayList<ChartsData>> disposableObserver = new DisposableObserver<ArrayList<ChartsData>>() {
-//            @Override
-//            public void onNext(ArrayList<ChartsData> chartsDataList) {
-//                ChartDataAdapter cda = new ChartDataAdapter(chartsDataList);
-//                allCharts.setAdapter(cda);
-//            }
-//
-//            @Override
-//            public void onError(Throwable e) {
-//
-//            }
-//
-//            @Override
-//            public void onComplete() {
-//            }
-//        };
-//
-//        disposables.add(
-//                observable.subscribeOn(Schedulers.io())
-//                        .observeOn(AndroidSchedulers.mainThread())
-//                        .subscribeWith(disposableObserver));
 
         allCharts.invalidate();
 

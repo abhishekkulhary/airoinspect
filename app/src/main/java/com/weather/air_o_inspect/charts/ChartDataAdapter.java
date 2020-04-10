@@ -1,4 +1,4 @@
-package com.weather.air_o_inspect.chartadapter;
+package com.weather.air_o_inspect.charts;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -13,8 +13,6 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.weather.air_o_inspect.R;
-import com.weather.air_o_inspect.viewholders.ChartViewHolder;
-import com.weather.air_o_inspect.viewholders.ChartsData;
 
 import java.util.List;
 

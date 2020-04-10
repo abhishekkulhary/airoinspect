@@ -1,4 +1,4 @@
-package com.weather.air_o_inspect.viewholders;
+package com.weather.air_o_inspect.charts;
 
 import com.github.mikephil.charting.data.BarData;
 

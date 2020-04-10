@@ -1,4 +1,4 @@
-package com.weather.air_o_inspect.datareadutil;
+package com.weather.air_o_inspect.Utils;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -137,7 +137,7 @@ public class UtilsWeatherDataRead {
                         for (int j = 0; j < myApp.getCOLUMNS().length; j++) {
                             for (int k = 0; k < titleLine.length; k++) {
                                 if (myApp.getCOLUMNS()[j].equals(titleLine[k])) {
-                                    System.out.println(myApp.getCOLUMNS()[j]);
+//                                    System.out.println(myApp.getCOLUMNS()[j]);
                                     utilModel.add(j, Float.parseFloat(strings[k]));
                                     break;
                                 }
@@ -207,7 +207,7 @@ public class UtilsWeatherDataRead {
                         colors.add(red);
                     }
                 }
-                Log.d("generateBarDaata", label);
+//                Log.d("generateBarDaata", label);
                 // Here each dataset would be processed, temp, sunshine etc.
                 BarDataSet barDataSet = new BarDataSet(yValues, label);
                 barDataSet.setColors(colors);

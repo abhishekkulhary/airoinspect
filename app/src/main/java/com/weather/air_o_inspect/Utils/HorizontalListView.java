@@ -1,4 +1,4 @@
-package com.weather.air_o_inspect.horizontallistview;/*
+package com.weather.air_o_inspect.Utils;/*
  * The MIT License Copyright (c) 2011 Paul Soucy (paul@dev-smart.com)
  * The MIT License Copyright (c) 2013 MeetMe, Inc.
  *

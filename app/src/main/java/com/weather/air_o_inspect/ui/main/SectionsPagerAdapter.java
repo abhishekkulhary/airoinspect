@@ -14,7 +14,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.weather.air_o_inspect.MyApp;
 import com.weather.air_o_inspect.R;
-import com.weather.air_o_inspect.datareadutil.UtilsWeatherDataRead;
+import com.weather.air_o_inspect.Utils.UtilsWeatherDataRead;
 
 import java.util.ArrayList;
 import java.util.Map;

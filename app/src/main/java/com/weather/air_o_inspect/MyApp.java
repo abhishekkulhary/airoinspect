@@ -33,15 +33,15 @@ public class MyApp extends Application implements LocationListener, Serializable
 
     @Override
     public void onCreate() {
-        Log.i("MyApp: OnCreate: ", "Start");
+//        Log.d("MyApp: OnCreate: ", "Start");
         super.onCreate();
-        Log.i("MyApp: OnCreate: ", "End");
+//        Log.d("MyApp: OnCreate: ", "End");
     }
 
     void fn_update(Location location) {
-        Log.i("MyApp: fn_update: ", "Start");
+//        Log.d("MyApp: fn_update: ", "Start");
         longLat = location.getLatitude() + "," + location.getLongitude();
-        Log.i("MyApp: fn_update: ", "End");
+//        Log.d("MyApp: fn_update: ", "End");
     }
 
     public String getxColumn() {
@@ -117,9 +117,9 @@ public class MyApp extends Application implements LocationListener, Serializable
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.i("MyApp: onLocationChanged: ", "Start");
+//        Log.i("MyApp:onLocChanged:", "Start");
         fn_update(location);
-        Log.i("MyApp: onLocationChanged: ", "End");
+//        Log.i("MyApp:onLocChanged:", "End");
     }
 
     @Override
