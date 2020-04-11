@@ -31,6 +31,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.weather.air_o_inspect.CurrentStatus.CurrentStatusData;
 import com.weather.air_o_inspect.Utils.UtilsWeatherDataRead;
 import com.weather.air_o_inspect.service.LoadWeatherService;
+import com.weather.air_o_inspect.settings.Preferences;
 import com.weather.air_o_inspect.settings.SettingsFragment;
 import com.weather.air_o_inspect.ui.main.SectionsPagerAdapter;
 
@@ -184,6 +185,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     currentTimePlace.setText(currentStatusData.getCurrent_time_place());
 
                 }
+                Log.i("Preferences", String.valueOf(Preferences.getPreferences().getWindGustSeek()));
 
 
             }

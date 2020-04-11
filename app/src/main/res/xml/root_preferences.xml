@@ -20,28 +20,34 @@
     <PreferenceCategory app:title="Threshold">
 
         <SeekBarPreference
-            android:key="wind"
-            android:title="Wind"
+            android:defaultValue="10"
+            android:id="@+id/wind_seek"
+            android:key="wind_seek"
+            android:max="25"
+            android:min="0"
             android:summary="Max. Wind Speed allowed for Flight."
-            android:max="25"
-            android:min="0"
-            android:defaultValue="10" />
+            android:title="Wind"
+            app:showSeekBarValue="true"  />
 
         <SeekBarPreference
-            android:key="wind_gust"
-            android:title="Wind Gust"
+            android:defaultValue="15"
+            android:id="@+id/wind_gust_seek"
+            android:key="wind_gust_seek"
+            android:max="25"
+            android:min="0"
             android:summary="Max. Wind Gust Speed allowed for Flight."
-            android:max="25"
-            android:min="0"
-            android:defaultValue="15" />
+            android:title="Wind Gust"
+            app:showSeekBarValue="true" />
 
         <SeekBarPreference
-            android:key="precipitation"
-            android:title="Precipitation"
-            android:summary="Max. Precipitation allowed for Flight."
+            android:defaultValue="0"
+            android:id="@+id/precipitation_seek"
+            android:key="precipitation_seek"
             android:max="1"
             android:min="0"
-            android:defaultValue="0" />
+            android:summary="Max. Precipitation allowed for Flight."
+            android:title="Precipitation"
+            app:showSeekBarValue="true"  />
 
     </PreferenceCategory>
 
