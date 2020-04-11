@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.SeekBar;
 
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
@@ -14,8 +15,6 @@ import androidx.preference.PreferenceManager;
 import androidx.preference.SeekBarPreference;
 
 import com.weather.air_o_inspect.R;
-
-import java.util.Map;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener {
 
@@ -29,6 +28,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
+        SeekBarPreference precipitationSeekBar = findPreference("precipitation_seek");
+        precipitationSeekBar.setValue(0);
+        SeekBarPreference windSeekBar =  findPreference("wind_seek");
+        windSeekBar.setValue(0);
+        SeekBarPreference windGustSeekBar =  findPreference("wind_gust_seek");
+        windGustSeekBar.setValue(0);
         Preferences.getPreferences();
         findPreference("wind_seek").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override

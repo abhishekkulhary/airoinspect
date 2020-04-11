@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,6 +25,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.preference.SeekBarPreference;
 import androidx.viewpager.widget.ViewPager;
 
 import com.github.mikephil.charting.utils.Utils;
@@ -332,6 +334,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     .replace(android.R.id.content, new SettingsFragment())
                     .addToBackStack(null)
                     .commit();
+
             return true;
         }
 
