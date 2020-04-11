@@ -25,6 +25,7 @@
             android:key="wind_seek"
             android:max="25"
             android:min="0"
+            app:defaultValue="@integer/wind_default"
             android:summary="Max. Wind Speed allowed for Flight."
             android:title="Wind"
             app:showSeekBarValue="true"  />
@@ -35,6 +36,7 @@
             android:key="wind_gust_seek"
             android:max="25"
             android:min="0"
+            app:defaultValue="@integer/wind_gust_default"
             android:summary="Max. Wind Gust Speed allowed for Flight."
             android:title="Wind Gust"
             app:showSeekBarValue="true" />
@@ -45,9 +47,11 @@
             android:key="precipitation_seek"
             android:max="1"
             android:min="0"
+            app:defaultValue="@integer/precipitation_default"
             android:summary="Max. Precipitation allowed for Flight."
             android:title="Precipitation"
             app:showSeekBarValue="true"  />
+
 
     </PreferenceCategory>
 
