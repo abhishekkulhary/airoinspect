@@ -35,6 +35,10 @@
     <integer name="wind_default">10</integer>
     <integer name="wind_gust_default">15</integer>
     <integer name="precipitation_default">0</integer>
+    <bool name="wind_default">true</bool>
+    <bool name="wind_gust_default">true</bool>
+    <bool name="sunshine_default">true</bool>
+    <bool name="precipitation_default">true</bool>
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
     <string name="attachment_summary_on">Automatically download attachments for incoming emails

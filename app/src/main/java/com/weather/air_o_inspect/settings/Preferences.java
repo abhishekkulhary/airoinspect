@@ -1,13 +1,47 @@
 package com.weather.air_o_inspect.settings;
 
-import androidx.preference.Preference;
-
 public class Preferences {
 
     private int windSeek;
     private int windGustSeek;
     private float precipitationSeek;
+    private boolean windSwitch;
+    private boolean windGustSwitch;
+    private boolean precipitationSwitch;
+    private boolean sunshineSwitch;
     private static Preferences preferences = null;
+
+    public boolean isWindSwitch() {
+        return windSwitch;
+    }
+
+    public void setWindSwitch(boolean windSwitch) {
+        this.windSwitch = windSwitch;
+    }
+
+    public boolean isWindGustSwitch() {
+        return windGustSwitch;
+    }
+
+    public void setWindGustSwitch(boolean windGustSwitch) {
+        this.windGustSwitch = windGustSwitch;
+    }
+
+    public boolean isPrecipitationSwitch() {
+        return precipitationSwitch;
+    }
+
+    public void setPrecipitationSwitch(boolean precipitationSwitch) {
+        this.precipitationSwitch = precipitationSwitch;
+    }
+
+    public boolean isSunshineSwitch() {
+        return sunshineSwitch;
+    }
+
+    public void setSunshineSwitch(boolean sunshineSwitch) {
+        this.sunshineSwitch = sunshineSwitch;
+    }
 
     private Preferences() {
 

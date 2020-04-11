@@ -3,16 +3,20 @@
 
     <PreferenceCategory app:title="Activate for Decision">
         <SwitchPreferenceCompat
+            app:defaultValue="@bool/wind_default"
             app:key="wind_switch"
             app:title="Wind" />
 
         <SwitchPreferenceCompat
+            app:defaultValue="@bool/wind_gust_default"
             app:key="wind_gust_switch"
             app:title="Wind Gust" />
         <SwitchPreferenceCompat
+            app:defaultValue="@bool/sunshine_default"
             app:key="sunshine_switch"
             app:title="Sunshine" />
         <SwitchPreferenceCompat
+            app:defaultValue="@bool/precipitation_default"
             app:key="precipitation_switch"
             app:title="Precipation" />
     </PreferenceCategory>
@@ -20,37 +24,37 @@
     <PreferenceCategory app:title="Threshold">
 
         <SeekBarPreference
-            android:defaultValue="10"
             android:id="@+id/wind_seek"
+            android:defaultValue="10"
             android:key="wind_seek"
             android:max="25"
             android:min="0"
-            app:defaultValue="@integer/wind_default"
             android:summary="Max. Wind Speed allowed for Flight."
             android:title="Wind"
-            app:showSeekBarValue="true"  />
-
-        <SeekBarPreference
-            android:defaultValue="15"
-            android:id="@+id/wind_gust_seek"
-            android:key="wind_gust_seek"
-            android:max="25"
-            android:min="0"
-            app:defaultValue="@integer/wind_gust_default"
-            android:summary="Max. Wind Gust Speed allowed for Flight."
-            android:title="Wind Gust"
+            app:defaultValue="@integer/wind_default"
             app:showSeekBarValue="true" />
 
         <SeekBarPreference
-            android:defaultValue="0"
+            android:id="@+id/wind_gust_seek"
+            android:defaultValue="15"
+            android:key="wind_gust_seek"
+            android:max="25"
+            android:min="0"
+            android:summary="Max. Wind Gust Speed allowed for Flight."
+            android:title="Wind Gust"
+            app:defaultValue="@integer/wind_gust_default"
+            app:showSeekBarValue="true" />
+
+        <SeekBarPreference
             android:id="@+id/precipitation_seek"
+            android:defaultValue="0"
             android:key="precipitation_seek"
             android:max="1"
             android:min="0"
-            app:defaultValue="@integer/precipitation_default"
             android:summary="Max. Precipitation allowed for Flight."
             android:title="Precipitation"
-            app:showSeekBarValue="true"  />
+            app:defaultValue="@integer/precipitation_default"
+            app:showSeekBarValue="true" />
 
 
     </PreferenceCategory>
