@@ -22,14 +22,18 @@ public class MyApp extends Application implements LocationListener, Serializable
     private static String query = "units=si";
     private static Long timeDelay = 20L; // Time in mins
     private final Integer REQUEST_CODE = 15;
+
     private final String xColumn = "time";
     private final String[] COLUMNS = {"precipIntensity", "precipProbability", "temperature", "pressure",
             "windSpeed", "windGust", "cloudCover", "visibility"};
+    private static Float[] COLUMNS_MAXVALUE = new Float[]{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
+
     private final String[] TAB_SUBTEXT = {"Today", "Tomorrow", "Day After"};
     private final String[] LABELS = {"Precipitation Intensity", "Precipitation Probability", "Temperature", "Pressure", "Wind Speed", "Wind Gust", "Cloud Cover", "Visibility"};
-    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
-    private final SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm:ss:SSS", Locale.US);
-    private final SimpleDateFormat simpleTimesFormat = new SimpleDateFormat("HH:mm:ss", Locale.US);
+
+    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+    private final SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+    private final SimpleDateFormat simpleTimesFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.getDefault());
 
     @Override
     public void onCreate() {
@@ -139,5 +143,13 @@ public class MyApp extends Application implements LocationListener, Serializable
 
     public String[] getTAB_SUBTEXT() {
         return TAB_SUBTEXT;
+    }
+
+    public Float[] getCOLUMNS_MAXVALUE() {
+        return COLUMNS_MAXVALUE;
+    }
+
+    public void setCOLUMNS_MAXVALUE(Float[] COLUMNS_MAXVALUE) {
+        MyApp.COLUMNS_MAXVALUE = COLUMNS_MAXVALUE;
     }
 }

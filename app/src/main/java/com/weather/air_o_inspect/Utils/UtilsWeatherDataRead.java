@@ -21,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ public class UtilsWeatherDataRead {
 
     private Context context;
     private MyApp myApp;
+    private ArrayList<Long> xValues;
 
     public UtilsWeatherDataRead(Context context) {
         super();
@@ -87,20 +89,32 @@ public class UtilsWeatherDataRead {
 
             titleLine = Arrays.asList(myApp.getCOLUMNS());
 
+            xValues = new ArrayList<>();
+
+            for (String s : weatherData.keySet()) {
+
+                xValues.add(Long.parseLong(s));
+
+            }
+
+            Collections.sort(xValues);
+
             for (String column : myApp.getCOLUMNS()) {
 
                 int index = titleLine.indexOf(column);
 
                 ArrayList<Float> colValues = new ArrayList<>();
 
-                for (Map.Entry<String, ArrayList<Float>> string : weatherData.entrySet()) {
+                for (Long x : xValues) {
 
-                    colValues.add(string.getValue().get(index));
+                    colValues.add(Objects.requireNonNull(weatherData.get("" + x)).get(index));
 
                 }
 
                 yLabelValues.put(column, colValues);
             }
+
+            System.out.println("getChartItems" + xValues);
         }
 
         return yLabelValues;
@@ -138,6 +152,12 @@ public class UtilsWeatherDataRead {
                             for (int k = 0; k < titleLine.length; k++) {
                                 if (myApp.getCOLUMNS()[j].equals(titleLine[k])) {
 //                                    System.out.println(myApp.getCOLUMNS()[j]);
+                                    // getting maximum value for each column
+
+                                    if (Float.parseFloat(strings[k]) >= myApp.getCOLUMNS_MAXVALUE()[j]) {
+                                        myApp.getCOLUMNS_MAXVALUE()[j] = Float.parseFloat(strings[k]);
+                                    }
+
                                     utilModel.add(j, Float.parseFloat(strings[k]));
                                     break;
                                 }
@@ -226,6 +246,7 @@ public class UtilsWeatherDataRead {
         Map<String, Object> mappedEntries = new HashMap<>();
         if (yLabelValues != null && !yLabelValues.isEmpty()) {
             Map<String, ArrayList<BarEntry>> mappedBarEntries = new HashMap<>();
+
             for (Map.Entry<String, ArrayList<Float>> entry : yLabelValues.entrySet()) {
                 ArrayList<BarEntry> barEntries = new ArrayList<>();
                 int i = 0;
@@ -238,5 +259,13 @@ public class UtilsWeatherDataRead {
             mappedEntries.put("bar", mappedBarEntries);
         }
         return mappedEntries;
+    }
+
+    public ArrayList<Long> getxValues() {
+        return xValues;
+    }
+
+    public void setxValues(ArrayList<Long> xValues) {
+        this.xValues = xValues;
     }
 }

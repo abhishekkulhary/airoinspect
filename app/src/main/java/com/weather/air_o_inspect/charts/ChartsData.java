@@ -2,15 +2,19 @@ package com.weather.air_o_inspect.charts;
 
 import com.github.mikephil.charting.data.BarData;
 
+import java.util.ArrayList;
+
 public class ChartsData {
     private BarData data;
     private String chart_name;
     private String unit_value;
+    private ArrayList<Long> xValues;
 
-    public ChartsData(BarData data, String chart_name, String unit_value) {
+    public ChartsData(BarData data, String chart_name, String unit_value, ArrayList<Long> xValues) {
         this.data = data;
         this.chart_name = chart_name;
         this.unit_value = unit_value;
+        this.xValues = xValues;
     }
 
     public BarData getData() {
@@ -35,5 +39,13 @@ public class ChartsData {
 
     public void setUnit_value(String unit_value) {
         this.unit_value = unit_value;
+    }
+
+    public ArrayList<Long> getxValues() {
+        return xValues;
+    }
+
+    public void setxValues(ArrayList<Long> xValues) {
+        this.xValues = xValues;
     }
 }

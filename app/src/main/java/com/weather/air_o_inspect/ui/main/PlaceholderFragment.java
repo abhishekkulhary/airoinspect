@@ -14,7 +14,6 @@ import com.github.mikephil.charting.data.BarData;
 import com.weather.air_o_inspect.R;
 import com.weather.air_o_inspect.charts.ChartDataAdapter;
 import com.weather.air_o_inspect.Utils.UtilsWeatherDataRead;
-import com.weather.air_o_inspect.Utils.HorizontalListView;
 import com.weather.air_o_inspect.charts.ChartsData;
 
 import java.util.ArrayList;
@@ -29,7 +28,7 @@ public class PlaceholderFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
-    private HorizontalListView flyingStatus;
+//    private HorizontalListView flyingStatus;
 
     private RecyclerView allCharts;
 
@@ -38,7 +37,7 @@ public class PlaceholderFragment extends Fragment {
     private UtilsWeatherDataRead utilsWeatherDataRead;
     private Map<String, ArrayList<Float>> weatherData;
 
-    public static PlaceholderFragment newInstance(int index, Map<String, ArrayList<Float>> weatherData, String[] LABELS, UtilsWeatherDataRead utilsWeatherDataRead) {
+    static PlaceholderFragment newInstance(int index, Map<String, ArrayList<Float>> weatherData, String[] LABELS, UtilsWeatherDataRead utilsWeatherDataRead) {
 
         PlaceholderFragment placeholderFragment = new PlaceholderFragment();
         placeholderFragment.weatherData = weatherData;
@@ -70,7 +69,7 @@ public class PlaceholderFragment extends Fragment {
 
         if (mappedBarData != null) {
             for (int i = 0; i < mappedBarData.size(); i++) {
-                chartsDataList.add(new ChartsData(mappedBarData.get(i), LABELS[i], "UNIT"));
+                chartsDataList.add(new ChartsData(mappedBarData.get(i), LABELS[i], "UNIT", utilsWeatherDataRead.getxValues()));
             }
         }
         ChartDataAdapter cda = new ChartDataAdapter(chartsDataList);
@@ -79,14 +78,6 @@ public class PlaceholderFragment extends Fragment {
         allCharts.invalidate();
 
         return view;
-    }
-
-    public HorizontalListView getFlyingStatus() {
-        return flyingStatus;
-    }
-
-    public void setFlyingStatus(HorizontalListView flyingStatus) {
-        this.flyingStatus = flyingStatus;
     }
 
     public RecyclerView getAllCharts() {
