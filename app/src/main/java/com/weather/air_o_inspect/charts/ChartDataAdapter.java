@@ -14,7 +14,7 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.weather.air_o_inspect.MyApp;
+import com.weather.air_o_inspect.MyApplication;
 import com.weather.air_o_inspect.R;
 
 import java.util.ArrayList;
@@ -23,12 +23,12 @@ import java.util.List;
 public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
 
     private List<ChartsData> chartDataList;
-    private MyApp myApp;
+    private MyApplication myApplication;
 
 
     public ChartDataAdapter(List<ChartsData> objects) {
         this.chartDataList = objects;
-        this.myApp = new MyApp();
+        this.myApplication = new MyApplication();
     }
 
     // Create new views (invoked by the layout manager)
@@ -57,11 +57,8 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
             data.setHighlightEnabled(false);
             data.setValueTextSize(5f);
 
-//            data.calcMinMax();
-
             holder.chart.getDescription().setEnabled(false);
-//            holder.chart.setFitBars(true);
-//            holder.chart.setHighlightFullBarEnabled(true);
+
 
             XAxis xAxis = holder.chart.getXAxis();
 
@@ -77,7 +74,7 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
                 @Override
                 public String getAxisLabel(float value, AxisBase axis) {
                     if (value >= 0 && value < xValues.size()) {
-                        return myApp.getSimpleTimeFormat().format(xValues.get((int) value) * 1000);
+                        return myApplication.getSimpleTimeFormat().format(xValues.get((int) value) * 1000);
                     }
                     return "";
                 }
@@ -104,8 +101,8 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
             leftAxis.setMinWidth(35f);
             leftAxis.setMaxWidth(40f);
 
-            rightAxis.setAxisMaximum(myApp.getCOLUMNS_MAXVALUE()[position] + (myApp.getCOLUMNS_MAXVALUE()[position] + data.getYMin()) / 2);
-            leftAxis.setAxisMaximum(myApp.getCOLUMNS_MAXVALUE()[position] + (myApp.getCOLUMNS_MAXVALUE()[position] + data.getYMin()) / 2);
+            rightAxis.setAxisMaximum(myApplication.getCOLUMNS_MAXVALUE()[position] + (myApplication.getCOLUMNS_MAXVALUE()[position] + data.getYMin()) / 2);
+            leftAxis.setAxisMaximum(myApplication.getCOLUMNS_MAXVALUE()[position] + (myApplication.getCOLUMNS_MAXVALUE()[position] + data.getYMin()) / 2);
 
             leftAxis.setAxisMinimum(0f);
             rightAxis.setAxisMinimum(0f);

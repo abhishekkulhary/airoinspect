@@ -9,8 +9,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import com.weather.air_o_inspect.MainActivity;
-import com.weather.air_o_inspect.MyApp;
-import com.weather.air_o_inspect.Utils.Utils;
+import com.weather.air_o_inspect.MyApplication;
 
 import java.util.concurrent.Callable;
 
@@ -25,8 +24,8 @@ public class LoadWeatherService extends Service {
 
     private final CompositeDisposable disposables = new CompositeDisposable();
 
-    MyApp myApp;
-    Utils utils = new Utils();
+    MyApplication myApplication;
+    FileUtils fileUtils = new FileUtils();
 
     Runnable periodicUpdate;
     private final Integer broadcastTem = 0;
@@ -37,14 +36,14 @@ public class LoadWeatherService extends Service {
         Log.i("LoadWeatherNoLimitService:", "onStartCommand");
         //TODO: 1. Try Combining Handler, and thread within CompositeDisposable disposables.
 
-        myApp = new MyApp();
+        myApplication = new MyApplication();
 
         boolean isRepeat = intent.getBooleanExtra("isRepeat", true);
 
         final Observable<String> observable = Observable.defer(new Callable<ObservableSource<String>>() {
             @Override
             public ObservableSource<String> call() throws Exception {
-                String data = utils.getDataFromUrlWriteToCSV(myApp.getLongLat(), myApp.getQuery());
+                String data = fileUtils.getDataFromUrlWriteToCSV(myApplication.getLongLat(), myApplication.getQuery());
                 return Observable.just(data);
             }
         });
@@ -53,7 +52,7 @@ public class LoadWeatherService extends Service {
             @Override
             public void onNext(String data) {
                 if (data != null && !data.equals("")) {
-                    utils.saveCSVFile(getApplicationContext(), data, myApp.getFilename());
+                    fileUtils.saveCSVFile(getApplicationContext(), data, myApplication.getFilename());
                 }
 
                 Intent broadcastIntent = new Intent();
@@ -77,7 +76,7 @@ public class LoadWeatherService extends Service {
                 @Override
                 public void run() {
 
-                    handler.postDelayed(periodicUpdate, 1000 * 60 * myApp.getTimeDelay()); // schedule next wake up every X mins
+                    handler.postDelayed(periodicUpdate, 1000 * 60 * myApplication.getTimeDelay()); // schedule next wake up every X mins
 
                     disposables.add(
                             observable.subscribeOn(Schedulers.io())
@@ -86,14 +85,14 @@ public class LoadWeatherService extends Service {
 
                 }
             };
-            handler.postDelayed(periodicUpdate, 1000 * 60 * myApp.getTimeDelay()); // schedule next wake up every X mins
+            handler.postDelayed(periodicUpdate, 1000 * 60 * myApplication.getTimeDelay()); // schedule next wake up every X mins
         } else {
             final Handler handler = new Handler();
             periodicUpdate = new Runnable() {
                 @Override
                 public void run() {
 
-                    handler.postDelayed(periodicUpdate, 1000 * 60 * myApp.getTimeDelay()); // schedule next wake up every X mins
+                    handler.postDelayed(periodicUpdate, 1000 * 60 * myApplication.getTimeDelay()); // schedule next wake up every X mins
 
                     disposables.add(
                             observable.subscribeOn(Schedulers.io())

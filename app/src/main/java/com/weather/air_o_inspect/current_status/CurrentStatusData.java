@@ -1,8 +1,8 @@
-package com.weather.air_o_inspect.CurrentStatus;
+package com.weather.air_o_inspect.current_status;
 
 import android.util.Log;
 
-import com.weather.air_o_inspect.MyApp;
+import com.weather.air_o_inspect.MyApplication;
 
 import java.util.List;
 import java.util.Map;
@@ -63,10 +63,10 @@ public class CurrentStatusData {
         this.current_time_place = current_time_place;
     }
 
-    public void populatateCurrentStatus(Map<String, List<String>> currentWeatherCondition, MyApp myApp){
+    public void populatateCurrentStatus(Map<String, List<String>> currentWeatherCondition, MyApplication myApplication){
         if (currentWeatherCondition != null && !currentWeatherCondition.isEmpty()) {
             Log.i("pupulateCurrentstatus","value not null");
-            this.setCurrent_time_place(myApp.getSimpleTimesFormat().format(Long.parseLong(
+            this.setCurrent_time_place(myApplication.getSimpleTimesFormat().format(Long.parseLong(
                             currentWeatherCondition.get("values")
                                     .get(currentWeatherCondition.get("titles").indexOf("time"))) * 1000));
             this.setCurrent_rain_status("" + currentWeatherCondition.get("values")

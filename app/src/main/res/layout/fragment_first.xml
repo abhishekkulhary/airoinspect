@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="8"
-    tools:context=".ui.main.PlaceholderFragment">
+    tools:context=".ui.main_page.PlaceholderFragment">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/layout_flying_status"

@@ -2,13 +2,19 @@ package com.weather.air_o_inspect.settings;
 
 public class Preferences {
 
-    private int windSeek;
-    private int windGustSeek;
-    private float precipitationSeek;
+    private int windThresold;
+    private int windGustThresold;
+    private float precipitationThresold;
+    private int precipitationProbabilityThresold;
+    private int temperatureThresold;
+    private int pressureThresold;
+    private int cloudCoverThresold;
+    private int visibilityThresold;
     private boolean windSwitch;
     private boolean windGustSwitch;
     private boolean precipitationSwitch;
     private boolean sunshineSwitch;
+
     private static Preferences preferences = null;
 
     public boolean isWindSwitch() {
@@ -54,28 +60,67 @@ public class Preferences {
         return preferences;
     }
 
-    public int getWindSeek() {
-        return windSeek;
+    public int getWindThresold() {
+        return windThresold;
     }
 
-    public void setWindSeek(int windSeek) {
-        this.windSeek = windSeek;
+    public void setWindThresold(int windThresold) {
+        this.windThresold = windThresold;
     }
 
-    public int getWindGustSeek() {
-        return windGustSeek;
+    public int getWindGustThresold() {
+        return windGustThresold;
     }
 
-    public void setWindGustSeek(int windGustSeek) {
-        this.windGustSeek = windGustSeek;
+    public void setWindGustThresold(int windGustThresold) {
+        this.windGustThresold = windGustThresold;
     }
 
-    public float getPrecipitationSeek() {
-        return precipitationSeek;
+    public float getPrecipitationThresold() {
+        return precipitationThresold;
     }
 
-    public void setPrecipitationSeek(float precipitationSeek) {
-        this.precipitationSeek = precipitationSeek;
+    public void setPrecipitationThresold(float precipitationThresold) {
+        this.precipitationThresold = precipitationThresold;
     }
 
+    public int getPrecipitationProbabilityThresold() {
+        return precipitationProbabilityThresold;
+    }
+
+    public void setPrecipitationProbabilityThresold(int precipitationProbabilityThresold) {
+        this.precipitationProbabilityThresold = precipitationProbabilityThresold;
+    }
+
+    public int getTemperatureThresold() {
+        return temperatureThresold;
+    }
+
+    public void setTemperatureThresold(int temperatureThresold) {
+        this.temperatureThresold = temperatureThresold;
+    }
+
+    public int getPressureThresold() {
+        return pressureThresold;
+    }
+
+    public void setPressureThresold(int pressureThresold) {
+        this.pressureThresold = pressureThresold;
+    }
+
+    public int getCloudCoverThresold() {
+        return cloudCoverThresold;
+    }
+
+    public void setCloudCoverThresold(int cloudCoverThresold) {
+        this.cloudCoverThresold = cloudCoverThresold;
+    }
+
+    public int getVisibilityThresold() {
+        return visibilityThresold;
+    }
+
+    public void setVisibilityThresold(int visibilityThresold) {
+        this.visibilityThresold = visibilityThresold;
+    }
 }

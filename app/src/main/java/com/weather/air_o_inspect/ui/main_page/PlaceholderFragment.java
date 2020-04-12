@@ -1,4 +1,4 @@
-package com.weather.air_o_inspect.ui.main;
+package com.weather.air_o_inspect.ui.main_page;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.github.mikephil.charting.data.BarData;
 import com.weather.air_o_inspect.R;
 import com.weather.air_o_inspect.charts.ChartDataAdapter;
-import com.weather.air_o_inspect.Utils.UtilsWeatherDataRead;
+import com.weather.air_o_inspect.service.UtilsWeatherDataRead;
 import com.weather.air_o_inspect.charts.ChartsData;
 
 import java.util.ArrayList;

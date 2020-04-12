@@ -1,4 +1,4 @@
-package com.weather.air_o_inspect.Utils;
+package com.weather.air_o_inspect.service;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -9,7 +9,8 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.weather.air_o_inspect.MyApp;
+import com.weather.air_o_inspect.MyApplication;
+import com.weather.air_o_inspect.settings.Preferences;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -31,13 +32,13 @@ import java.util.Set;
 public class UtilsWeatherDataRead {
 
     private Context context;
-    private MyApp myApp;
+    private MyApplication myApplication;
     private ArrayList<Long> xValues;
 
     public UtilsWeatherDataRead(Context context) {
         super();
         this.context = context;
-        this.myApp = new MyApp();
+        this.myApplication = new MyApplication();
     }
 
     public Map<String, List<String>> getCurrentWeatherConditions(Map<String, Map<String, ArrayList<Float>>> weatherData) {
@@ -46,12 +47,12 @@ public class UtilsWeatherDataRead {
 
         List<String> titleLine = new ArrayList<>();
 
-        titleLine.add(myApp.getxColumn());
+        titleLine.add(myApplication.getxColumn());
 
         if (!weatherData.isEmpty()) {
 
 
-            titleLine.addAll(Arrays.asList(myApp.getCOLUMNS()));
+            titleLine.addAll(Arrays.asList(myApplication.getCOLUMNS()));
 
             Set<String> keys = weatherData.keySet();
 
@@ -87,7 +88,7 @@ public class UtilsWeatherDataRead {
 
         if (!weatherData.isEmpty()) {
 
-            titleLine = Arrays.asList(myApp.getCOLUMNS());
+            titleLine = Arrays.asList(myApplication.getCOLUMNS());
 
             xValues = new ArrayList<>();
 
@@ -99,7 +100,7 @@ public class UtilsWeatherDataRead {
 
             Collections.sort(xValues);
 
-            for (String column : myApp.getCOLUMNS()) {
+            for (String column : myApplication.getCOLUMNS()) {
 
                 int index = titleLine.indexOf(column);
 
@@ -148,14 +149,14 @@ public class UtilsWeatherDataRead {
                         String[] strings = line.split(",");
                         ArrayList<Float> utilModel = new ArrayList<>();
 
-                        for (int j = 0; j < myApp.getCOLUMNS().length; j++) {
+                        for (int j = 0; j < myApplication.getCOLUMNS().length; j++) {
                             for (int k = 0; k < titleLine.length; k++) {
-                                if (myApp.getCOLUMNS()[j].equals(titleLine[k])) {
+                                if (myApplication.getCOLUMNS()[j].equals(titleLine[k])) {
 //                                    System.out.println(myApp.getCOLUMNS()[j]);
                                     // getting maximum value for each column
 
-                                    if (Float.parseFloat(strings[k]) >= myApp.getCOLUMNS_MAXVALUE()[j]) {
-                                        myApp.getCOLUMNS_MAXVALUE()[j] = Float.parseFloat(strings[k]);
+                                    if (Float.parseFloat(strings[k]) >= myApplication.getCOLUMNS_MAXVALUE()[j]) {
+                                        myApplication.getCOLUMNS_MAXVALUE()[j] = Float.parseFloat(strings[k]);
                                     }
 
                                     utilModel.add(j, Float.parseFloat(strings[k]));
@@ -165,9 +166,9 @@ public class UtilsWeatherDataRead {
                         }
 
                         for (int j = 0; j < titleLine.length; j++) {
-                            if (titleLine[j].equals(myApp.getxColumn())) {
+                            if (titleLine[j].equals(myApplication.getxColumn())) {
 
-                                tmpDate = myApp.getSimpleDateFormat().format(new Timestamp(Long.parseLong(strings[j]) * 1000));
+                                tmpDate = myApplication.getSimpleDateFormat().format(new Timestamp(Long.parseLong(strings[j]) * 1000));
 
                                 if (weatherData.containsKey(tmpDate)) {
                                     dayWiseData = weatherData.get(tmpDate);
@@ -179,7 +180,6 @@ public class UtilsWeatherDataRead {
                                     dayWiseData.put(strings[j], utilModel);
                                     weatherData.put(tmpDate, dayWiseData);
                                 }
-
                                 break;
                             }
                         }
@@ -205,6 +205,28 @@ public class UtilsWeatherDataRead {
         return weatherData;
     }
 
+    public float getThreshold(String label) {
+
+        switch (label) {
+            case "windSpeed":
+                return Preferences.getPreferences().getWindThresold();
+            case "windGust":
+                return Preferences.getPreferences().getWindGustThresold();
+            case "precipIntensity":
+                return Preferences.getPreferences().getPrecipitationThresold();
+            case "precipProbability":
+                return Preferences.getPreferences().getPrecipitationThresold() / 100;
+            case "temperature":
+                return Preferences.getPreferences().getPrecipitationThresold();
+            case "cloudCover":
+                return Preferences.getPreferences().getPrecipitationThresold() / 100;
+            case "visibility":
+                return Preferences.getPreferences().getPrecipitationThresold();
+            default:
+                return 2;
+        }
+    }
+
     //TODO: 1. Remove the Line chart from the combined chart
     //TODO: 2. Add colors to the bars based on some conditions.
     public ArrayList<BarData> generateBarData(Map<String, Object> values) {
@@ -215,13 +237,16 @@ public class UtilsWeatherDataRead {
 
 
         if (values != null && !values.isEmpty()) {
-            for (String label : myApp.getCOLUMNS()) {
+            for (String label : myApplication.getCOLUMNS()) {
                 ArrayList<IBarDataSet> barDataSets = new ArrayList<>();
                 List<Integer> colors = new ArrayList<>();
                 ArrayList<BarEntry> yValues = ((Map<String, ArrayList<BarEntry>>) Objects.requireNonNull(values.get("bar"))).get(label);
                 assert yValues != null;
                 for (BarEntry data : yValues) {
-                    if (data.getY() > 2) {
+
+                    float threshold = getThreshold(label);
+                    Log.i("GenerateBarData", "label : " + label + String.valueOf(threshold));
+                    if (data.getY() > threshold) {
                         colors.add(green);
                     } else {
                         colors.add(red);
@@ -231,7 +256,6 @@ public class UtilsWeatherDataRead {
                 // Here each dataset would be processed, temp, sunshine etc.
                 BarDataSet barDataSet = new BarDataSet(yValues, label);
                 barDataSet.setColors(colors);
-                // set.setValueTextColors(colors);
                 barDataSet.setDrawValues(false);
                 barDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
                 barDataSets.add(barDataSet);

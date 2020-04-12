@@ -1,8 +1,7 @@
-package com.weather.air_o_inspect.ui.main;
+package com.weather.air_o_inspect.ui.main_page;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,14 +13,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.weather.air_o_inspect.MyApp;
+import com.weather.air_o_inspect.MyApplication;
 import com.weather.air_o_inspect.R;
-import com.weather.air_o_inspect.Utils.UtilsWeatherDataRead;
+import com.weather.air_o_inspect.service.UtilsWeatherDataRead;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,7 +31,7 @@ import java.util.Set;
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     private static List<String> TAB_TITLES;
-    private MyApp myApp;
+    private MyApplication myApplication;
     private Context mContext;
     private UtilsWeatherDataRead utilsWeatherDataRead;
     private Map<String, Map<String, ArrayList<Float>>> yLabelValues;
@@ -42,10 +39,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     private TextView title;
     private TextView subtitle;
 
-    public SectionsPagerAdapter(Context context, int count, FragmentManager fm, UtilsWeatherDataRead utilsWeatherDataRead, MyApp myApp, Map<String, Map<String, ArrayList<Float>>> yLabelValues) {
+    public SectionsPagerAdapter(Context context, int count, FragmentManager fm, UtilsWeatherDataRead utilsWeatherDataRead, MyApplication myApplication, Map<String, Map<String, ArrayList<Float>>> yLabelValues) {
         super(fm, count);
         this.utilsWeatherDataRead = utilsWeatherDataRead;
-        this.myApp = myApp;
+        this.myApplication = myApplication;
         this.mContext = context;
         this.yLabelValues = yLabelValues;
         TAB_TITLES = convert(this.yLabelValues.keySet());
@@ -57,7 +54,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
-        return PlaceholderFragment.newInstance(position, this.yLabelValues.get(TAB_TITLES.get(position)), this.myApp.getLABELS(), utilsWeatherDataRead);
+        return PlaceholderFragment.newInstance(position, this.yLabelValues.get(TAB_TITLES.get(position)), this.myApplication.getLABELS(), utilsWeatherDataRead);
     }
 
     @Nullable
@@ -90,8 +87,8 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         subtitle = view.findViewById(R.id.tv_sub_title);
 
         // Data Binding
-        if (position < myApp.getTAB_SUBTEXT().length) {
-            title.setText(myApp.getTAB_SUBTEXT()[position]);
+        if (position < myApplication.getTAB_SUBTEXT().length) {
+            title.setText(myApplication.getTAB_SUBTEXT()[position]);
             subtitle.setText(TAB_TITLES.get(position));
         } else {
             title.setText(TAB_TITLES.get(position));

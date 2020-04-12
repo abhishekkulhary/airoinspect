@@ -1,4 +1,4 @@
-package com.weather.air_o_inspect.Utils;
+package com.weather.air_o_inspect.service;
 
 import android.content.Context;
 import android.util.Log;
@@ -16,7 +16,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class Utils {
+public class FileUtils {
 
     public String getDataFromUrlWriteToCSV(String longLat, String query) {
 

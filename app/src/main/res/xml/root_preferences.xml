@@ -49,11 +49,56 @@
             android:id="@+id/precipitation_seek"
             android:defaultValue="0"
             android:key="precipitation_seek"
-            android:max="1"
+            android:max="100"
             android:min="0"
             android:summary="Max. Precipitation allowed for Flight."
             android:title="Precipitation"
             app:defaultValue="@integer/precipitation_default"
+            app:showSeekBarValue="true" />
+
+        <SeekBarPreference
+            android:id="@+id/precipitation_probability_seek"
+            android:defaultValue="0"
+            android:key="precipitation_probability_seek"
+            android:max="1"
+            android:min="0"
+            android:summary="Max. Precipitation Probability allowed for Flight."
+            android:title="Precipitation"
+            app:defaultValue="@integer/precipitation_probability_default"
+            app:showSeekBarValue="true" />
+
+        <SeekBarPreference
+            android:id="@+id/temperature_seek"
+            android:defaultValue="0"
+            android:key="temperature_seek"
+            android:max="100"
+            android:min="0"
+            android:summary="Max. Temperature allowed for Flight."
+            android:title="Precipitation"
+            app:defaultValue="@integer/temperature_default"
+            app:showSeekBarValue="true" />
+
+
+        <SeekBarPreference
+            android:id="@+id/cloud_cover_seek"
+            android:defaultValue="0"
+            android:key="cloud_cover_seek"
+            android:max="100"
+            android:min="0"
+            android:summary="Max. Cloud Cover allowed for Flight."
+            android:title="Precipitation"
+            app:defaultValue="@integer/cloud_cover_default"
+            app:showSeekBarValue="true" />
+
+        <SeekBarPreference
+            android:id="@+id/visibility_seek"
+            android:defaultValue="0"
+            android:key="visibility_seek"
+            android:max="100"
+            android:min="0"
+            android:summary="Min. Visibility allowed for Flight."
+            android:title="Precipitation"
+            app:defaultValue="@integer/visibility_default"
             app:showSeekBarValue="true" />
 
 

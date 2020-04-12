@@ -6,15 +6,16 @@ import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
+
+import com.weather.air_o_inspect.settings.Preferences;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class MyApp extends Application implements LocationListener, Serializable {
+public class MyApplication extends Application implements LocationListener, Serializable {
     // Called when the application is starting, before any other application objects have been created.
     // Overriding this method is totally optional!
     private static final String[] filename = new String[]{"currentforecast.csv", "forecast.csv"};
@@ -32,13 +33,18 @@ public class MyApp extends Application implements LocationListener, Serializable
     private final String[] LABELS = {"Precipitation Intensity", "Precipitation Probability", "Temperature", "Pressure", "Wind Speed", "Wind Gust", "Cloud Cover", "Visibility"};
 
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
-    private final SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+    private final SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH", Locale.getDefault());
     private final SimpleDateFormat simpleTimesFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.getDefault());
+
+    private MyApplication myApplication = null;
+
+
 
     @Override
     public void onCreate() {
 //        Log.d("MyApp: OnCreate: ", "Start");
         super.onCreate();
+        setTheme(R.style.AppTheme);
 //        Log.d("MyApp: OnCreate: ", "End");
     }
 
@@ -61,7 +67,7 @@ public class MyApp extends Application implements LocationListener, Serializable
     }
 
     public void setLongLat(String longLat) {
-        MyApp.longLat = longLat;
+        MyApplication.longLat = longLat;
     }
 
     public String getQuery() {
@@ -69,7 +75,7 @@ public class MyApp extends Application implements LocationListener, Serializable
     }
 
     public void setQuery(String query) {
-        MyApp.query = query;
+        MyApplication.query = query;
     }
 
     public Long getTimeDelay() {
@@ -77,7 +83,7 @@ public class MyApp extends Application implements LocationListener, Serializable
     }
 
     public void setTimeDelay(Long timeDelay) {
-        MyApp.timeDelay = timeDelay;
+        MyApplication.timeDelay = timeDelay;
     }
 
     public String[] getCOLUMNS() {
@@ -150,6 +156,6 @@ public class MyApp extends Application implements LocationListener, Serializable
     }
 
     public void setCOLUMNS_MAXVALUE(Float[] COLUMNS_MAXVALUE) {
-        MyApp.COLUMNS_MAXVALUE = COLUMNS_MAXVALUE;
+        MyApplication.COLUMNS_MAXVALUE = COLUMNS_MAXVALUE;
     }
 }

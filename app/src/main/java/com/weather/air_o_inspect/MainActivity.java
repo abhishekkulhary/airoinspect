@@ -28,12 +28,11 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.github.mikephil.charting.utils.Utils;
 import com.google.android.material.tabs.TabLayout;
-import com.weather.air_o_inspect.CurrentStatus.CurrentStatusData;
-import com.weather.air_o_inspect.Utils.UtilsWeatherDataRead;
+import com.weather.air_o_inspect.current_status.CurrentStatusData;
 import com.weather.air_o_inspect.service.LoadWeatherService;
-import com.weather.air_o_inspect.settings.Preferences;
+import com.weather.air_o_inspect.service.UtilsWeatherDataRead;
 import com.weather.air_o_inspect.settings.SettingsFragment;
-import com.weather.air_o_inspect.ui.main.SectionsPagerAdapter;
+import com.weather.air_o_inspect.ui.main_page.SectionsPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +50,7 @@ import io.reactivex.schedulers.Schedulers;
 @SuppressWarnings("ALL")
 public class MainActivity extends AppCompatActivity implements ActivityCompat.OnRequestPermissionsResultCallback {
 
-    private final MyApp myApp = new MyApp();
+    private final MyApplication myApplication = new MyApplication();
     private UtilsWeatherDataRead utilsWeatherDataRead;
 
     private ViewPager viewPager;
@@ -104,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE,
                             Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                    myApp.getREQUEST_CODE());
+                    myApplication.getREQUEST_CODE());
         }
 
         fn_getlocation();
@@ -125,12 +124,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             @Override
             public Observable<Map<String, List<String>>> call() throws Exception {
                 Log.i("In Observable", "Hello done till here");
-                Map<String, Map<String, ArrayList<Float>>> currentWeatherData = utilsWeatherDataRead.readWeatherData(myApp.getFilename()[0]);
+                Map<String, Map<String, ArrayList<Float>>> currentWeatherData = utilsWeatherDataRead.readWeatherData(myApplication.getFilename()[0]);
                 Map<String, List<String>> currentWeatherCondition = utilsWeatherDataRead.getCurrentWeatherConditions(currentWeatherData);
 
                 Log.i("In Observable2", "Hello done till here");
 
-                weatherData = utilsWeatherDataRead.readWeatherData(myApp.getFilename()[1]);
+                weatherData = utilsWeatherDataRead.readWeatherData(myApplication.getFilename()[1]);
 
                 return Observable.just(currentWeatherCondition);
             }
@@ -141,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             @Override
             public void onNext(Map<String, List<String>> currentWeatherCondition) {
                 sectionsPagerAdapter = new SectionsPagerAdapter(getApplicationContext(), weatherData.keySet().size(),
-                        getSupportFragmentManager(), utilsWeatherDataRead, myApp, weatherData);
+                        getSupportFragmentManager(), utilsWeatherDataRead, myApplication, weatherData);
                 viewPager.setAdapter(sectionsPagerAdapter);
                 tabs.setupWithViewPager(viewPager);
 
@@ -167,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         return;
                     }
                     CurrentStatusData currentStatusData = new CurrentStatusData();
-                    currentStatusData.populatateCurrentStatus(currentWeatherCondition, myApp);
+                    currentStatusData.populatateCurrentStatus(currentWeatherCondition, myApplication);
 //                    RecyclerView currentStatusView = findViewById(R.id.current_status_view);
 //                    CurrentStatusViewAdapter currentStatusViewAdapter = new CurrentStatusViewAdapter(currentStatusData);
 //                    currentStatusView.setAdapter(currentStatusViewAdapter);
@@ -185,7 +184,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     currentTimePlace.setText(currentStatusData.getCurrent_time_place());
 
                 }
-                Log.i("Preferences", String.valueOf(Preferences.getPreferences().getWindGustSeek()));
 
 
             }
@@ -275,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     // for ActivityCompat#requestPermissions for more details.
                     return;
                 }
-                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, myApp);
+                locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, myApplication);
                 if (locationManager != null) {
                     location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
                     if (location != null) {
@@ -285,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
                         latitude = location.getLatitude();
                         longitude = location.getLongitude();
-                        myApp.fn_update(location);
+                        myApplication.fn_update(location);
                     }
                 }
 
@@ -294,7 +292,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             if (isGPSEnable) {
                 location = null;
                 assert locationManager != null;
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, myApp);
+                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, myApplication);
                 if (locationManager != null) {
                     location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                     if (location != null) {
@@ -302,7 +300,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                         Log.e("longitude", location.getLongitude() + "");
                         latitude = location.getLatitude();
                         longitude = location.getLongitude();
-                        myApp.fn_update(location);
+                        myApplication.fn_update(location);
                     }
                 }
             }
@@ -342,7 +340,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.i("MainActivity:", "onRequestPermissionResult");
-        if (requestCode == myApp.getREQUEST_CODE()) {
+        if (requestCode == myApplication.getREQUEST_CODE()) {
             for (int result : grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
                     Log.d("onRequestPermissionsRe:", "Permission Not Granted");
