@@ -24,7 +24,6 @@ public class Preferences {
     private boolean sunshineSwitch;
 
     SharedPreferences sharedPref;
-    //    SharedPreferences.Editor sharedPrefEditor;
     Context applicationContext;
 
     public static Preferences getPreferences(Context applicationContext) {
@@ -43,13 +42,7 @@ public class Preferences {
     public void configSessionUtils(Context applicationContext) {
         this.applicationContext = applicationContext;
         sharedPref = PreferenceManager.getDefaultSharedPreferences(this.applicationContext);
-//        sharedPrefEditor = sharedPref.edit();
     }
-//
-//    public void storeValueString(String key, String value) {
-//        sharedPrefEditor.putString(key, value);
-//        sharedPrefEditor.commit();
-//    }
 
     public void fetchValueString() {
         setWindThresold(sharedPref.getInt("wind_seek", R.integer.wind_default));

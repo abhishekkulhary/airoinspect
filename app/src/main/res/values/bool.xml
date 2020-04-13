@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <bool name="wind_default">true</bool>
+    <bool name="wind_gust_default">true</bool>
+    <bool name="sunshine_default">true</bool>
+    <bool name="precipitation_default">true</bool>
+</resources>

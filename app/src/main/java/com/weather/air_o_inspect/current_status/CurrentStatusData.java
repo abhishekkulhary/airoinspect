@@ -70,13 +70,13 @@ public class CurrentStatusData {
                             currentWeatherCondition.get("values")
                                     .get(currentWeatherCondition.get("titles").indexOf("time"))) * 1000));
             this.setCurrent_rain_status("" + currentWeatherCondition.get("values")
-                    .get(currentWeatherCondition.get("titles").indexOf("precipIntensity")));
+                    .get(currentWeatherCondition.get("titles").indexOf("precipIntensity")) + " mm");
             this.setCurrent_temperature("" + currentWeatherCondition.get("values")
-                    .get(currentWeatherCondition.get("titles").indexOf("temperature")));
+                    .get(currentWeatherCondition.get("titles").indexOf("temperature")) + " \u2103");
             this.setCurrent_visibility("" + currentWeatherCondition.get("values")
-                    .get(currentWeatherCondition.get("titles").indexOf("visibility")));
+                    .get(currentWeatherCondition.get("titles").indexOf("visibility")).substring(0,5) + " km");
             this.setCurrent_wind("" + currentWeatherCondition.get("values")
-                    .get(currentWeatherCondition.get("titles").indexOf("windSpeed")));
+                    .get(currentWeatherCondition.get("titles").indexOf("windSpeed")) + " km/h");
 
         }
     }

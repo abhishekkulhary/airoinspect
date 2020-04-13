@@ -188,7 +188,7 @@ public class UtilsWeatherDataRead {
             case "windGust":
                 return Preferences.getPreferences().getWindGustThresold();
             case "precipIntensity":
-                return Float.parseFloat(String.valueOf(Preferences.getPreferences().getPrecipitationThresold()));
+                return Float.parseFloat(String.valueOf(Preferences.getPreferences().getPrecipitationThresold())) / 100;
             case "precipProbability":
                 return Float.parseFloat(String.valueOf(Preferences.getPreferences().getPrecipitationProbabilityThresold())) / 100;
             case "temperature":

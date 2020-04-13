@@ -10,19 +10,41 @@
         android:weightSum="3">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:weightSum="5">
 
-            <TextView
-                android:id="@+id/current_fly_status"
-                style="@style/TextviewStyleFly"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@string/fly">
+                android:layout_height="0dp"
+                android:layout_weight="4">
 
-            </TextView>
+                <TextView
+                    android:id="@+id/current_fly_status"
+                    style="@style/TextviewStyleFly"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@string/fly">
+
+                </TextView>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/current_time_place"
+                    style="@style/TextviewStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -30,7 +52,7 @@
             android:layout_height="match_parent"
             android:layout_weight="2"
             android:orientation="vertical"
-            android:weightSum="5">
+            android:weightSum="4">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -41,24 +63,25 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:orientation="horizontal"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:orientation="horizontal"
                     android:weightSum="2">
 
                     <ImageView
                         android:id="@+id/imageTemp"
-                        android:layout_width="25dp"
+                        android:layout_width="0dp"
                         android:layout_height="25dp"
-                        android:src="@drawable/temp_icon"
-                        android:layout_weight="1"/>
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:src="@drawable/temp_icon" />
 
                     <TextView
                         android:id="@+id/current_temperature"
                         style="@style/TextviewStyle"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:layout_weight="1"
                         android:gravity="bottom|start"
                         android:text="@string/temperature">
@@ -69,24 +92,26 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:orientation="horizontal"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:orientation="horizontal"
                     android:weightSum="2">
 
                     <ImageView
                         android:id="@+id/imageRain"
-                        android:layout_width="25dp"
+                        android:layout_width="0dp"
                         android:layout_height="25dp"
-                        android:src="@drawable/rain_icon"
-                        android:layout_weight="1"/>
+
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:src="@drawable/rain_icon" />
 
                     <TextView
                         android:id="@+id/current_rain_status"
                         style="@style/TextviewStyle"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:layout_weight="1"
                         android:gravity="bottom|start"
                         android:text="@string/precipitation">
@@ -107,23 +132,26 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:orientation="horizontal"
                     android:weightSum="2">
 
                     <ImageView
                         android:id="@+id/imageWind"
-                        android:layout_width="25dp"
+                        android:layout_width="0dp"
                         android:layout_height="25dp"
-                        android:src="@drawable/wind_icon"
-                        android:layout_weight="1"/>
+
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:src="@drawable/wind_icon" />
 
                     <TextView
                         android:id="@+id/current_wind"
                         style="@style/TextviewStyle"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:layout_weight="1"
                         android:gravity="bottom|start"
                         android:text="@string/wind" />
@@ -132,46 +160,32 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:orientation="horizontal"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:orientation="horizontal"
                     android:weightSum="2">
 
                     <ImageView
                         android:id="@+id/imageVisibility"
-                        android:layout_width="25dp"
+                        android:layout_width="0dp"
                         android:layout_height="25dp"
-                        android:src="@drawable/visibility_icon"
-                        android:layout_weight="1"/>
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:src="@drawable/visibility_icon" />
 
                     <TextView
                         android:id="@+id/current_visibility"
                         style="@style/TextviewStyle"
                         android:layout_width="0dp"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:gravity="bottom|start"
                         android:text="@string/sun_or_visibility">
 
 
                     </TextView>
                 </LinearLayout>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
-
-                <TextView
-                    android:id="@+id/current_time_place"
-                    style="@style/TextviewStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"/>
             </LinearLayout>
 
         </LinearLayout>

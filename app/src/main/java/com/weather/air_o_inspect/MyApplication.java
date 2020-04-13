@@ -41,7 +41,7 @@ public class MyApplication extends Application implements LocationListener, Seri
 
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
     private final SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH", Locale.getDefault());
-    private final SimpleDateFormat simpleTimesFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.getDefault());
+    private final SimpleDateFormat simpleTimesFormat = new SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault());
 
     private MyApplication myApplication = null;
 
