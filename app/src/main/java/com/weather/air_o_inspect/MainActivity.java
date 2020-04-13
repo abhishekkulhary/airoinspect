@@ -28,11 +28,11 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.github.mikephil.charting.utils.Utils;
 import com.google.android.material.tabs.TabLayout;
+import com.weather.air_o_inspect.charts.SectionsPagerAdapter;
 import com.weather.air_o_inspect.current_status.CurrentStatusData;
 import com.weather.air_o_inspect.service.LoadWeatherService;
 import com.weather.air_o_inspect.service.UtilsWeatherDataRead;
 import com.weather.air_o_inspect.settings.SettingsFragment;
-import com.weather.air_o_inspect.charts.SectionsPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -167,16 +167,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     }
                     CurrentStatusData currentStatusData = new CurrentStatusData();
                     currentStatusData.populatateCurrentStatus(currentWeatherCondition, myApplication);
-//                    RecyclerView currentStatusView = findViewById(R.id.current_status_view);
-//                    CurrentStatusViewAdapter currentStatusViewAdapter = new CurrentStatusViewAdapter(currentStatusData);
-//                    currentStatusView.setAdapter(currentStatusViewAdapter);
                     currentFlyStatus = findViewById(R.id.current_fly_status);
                     currentTemperature = findViewById(R.id.current_temperature);
                     currentRainStatus = findViewById(R.id.current_rain_status);
                     currentWind = findViewById(R.id.current_wind);
                     currentVisibility = findViewById(R.id.current_visibility);
                     currentTimePlace = findViewById(R.id.current_time_place);
-//                    currentFlyStatus.setText(currentStatusData.getCurrent_fly_status());
+                    TextView flyingStatus = findViewById(R.id.current_fly_status);
+                    if (currentStatusData.isCurrent_fly_status()) {
+
+                        flyingStatus.setBackgroundColor(R.color.all_ok);
+                    } else {
+
+                        flyingStatus.setBackgroundColor(R.color.not_ok);
+                    }
                     currentTemperature.setText(currentStatusData.getCurrent_temperature());
                     currentRainStatus.setText(currentStatusData.getCurrent_rain_status());
                     currentWind.setText(currentStatusData.getCurrent_wind());

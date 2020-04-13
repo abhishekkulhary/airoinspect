@@ -11,10 +11,10 @@
             app:defaultValue="@bool/wind_gust_default"
             app:key="wind_gust_switch"
             app:title="Wind Gust" />
-        <SwitchPreferenceCompat
-            app:defaultValue="@bool/sunshine_default"
-            app:key="sunshine_switch"
-            app:title="Sunshine" />
+<!--        <SwitchPreferenceCompat-->
+<!--            app:defaultValue="@bool/sunshine_default"-->
+<!--            app:key="sunshine_switch"-->
+<!--            app:title="Sunshine" />-->
         <SwitchPreferenceCompat
             app:defaultValue="@bool/precipitation_default"
             app:key="precipitation_switch"
