@@ -177,9 +177,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     if (currentStatusData.isCurrent_fly_status()) {
 
                         flyingStatus.setBackgroundColor(R.color.all_ok);
+                        Log.i("flyingstatuscolor","Clear for takeoff");
                     } else {
 
+                        Log.i("flyingstatuscolor","Not clear for takeoff");
                         flyingStatus.setBackgroundColor(R.color.not_ok);
+
                     }
                     currentTemperature.setText(currentStatusData.getCurrent_temperature());
                     currentRainStatus.setText(currentStatusData.getCurrent_rain_status());

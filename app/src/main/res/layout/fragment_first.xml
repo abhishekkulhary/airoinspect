@@ -5,7 +5,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:weightSum="8"
-    tools:context=".charts.ChartFragment">
+    tools:context=".charts.ChartFragment"
+    android:background="@color/cardview_dark_background"
+    >
 
     <androidx.cardview.widget.CardView
         android:id="@+id/layout_flying_status"
@@ -13,7 +15,7 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <include layout="@layout/layout_flying_status" />
+        <include layout="@layout/flying_status" />
 
     </androidx.cardview.widget.CardView>
     <androidx.cardview.widget.CardView
@@ -23,7 +25,7 @@
         android:layout_weight="7"
         android:orientation="vertical">
 
-        <include layout="@layout/layout_all_chart_view" />
+        <include layout="@layout/all_chart_view" />
 
     </androidx.cardview.widget.CardView>
 

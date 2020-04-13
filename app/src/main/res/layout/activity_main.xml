@@ -7,13 +7,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".MainActivity"
+    android:background="@color/cardview_dark_background"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 <com.google.android.material.appbar.AppBarLayout
     android:id="@+id/appBarLayout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
     <com.google.android.material.appbar.CollapsingToolbarLayout
         android:layout_width="match_parent"
@@ -30,10 +31,10 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
+                android:background="@color/cardview_dark_background"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-            <include layout="@layout/layout_current_status"
+            <include layout="@layout/current_status"
                 android:layout_width="match_parent"
                 android:layout_height="175dp" />
         </LinearLayout>
@@ -47,6 +48,7 @@
         android:layout_height="wrap_content"
         app:tabGravity="fill"
         app:tabIndicatorColor="@color/tab_indicator"
+        android:background="@color/cardview_dark_background"
         app:tabMode="fixed" >
 
     </com.google.android.material.tabs.TabLayout>
@@ -57,6 +59,7 @@
     android:id="@+id/view_pager"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

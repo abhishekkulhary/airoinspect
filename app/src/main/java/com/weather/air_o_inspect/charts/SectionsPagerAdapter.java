@@ -80,7 +80,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     public View getTabView(int position) {
         @SuppressLint("InflateParams")
-        View view = LayoutInflater.from(mContext).inflate(R.layout.layout_tab_layout_viewpager, null);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.tab_layout_viewpager, null);
 
         // View Binding
         title = view.findViewById(R.id.tv_title);

@@ -37,7 +37,7 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
     public ChartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // create a new view
         CardView v = (CardView) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.layout_listitem_chart, parent, false);
+                .inflate(R.layout.listitem_chart, parent, false);
         return new ChartViewHolder(v);
     }
 
