@@ -32,7 +32,7 @@ import com.weather.air_o_inspect.current_status.CurrentStatusData;
 import com.weather.air_o_inspect.service.LoadWeatherService;
 import com.weather.air_o_inspect.service.UtilsWeatherDataRead;
 import com.weather.air_o_inspect.settings.SettingsFragment;
-import com.weather.air_o_inspect.ui.main_page.SectionsPagerAdapter;
+import com.weather.air_o_inspect.charts.SectionsPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;

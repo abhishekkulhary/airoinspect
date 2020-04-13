@@ -1,4 +1,4 @@
-package com.weather.air_o_inspect.ui.main_page;
+package com.weather.air_o_inspect.charts;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,9 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.data.BarData;
 import com.weather.air_o_inspect.R;
-import com.weather.air_o_inspect.charts.ChartDataAdapter;
 import com.weather.air_o_inspect.service.UtilsWeatherDataRead;
-import com.weather.air_o_inspect.charts.ChartsData;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -24,7 +22,7 @@ import io.reactivex.disposables.CompositeDisposable;
 /**
  * A placeholder fragment containing a simple view.
  */
-public class PlaceholderFragment extends Fragment {
+public class ChartFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -37,18 +35,18 @@ public class PlaceholderFragment extends Fragment {
     private UtilsWeatherDataRead utilsWeatherDataRead;
     private Map<String, ArrayList<Float>> weatherData;
 
-    static PlaceholderFragment newInstance(int index, Map<String, ArrayList<Float>> weatherData, String[] LABELS, UtilsWeatherDataRead utilsWeatherDataRead) {
+    static ChartFragment newInstance(int index, Map<String, ArrayList<Float>> weatherData, String[] LABELS, UtilsWeatherDataRead utilsWeatherDataRead) {
 
-        PlaceholderFragment placeholderFragment = new PlaceholderFragment();
-        placeholderFragment.weatherData = weatherData;
-        placeholderFragment.LABELS = LABELS;
-        placeholderFragment.utilsWeatherDataRead = utilsWeatherDataRead;
+        ChartFragment chartFragment = new ChartFragment();
+        chartFragment.weatherData = weatherData;
+        chartFragment.LABELS = LABELS;
+        chartFragment.utilsWeatherDataRead = utilsWeatherDataRead;
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_SECTION_NUMBER, index);
 
-        placeholderFragment.setArguments(bundle);
+        chartFragment.setArguments(bundle);
 
-        return placeholderFragment;
+        return chartFragment;
     }
 
     @Override

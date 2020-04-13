@@ -80,7 +80,7 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
                 }
             });
 
-            xAxis.setLabelRotationAngle(-80f);
+            //xAxis.setLabelRotationAngle(-80f);
 
             xAxis.setCenterAxisLabels(false);
 

@@ -1,4 +1,4 @@
-package com.weather.air_o_inspect.ui.main_page;
+package com.weather.air_o_inspect.charts;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -54,7 +54,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         // getItem is called to instantiate the fragment for the given page.
         // Return a PlaceholderFragment (defined as a static inner class below).
-        return PlaceholderFragment.newInstance(position, this.yLabelValues.get(TAB_TITLES.get(position)), this.myApplication.getLABELS(), utilsWeatherDataRead);
+        return ChartFragment.newInstance(position, this.yLabelValues.get(TAB_TITLES.get(position)), this.myApplication.getLABELS(), utilsWeatherDataRead);
     }
 
     @Nullable
