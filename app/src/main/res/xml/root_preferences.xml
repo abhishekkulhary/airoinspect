@@ -63,7 +63,7 @@
             android:max="1"
             android:min="0"
             android:summary="Max. Precipitation Probability allowed for Flight."
-            android:title="Precipitation"
+            android:title="Precipitation Probability"
             app:defaultValue="@integer/precipitation_probability_default"
             app:showSeekBarValue="true" />
 
@@ -74,7 +74,7 @@
             android:max="100"
             android:min="0"
             android:summary="Max. Temperature allowed for Flight."
-            android:title="Precipitation"
+            android:title="Temperature"
             app:defaultValue="@integer/temperature_default"
             app:showSeekBarValue="true" />
 
@@ -86,7 +86,7 @@
             android:max="100"
             android:min="0"
             android:summary="Max. Cloud Cover allowed for Flight."
-            android:title="Precipitation"
+            android:title="Cloud Cover"
             app:defaultValue="@integer/cloud_cover_default"
             app:showSeekBarValue="true" />
 
@@ -97,7 +97,7 @@
             android:max="100"
             android:min="0"
             android:summary="Min. Visibility allowed for Flight."
-            android:title="Precipitation"
+            android:title="Visibility"
             app:defaultValue="@integer/visibility_default"
             app:showSeekBarValue="true" />
 

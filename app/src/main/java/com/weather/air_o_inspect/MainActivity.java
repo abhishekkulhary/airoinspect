@@ -113,8 +113,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         Intent intent = new Intent(getApplicationContext(), LoadWeatherService.class);
         intent.putExtra("isRepeat", true);
         startService(intent);
-
         inflateUI();
+
     }
 
     private void inflateUI() {

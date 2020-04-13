@@ -1,5 +1,13 @@
 package com.weather.air_o_inspect.settings;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
+
+import androidx.preference.PreferenceManager;
+
+import com.weather.air_o_inspect.R;
+
 public class Preferences {
 
     private int windThresold;
@@ -14,6 +22,46 @@ public class Preferences {
     private boolean windGustSwitch;
     private boolean precipitationSwitch;
     private boolean sunshineSwitch;
+
+    SharedPreferences sharedPref;
+    //    SharedPreferences.Editor sharedPrefEditor;
+    Context applicationContext;
+
+    public static Preferences getPreferences(Context applicationContext) {
+        if (preferences == null) {
+            preferences = new Preferences();
+            preferences.configSessionUtils(applicationContext);
+        }
+        return preferences;
+    }
+
+    public static Preferences getPreferences() {
+
+        return preferences;
+    }
+
+    public void configSessionUtils(Context applicationContext) {
+        this.applicationContext = applicationContext;
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this.applicationContext);
+//        sharedPrefEditor = sharedPref.edit();
+    }
+//
+//    public void storeValueString(String key, String value) {
+//        sharedPrefEditor.putString(key, value);
+//        sharedPrefEditor.commit();
+//    }
+
+    public void fetchValueString() {
+        setWindThresold(sharedPref.getInt("wind_seek", R.integer.wind_default));
+        setWindGustThresold(sharedPref.getInt("wind_gust_seek", R.integer.wind_gust_default));
+        setPrecipitationThresold(sharedPref.getInt("precipitation_seek", R.integer.precipitation_default));
+        setPrecipitationProbabilityThresold(sharedPref.getInt("precipitation_probability_seek", R.integer.precipitation_probability_default));
+        setTemperatureThresold(sharedPref.getInt("temperature_seek", R.integer.temperature_default));
+        setCloudCoverThresold(sharedPref.getInt("cloud_cover_seek", R.integer.cloud_cover_default));
+        setVisibilityThresold(sharedPref.getInt("visibility_seek", R.integer.visibility_default));
+        Log.i("fetValueString", String.valueOf(getPreferences().getVisibilityThresold()));
+
+    }
 
     private static Preferences preferences = null;
 
@@ -51,13 +99,6 @@ public class Preferences {
 
     private Preferences() {
 
-    }
-
-    public static Preferences getPreferences() {
-        if (preferences == null) {
-            preferences = new Preferences();
-        }
-        return preferences;
     }
 
     public int getWindThresold() {

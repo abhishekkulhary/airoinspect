@@ -2,12 +2,15 @@ package com.weather.air_o_inspect;
 
 
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 
 import com.weather.air_o_inspect.settings.Preferences;
 
@@ -38,14 +41,30 @@ public class MyApplication extends Application implements LocationListener, Seri
 
     private MyApplication myApplication = null;
 
-
+    SharedPreferences sharedPref;
 
     @Override
     public void onCreate() {
 //        Log.d("MyApp: OnCreate: ", "Start");
         super.onCreate();
         setTheme(R.style.AppTheme);
+        Preferences.getPreferences(getApplicationContext());
+
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        fetchValueString();
 //        Log.d("MyApp: OnCreate: ", "End");
+    }
+
+
+    public void fetchValueString() {
+        Preferences.getPreferences().setWindThresold(sharedPref.getInt("wind_seek", (getResources().getInteger(R.integer.wind_default))));
+        Preferences.getPreferences().setWindGustThresold(sharedPref.getInt("wind_gust_seek", (getResources().getInteger(R.integer.wind_gust_default))));
+        Preferences.getPreferences().setPrecipitationThresold(sharedPref.getInt("precipitation_seek", (getResources().getInteger(R.integer.precipitation_default))));
+        Preferences.getPreferences().setPrecipitationProbabilityThresold(sharedPref.getInt("precipitation_probability_seek", (getResources().getInteger(R.integer.precipitation_probability_default))));
+        Preferences.getPreferences().setTemperatureThresold(sharedPref.getInt("temperature_seek",(getResources().getInteger(R.integer.temperature_default))));
+        Preferences.getPreferences().setCloudCoverThresold(sharedPref.getInt("cloud_cover_seek",(getResources().getInteger(R.integer.cloud_cover_default))));
+        Preferences.getPreferences().setVisibilityThresold(sharedPref.getInt("visibility_seek", (getResources().getInteger(R.integer.visibility_default))));
+
     }
 
     void fn_update(Location location) {

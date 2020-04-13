@@ -213,15 +213,15 @@ public class UtilsWeatherDataRead {
             case "windGust":
                 return Preferences.getPreferences().getWindGustThresold();
             case "precipIntensity":
-                return Preferences.getPreferences().getPrecipitationThresold();
+                return Float.parseFloat(String.valueOf(Preferences.getPreferences().getPrecipitationThresold()));
             case "precipProbability":
-                return Preferences.getPreferences().getPrecipitationThresold() / 100;
+                return Float.parseFloat(String.valueOf(Preferences.getPreferences().getPrecipitationProbabilityThresold())) / 100;
             case "temperature":
-                return Preferences.getPreferences().getPrecipitationThresold();
+                return Preferences.getPreferences().getTemperatureThresold();
             case "cloudCover":
-                return Preferences.getPreferences().getPrecipitationThresold() / 100;
+                return Float.parseFloat(String.valueOf(Preferences.getPreferences().getCloudCoverThresold())) / 100;
             case "visibility":
-                return Preferences.getPreferences().getPrecipitationThresold();
+                return Preferences.getPreferences().getVisibilityThresold();
             default:
                 return 2;
         }
@@ -245,8 +245,8 @@ public class UtilsWeatherDataRead {
                 for (BarEntry data : yValues) {
 
                     float threshold = getThreshold(label);
-                    Log.i("GenerateBarData", "label : " + label + String.valueOf(threshold));
-                    if (data.getY() > threshold) {
+                    Log.i("GenerateBarData", "label threshold : " + label + String.valueOf(threshold));
+                    if (data.getY() < threshold) {
                         colors.add(green);
                     } else {
                         colors.add(red);
