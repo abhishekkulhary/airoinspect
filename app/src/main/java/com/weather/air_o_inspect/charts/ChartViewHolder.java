@@ -1,4 +1,4 @@
-package com.weather.air_o_inspect.charts;
+package com.weather.air_o_inspect.Charts;
 
 import android.view.View;
 import android.widget.TextView;

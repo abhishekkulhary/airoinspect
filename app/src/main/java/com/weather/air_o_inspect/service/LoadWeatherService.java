@@ -1,116 +1,80 @@
-package com.weather.air_o_inspect.service;
+package com.weather.air_o_inspect.Service;
 
 import android.app.Service;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.weather.air_o_inspect.MainActivity;
-import com.weather.air_o_inspect.MyApplication;
+import com.weather.air_o_inspect.Entities.CurrentStatus;
+import com.weather.air_o_inspect.Entities.WeatherUpdate;
+import com.weather.air_o_inspect.MyApp;
+import com.weather.air_o_inspect.Repository.WeatherRespository;
+import com.weather.air_o_inspect.Utils.Utils;
 
-import java.util.concurrent.Callable;
+import java.util.List;
 
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.observers.DisposableObserver;
-import io.reactivex.schedulers.Schedulers;
 
-@SuppressWarnings("All")
 public class LoadWeatherService extends Service {
 
-    private final CompositeDisposable disposables = new CompositeDisposable();
-
-    MyApplication myApplication;
-    FileUtils fileUtils = new FileUtils();
-
     Runnable periodicUpdate;
-    private final Integer broadcastTem = 0;
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
-        Log.i("LoadWeatherNoLimitService:", "onStartCommand");
-        //TODO: 1. Try Combining Handler, and thread within CompositeDisposable disposables.
+        Log.i("LoadWeatherNoLimitSe:", "onStartCommand");
 
-        myApplication = new MyApplication();
-
-        boolean isRepeat = intent.getBooleanExtra("isRepeat", true);
-
-        final Observable<String> observable = Observable.defer(new Callable<ObservableSource<String>>() {
+        //TODO: 1. Try Combining Handler, and thread within and try making the handler to run everyday at specific time
+        final Handler handler = new Handler();
+        periodicUpdate = new Runnable() {
             @Override
-            public ObservableSource<String> call() throws Exception {
-                String data = fileUtils.getDataFromUrlWriteToCSV(myApplication.getLongLat(), myApplication.getQuery());
-                return Observable.just(data);
-            }
-        });
+            public void run() {
+                handler.postDelayed(periodicUpdate, 1000 * 60 * MyApp.getTimeDelay()); // schedule next wake up every X mins
 
-        final DisposableObserver<String> disposableObserver = new DisposableObserver<String>() {
-            @Override
-            public void onNext(String data) {
-                if (data != null && !data.equals("")) {
-                    fileUtils.saveCSVFile(getApplicationContext(), data, myApplication.getFilename());
-                }
+                new NewPopulateDbAsyncTask(new WeatherRespository(getApplication())).execute();
 
-                Intent broadcastIntent = new Intent();
-                broadcastIntent.setAction(MainActivity.mBroadcastRepeatAction);
-                sendBroadcast(broadcastIntent);
-            }
-
-            @Override
-            public void onError(Throwable e) {
-
-            }
-
-            @Override
-            public void onComplete() {
             }
         };
-
-        if (isRepeat) {
-            final Handler handler = new Handler();
-            periodicUpdate = new Runnable() {
-                @Override
-                public void run() {
-
-                    handler.postDelayed(periodicUpdate, 1000 * 60 * myApplication.getTimeDelay()); // schedule next wake up every X mins
-
-                    disposables.add(
-                            observable.subscribeOn(Schedulers.io())
-                                    .subscribeWith(disposableObserver));
-
-
-                }
-            };
-            handler.postDelayed(periodicUpdate, 1000 * 60 * myApplication.getTimeDelay()); // schedule next wake up every X mins
-        } else {
-            final Handler handler = new Handler();
-            periodicUpdate = new Runnable() {
-                @Override
-                public void run() {
-
-                    handler.postDelayed(periodicUpdate, 1000 * 60 * myApplication.getTimeDelay()); // schedule next wake up every X mins
-
-                    disposables.add(
-                            observable.subscribeOn(Schedulers.io())
-                                    .subscribeWith(disposableObserver));
-
-
-                }
-            };
-            handler.post(periodicUpdate);
-        }
+        handler.postDelayed(periodicUpdate, 1000 * 60 * MyApp.getTimeDelay()); // schedule next wake up every X mins
 
 
         return START_STICKY;
     }
 
+    public static class NewPopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        private WeatherRespository weatherRespository;
+
+        public NewPopulateDbAsyncTask(WeatherRespository weatherRespository) {
+            this.weatherRespository = weatherRespository;
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            Utils utils = new Utils();
+
+            String dataFromUrl = utils.getDataFromUrl(MyApp.getLongLat(), MyApp.getQuery());
+
+            List<WeatherUpdate> weatherUpdateList = utils.convertJsonToWeatherUpdateList(dataFromUrl);
+            CurrentStatus currentStatus = utils.convertJsonToCurrentStatus(dataFromUrl);
+
+            this.weatherRespository.deleteAllWeatherUpdate();
+            this.weatherRespository.deleteAllCurrentStatus();
+
+            this.weatherRespository.insertWeatherUpdate(weatherUpdateList);
+            this.weatherRespository.insertCurrentStatus(currentStatus);
+
+            return null;
+        }
+    }
+
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        Log.i("LoadWeatherNoLimitService:", "onTaskRemoved");
+        Log.i("LoadWeatherNoLimitSe:", "onTaskRemoved");
         Intent restartServiceIntent = new Intent(getApplicationContext(), this.getClass());
         restartServiceIntent.setPackage(getPackageName());
         startService(restartServiceIntent);
@@ -121,14 +85,13 @@ public class LoadWeatherService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.i("LoadWeatherNoLimitService:", "onBind");
+        Log.i("LoadWeatherNoLimitSe:", "onBind");
         return null;
     }
 
     @Override
     public void onDestroy() {
-        Log.i("LoadWeatherNoLimitService:", "onDestroy");
+        Log.i("LoadWeatherNoLimitSe:", "onDestroy");
         super.onDestroy();
-        disposables.clear();
     }
 }

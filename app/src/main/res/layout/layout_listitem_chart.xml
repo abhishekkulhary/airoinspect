@@ -2,14 +2,11 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="200dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardBackgroundColor="@color/cardview_dark_background">
+    android:layout_height="200dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/TextviewStyle"
         android:orientation="horizontal">
 
         <TextView
@@ -17,9 +14,9 @@
             android:layout_width="0dp"
             android:layout_height="25dp"
             android:layout_weight="1"
-            style="@style/TextviewStyle"
             android:text="@string/unit_for_chart"
-            android:gravity="left"
+            android:gravity="start"
+            android:layout_marginStart="5dp"
             tools:ignore="NestedWeights">
 
         </TextView>
@@ -29,8 +26,8 @@
             android:layout_width="0dp"
             android:layout_height="25dp"
             android:layout_weight="1"
-            style="@style/TextviewStyle"
-            android:gravity="right"
+            android:gravity="end"
+            android:layout_marginEnd="5dp"
             android:text="@string/maximum_unit"
             tools:ignore="NestedWeights">
 

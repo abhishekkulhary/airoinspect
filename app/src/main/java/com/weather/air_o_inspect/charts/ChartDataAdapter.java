@@ -1,4 +1,4 @@
-package com.weather.air_o_inspect.charts;
+package com.weather.air_o_inspect.Charts;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
@@ -14,7 +14,7 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.weather.air_o_inspect.MyApplication;
+import com.weather.air_o_inspect.MyApp;
 import com.weather.air_o_inspect.R;
 
 import java.util.ArrayList;
@@ -23,13 +23,6 @@ import java.util.List;
 public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
 
     private List<ChartsData> chartDataList;
-    private MyApplication myApplication;
-
-
-    public ChartDataAdapter(List<ChartsData> objects) {
-        this.chartDataList = objects;
-        this.myApplication = new MyApplication();
-    }
 
     // Create new views (invoked by the layout manager)
     @NonNull
@@ -37,7 +30,7 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
     public ChartViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // create a new view
         CardView v = (CardView) LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.listitem_chart, parent, false);
+                .inflate(R.layout.layout_listitem_chart, parent, false);
         return new ChartViewHolder(v);
     }
 
@@ -53,12 +46,15 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
         final ArrayList<Long> xValues = chartsData.getxValues();
 
         if (data != null) {
-            data.setValueTextColor(Color.WHITE);
+            data.setValueTextColor(Color.BLACK);
             data.setHighlightEnabled(false);
             data.setValueTextSize(5f);
 
-            holder.chart.getDescription().setEnabled(false);
+//            data.calcMinMax();
 
+            holder.chart.getDescription().setEnabled(false);
+//            holder.chart.setFitBars(true);
+//            holder.chart.setHighlightFullBarEnabled(true);
 
             XAxis xAxis = holder.chart.getXAxis();
 
@@ -74,16 +70,15 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
                 @Override
                 public String getAxisLabel(float value, AxisBase axis) {
                     if (value >= 0 && value < xValues.size()) {
-                        return myApplication.getSimpleTimeFormat().format(xValues.get((int) value) * 1000);
+                        return MyApp.getSimpleTimeFormat().format(xValues.get((int) value) * 1000);
                     }
                     return "";
                 }
             });
 
-            //xAxis.setLabelRotationAngle(-80f);
+//            xAxis.setLabelRotationAngle(-80f);
 
             xAxis.setCenterAxisLabels(false);
-            xAxis.setTextColor(Color.WHITE);
 
             // Y - axis
             YAxis rightAxis = holder.chart.getAxisRight();
@@ -94,7 +89,6 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
             rightAxis.setLabelCount(7, true);
             rightAxis.setMinWidth(35f);
             rightAxis.setMaxWidth(40f);
-            rightAxis.setTextColor(Color.WHITE);
 
             YAxis leftAxis = holder.chart.getAxisLeft();
             leftAxis.enableGridDashedLine(10f, 5f, 0f);
@@ -102,10 +96,9 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
             leftAxis.setLabelCount(7, true);
             leftAxis.setMinWidth(35f);
             leftAxis.setMaxWidth(40f);
-            leftAxis.setTextColor(Color.WHITE);
 
-            rightAxis.setAxisMaximum(myApplication.getCOLUMNS_MAXVALUE()[position] + (myApplication.getCOLUMNS_MAXVALUE()[position] + data.getYMin()) / 2);
-            leftAxis.setAxisMaximum(myApplication.getCOLUMNS_MAXVALUE()[position] + (myApplication.getCOLUMNS_MAXVALUE()[position] + data.getYMin()) / 2);
+            rightAxis.setAxisMaximum(MyApp.getColumnsMaxvalue()[position] + (MyApp.getColumnsMaxvalue()[position] + 0) / 2);
+            leftAxis.setAxisMaximum(MyApp.getColumnsMaxvalue()[position] + (MyApp.getColumnsMaxvalue()[position] + 0) / 2);
 
             leftAxis.setAxisMinimum(0f);
             rightAxis.setAxisMinimum(0f);
@@ -126,6 +119,10 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
     @Override
     public int getItemCount() {
         return chartDataList.size();
+    }
+    public void setChartDataList(List<ChartsData> chartDataList) {
+        this.chartDataList = chartDataList;
+        notifyDataSetChanged();
     }
 
 }

@@ -4,13 +4,12 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:gravity="center_horizontal"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical">
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/tv_title"
         android:maxLines="1"
         android:gravity="center"
-        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Widget.TextView"
+        android:textAppearance="@android:style/TextAppearance.DeviceDefault.Widget.TextView.PopupMenu"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

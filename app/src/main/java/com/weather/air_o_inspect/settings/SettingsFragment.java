@@ -1,232 +1,375 @@
-package com.weather.air_o_inspect.settings;
+package com.weather.air_o_inspect.Settings;
 
 
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceManager;
 import androidx.preference.SeekBarPreference;
 import androidx.preference.SwitchPreferenceCompat;
 
+import com.weather.air_o_inspect.Entities.Preferences;
 import com.weather.air_o_inspect.R;
+import com.weather.air_o_inspect.Utils.Utils;
+import com.weather.air_o_inspect.Viewmodel.WeatherViewModel;
 
-public class SettingsFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener, Preference.OnPreferenceChangeListener {
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
+import java.util.Objects;
+
+public class SettingsFragment extends PreferenceFragmentCompat  {
 
 
-    private SharedPreferences sharedPreferences;
-    SeekBarPreference windSeekBar;
-    SeekBarPreference windGustSeekBar;
-    SeekBarPreference precipitationSeekBar;
-    SeekBarPreference precipitationProbabilitySeekBar;
-    SeekBarPreference temperatureSeekBar;
-    SeekBarPreference cloudCoverSeekBar;
-    SeekBarPreference visibilitySeekBar;
+    private SeekBarPreference precipitationIntensitySeekBar;
+    private SeekBarPreference precipitationProbabilitySeekBar;
+    private SeekBarPreference temperatureSeekBar;
+    private SeekBarPreference pressureSeekBar;
+    private SeekBarPreference windSpeedSeekBar;
+    private SeekBarPreference windGustSeekBar;
+    private SeekBarPreference cloudCoverSeekBar;
+    private SeekBarPreference visibilitySeekBar;
 
-    SwitchPreferenceCompat windSwitch;
-    SwitchPreferenceCompat windGustSwitch;
-    SwitchPreferenceCompat sunshineSwitch;
-    SwitchPreferenceCompat precipitationSwitch;
+    private SwitchPreferenceCompat precipitationIntensitySwitch;
+    private SwitchPreferenceCompat precipitationProbabilitySwitch;
+    private SwitchPreferenceCompat temperatureSwitch;
+    private SwitchPreferenceCompat pressureSwitch;
+    private SwitchPreferenceCompat windSpeedSwitch;
+    private SwitchPreferenceCompat windGustSwitch;
+    private SwitchPreferenceCompat cloudCoverSwitch;
+    private SwitchPreferenceCompat visibilitySwitch;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.root_preferences, rootKey);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
 
-        windSeekBar = findPreference("wind_seek");
-        windGustSeekBar = findPreference("wind_gust_seek");
-        precipitationSeekBar = findPreference("precipitation_seek");
+        precipitationIntensitySeekBar = findPreference("precipitation_intensity_seek");
         precipitationProbabilitySeekBar = findPreference("precipitation_probability_seek");
         temperatureSeekBar = findPreference("temperature_seek");
+        pressureSeekBar = findPreference("pressure_seek");
+        windSpeedSeekBar = findPreference("wind_speed_seek");
+        windGustSeekBar = findPreference("wind_gust_seek");
         cloudCoverSeekBar = findPreference("cloud_cover_seek");
         visibilitySeekBar = findPreference("visibility_seek");
 
-
-        Preferences.getPreferences().setWindThresold(windSeekBar.getValue());
-        Preferences.getPreferences().setWindGustThresold(windGustSeekBar.getValue());
-        Preferences.getPreferences().setPrecipitationThresold(precipitationSeekBar.getValue());
-        Preferences.getPreferences().setPrecipitationProbabilityThresold(precipitationProbabilitySeekBar.getValue());
-        Preferences.getPreferences().setTemperatureThresold(temperatureSeekBar.getValue());
-        Preferences.getPreferences().setCloudCoverThresold(cloudCoverSeekBar.getValue());
-        Preferences.getPreferences().setVisibilityThresold(visibilitySeekBar.getValue());
-
-        windSwitch =findPreference("wind_switch");
-        windGustSwitch = findPreference("wind_gust_switch");
-        //sunshineSwitch = findPreference("sunshine_switch");
-        precipitationSwitch = findPreference("precipitation_switch");
-
-        Preferences.getPreferences().setWindSwitch(windSwitch.isChecked());
-        Preferences.getPreferences().setWindGustSwitch(windGustSwitch.isChecked());
-        //Preferences.getPreferences().setSunshineSwitch(sunshineSwitch.isChecked());
-        Preferences.getPreferences().setPrecipitationSwitch(precipitationSwitch.isChecked());
-
-//        Log.i("onCreatePref", String.valueOf(Preferences.getPreferences().getWindThresold()));
-//        Log.i("onCreatePref", String.valueOf(Preferences.getPreferences().getWindGustThresold()));
-//        Log.i("onCreatePref", String.valueOf(Preferences.getPreferences().getPrecipitationThresold()));
-//        Log.i("onCreatePref", String.valueOf(Preferences.getPreferences().getPrecipitationProbabilityThresold()));
-//        Log.i("onCreatePref", String.valueOf(Preferences.getPreferences().getTemperatureThresold()));
-//        Log.i("onCreatePref", String.valueOf(Preferences.getPreferences().getCloudCoverThresold()));
-//        Log.i("onCreatePref", String.valueOf(Preferences.getPreferences().getVisibilityThresold()));
-//        Log.i("onCreatePref", String.valueOf(Preferences.getPreferences().isPrecipitationSwitch()));
-//        Log.i("onCreatePref", String.valueOf(Preferences.getPreferences().isSunshineSwitch()));
-//        Log.i("onCreatePref", String.valueOf(Preferences.getPreferences().isWindGustSwitch()));
-//        Log.i("onCreatePref", String.valueOf(Preferences.getPreferences().isWindSwitch()));
-
-
+        precipitationIntensitySwitch = findPreference("precip_intensity_switch");
+        precipitationProbabilitySwitch =findPreference("precip_probability_switch");
+        temperatureSwitch = findPreference("temperature_switch");
+        pressureSwitch = findPreference("pressure_switch");
+        windSpeedSwitch = findPreference("wind_speed_switch");
+        windGustSwitch =findPreference("wind_gust_switch");
+        cloudCoverSwitch = findPreference("cloud_cover_switch");
+        visibilitySwitch = findPreference("visibility_switch");
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         view.setBackgroundColor(Color.WHITE);
+
+        final WeatherViewModel weatherViewModel = new ViewModelProvider.AndroidViewModelFactory(Objects.requireNonNull(getActivity()).getApplication()).create(WeatherViewModel.class);
+
+        weatherViewModel.getPreferencesLiveData().observe(getActivity(), new Observer<List<Preferences>>() {
+            @Override
+            public void onChanged(final List<Preferences> preferences_1) {
+
+                final Preferences preferences = preferences_1.get(0);
+                Log.i("weatherViewM", "Inside preferences ");
+                precipitationIntensitySeekBar.setValue(Math.round(preferences.getPrecipitationIntensityThresold()));
+                precipitationProbabilitySeekBar.setValue(Math.round(preferences.getPrecipitationProbabilityThresold()));
+                temperatureSeekBar.setValue(Math.round(preferences.getTemperatureThresold()));
+                pressureSeekBar.setValue(Math.round(preferences.getPressureThresold()));
+                windSpeedSeekBar.setValue(Math.round(preferences.getWindSpeedThresold()));
+                windGustSeekBar.setValue(Math.round(preferences.getWindGustThresold()));
+                cloudCoverSeekBar.setValue(Math.round(preferences.getCloudCoverThresold()));
+                visibilitySeekBar.setValue(Math.round(preferences.getVisibilityThresold()));
+
+                precipitationIntensitySwitch.setChecked(preferences.getPrecipitationIntensitySwitch());
+                precipitationProbabilitySwitch.setChecked(preferences.getPrecipitationProbabilitySwitch());
+                temperatureSwitch.setChecked(preferences.getTemperatureSwitch());
+                pressureSwitch.setChecked(preferences.getPressureSwitch());
+                windSpeedSwitch.setChecked(preferences.getWindSpeedSwitch());
+                windGustSwitch.setChecked(preferences.getWindGustSwitch());
+                cloudCoverSwitch.setChecked(preferences.getCloudCoverSwitch());
+                visibilitySwitch.setChecked(preferences.getVisibilitySwitch());
+
+                precipitationIntensitySeekBar.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        Float progress = Float.parseFloat(String.valueOf(newValue));
+                        Preferences preferences_1 = new Preferences(progress, preferences.getPrecipitationProbabilityThresold(),
+                                preferences.getTemperatureThresold(), preferences.getPressureThresold(), preferences.getWindSpeedThresold(),
+                                preferences.getWindGustThresold(), preferences.getCloudCoverThresold(), preferences.getVisibilityThresold(),
+                                preferences.getPrecipitationIntensitySwitch(), preferences.getPrecipitationProbabilitySwitch(), preferences.getTemperatureSwitch(),
+                                preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
+                                preferences.getVisibilitySwitch());
+
+                        weatherViewModel.deleteAllPreferences();
+                        weatherViewModel.insertPreferences(preferences_1);
+                        return true;
+                    }
+                });
+                precipitationProbabilitySeekBar.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        Float progress = Float.parseFloat(String.valueOf(newValue));
+                        Preferences preferences_1 = new Preferences(preferences.getPrecipitationIntensityThresold(), progress,
+                                preferences.getTemperatureThresold(), preferences.getPressureThresold(), preferences.getWindSpeedThresold(),
+                                preferences.getWindGustThresold(), preferences.getCloudCoverThresold(), preferences.getVisibilityThresold(),
+                                preferences.getPrecipitationIntensitySwitch(), preferences.getPrecipitationProbabilitySwitch(), preferences.getTemperatureSwitch(),
+                                preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
+                                preferences.getVisibilitySwitch());
+
+                        weatherViewModel.deleteAllPreferences();
+                        weatherViewModel.insertPreferences(preferences_1);
+                        return true;
+                    }
+                });
+                temperatureSeekBar.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        Float progress = Float.parseFloat(String.valueOf(newValue));
+                        Preferences preferences_1 = new Preferences(preferences.getPrecipitationIntensityThresold(), preferences.getPrecipitationProbabilityThresold(),
+                                progress, preferences.getPressureThresold(), preferences.getWindSpeedThresold(),
+                                preferences.getWindGustThresold(), preferences.getCloudCoverThresold(), preferences.getVisibilityThresold(),
+                                preferences.getPrecipitationIntensitySwitch(), preferences.getPrecipitationProbabilitySwitch(), preferences.getTemperatureSwitch(),
+                                preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
+                                preferences.getVisibilitySwitch());
+
+                        weatherViewModel.deleteAllPreferences();
+                        weatherViewModel.insertPreferences(preferences_1);
+                        return true;
+                    }
+                });
+                pressureSeekBar.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        Float progress = Float.parseFloat(String.valueOf(newValue));
+                        Preferences preferences_1 = new Preferences(preferences.getPrecipitationIntensityThresold(), preferences.getPrecipitationProbabilityThresold(),
+                                preferences.getTemperatureThresold(), progress, preferences.getWindSpeedThresold(),
+                                preferences.getWindGustThresold(), preferences.getCloudCoverThresold(), preferences.getVisibilityThresold(),
+                                preferences.getPrecipitationIntensitySwitch(), preferences.getPrecipitationProbabilitySwitch(), preferences.getTemperatureSwitch(),
+                                preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
+                                preferences.getVisibilitySwitch());
+
+                        weatherViewModel.deleteAllPreferences();
+                        weatherViewModel.insertPreferences(preferences_1);
+                        return true;
+                    }
+                });
+                windSpeedSeekBar.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        Float progress = Float.parseFloat(String.valueOf(newValue));
+                        Preferences preferences_1 = new Preferences(preferences.getPrecipitationIntensityThresold(), preferences.getPrecipitationProbabilityThresold(),
+                                preferences.getTemperatureThresold(), preferences.getPressureThresold(), progress,
+                                preferences.getWindGustThresold(), preferences.getCloudCoverThresold(), preferences.getVisibilityThresold(),
+                                preferences.getPrecipitationIntensitySwitch(), preferences.getPrecipitationProbabilitySwitch(), preferences.getTemperatureSwitch(),
+                                preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
+                                preferences.getVisibilitySwitch());
+
+                        weatherViewModel.deleteAllPreferences();
+                        weatherViewModel.insertPreferences(preferences_1);
+                        return true;
+                    }
+                });
+                windGustSeekBar.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        Float progress = Float.parseFloat(String.valueOf(newValue));
+                        Preferences preferences_1 = new Preferences(preferences.getPrecipitationIntensityThresold(), preferences.getPrecipitationProbabilityThresold(),
+                                preferences.getTemperatureThresold(), preferences.getPressureThresold(),
+                                preferences.getWindSpeedThresold(), progress, preferences.getCloudCoverThresold(), preferences.getVisibilityThresold(),
+                                preferences.getPrecipitationIntensitySwitch(), preferences.getPrecipitationProbabilitySwitch(), preferences.getTemperatureSwitch(),
+                                preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
+                                preferences.getVisibilitySwitch());
+
+                        weatherViewModel.deleteAllPreferences();
+                        weatherViewModel.insertPreferences(preferences_1);
+                        return true;
+                    }
+                });
+                cloudCoverSeekBar.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        Float progress = Float.parseFloat(String.valueOf(newValue));
+                        Preferences preferences_1 = new Preferences(preferences.getPrecipitationIntensityThresold(), preferences.getPrecipitationProbabilityThresold(),
+                                preferences.getTemperatureThresold(), preferences.getPressureThresold(),
+                                preferences.getWindSpeedThresold(), preferences.getWindGustThresold(), progress, preferences.getVisibilityThresold(),
+                                preferences.getPrecipitationIntensitySwitch(), preferences.getPrecipitationProbabilitySwitch(), preferences.getTemperatureSwitch(),
+                                preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
+                                preferences.getVisibilitySwitch());
+
+                        weatherViewModel.deleteAllPreferences();
+                        weatherViewModel.insertPreferences(preferences_1);
+                        return true;
+                    }
+                });
+                visibilitySeekBar.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        Float progress = Float.parseFloat(String.valueOf(newValue));
+                        Preferences preferences_1 = new Preferences(preferences.getPrecipitationIntensityThresold(), preferences.getPrecipitationProbabilityThresold(),
+                                preferences.getTemperatureThresold(), preferences.getPressureThresold(),
+                                preferences.getWindSpeedThresold(), preferences.getWindGustThresold(), preferences.getCloudCoverThresold(), progress,
+                                preferences.getPrecipitationIntensitySwitch(), preferences.getPrecipitationProbabilitySwitch(), preferences.getTemperatureSwitch(),
+                                preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
+                                preferences.getVisibilitySwitch());
+
+                        weatherViewModel.deleteAllPreferences();
+                        weatherViewModel.insertPreferences(preferences_1);
+                        return true;
+                    }
+                });
+                precipitationIntensitySwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        Boolean progress = Boolean.parseBoolean(String.valueOf(newValue));
+                        Preferences preferences_1 = new Preferences(preferences.getPrecipitationIntensityThresold(), preferences.getPrecipitationProbabilityThresold(),
+                                preferences.getTemperatureThresold(), preferences.getPressureThresold(),
+                                preferences.getWindSpeedThresold(), preferences.getWindGustThresold(), preferences.getCloudCoverThresold(), preferences.getVisibilityThresold(),
+                                progress, preferences.getPrecipitationProbabilitySwitch(), preferences.getTemperatureSwitch(),
+                                preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
+                                preferences.getVisibilitySwitch());
+
+                        weatherViewModel.deleteAllPreferences();
+                        weatherViewModel.insertPreferences(preferences_1);
+                        return true;
+                    }
+                });
+                precipitationProbabilitySwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        Boolean progress = Boolean.parseBoolean(String.valueOf(newValue));
+                        Preferences preferences_1 = new Preferences(preferences.getPrecipitationIntensityThresold(), preferences.getPrecipitationProbabilityThresold(),
+                                preferences.getTemperatureThresold(), preferences.getPressureThresold(),
+                                preferences.getWindSpeedThresold(), preferences.getWindGustThresold(), preferences.getCloudCoverThresold(), preferences.getVisibilityThresold(),
+                                preferences.getPrecipitationIntensitySwitch(), progress, preferences.getTemperatureSwitch(),
+                                preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
+                                preferences.getVisibilitySwitch());
+
+                        weatherViewModel.deleteAllPreferences();
+                        weatherViewModel.insertPreferences(preferences_1);
+                        return true;
+                    }
+                });
+                temperatureSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        Boolean progress = Boolean.parseBoolean(String.valueOf(newValue));
+                        Preferences preferences_1 = new Preferences(preferences.getPrecipitationIntensityThresold(), preferences.getPrecipitationProbabilityThresold(),
+                                preferences.getTemperatureThresold(), preferences.getPressureThresold(),
+                                preferences.getWindSpeedThresold(), preferences.getWindGustThresold(), preferences.getCloudCoverThresold(), preferences.getVisibilityThresold(),
+                                preferences.getPrecipitationIntensitySwitch(), preferences.getPrecipitationProbabilitySwitch(), progress,
+                                preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
+                                preferences.getVisibilitySwitch());
+
+                        weatherViewModel.deleteAllPreferences();
+                        weatherViewModel.insertPreferences(preferences_1);
+                        return true;
+                    }
+                });
+                pressureSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        Boolean progress = Boolean.parseBoolean(String.valueOf(newValue));
+                        Preferences preferences_1 = new Preferences(preferences.getPrecipitationIntensityThresold(), preferences.getPrecipitationProbabilityThresold(),
+                                preferences.getTemperatureThresold(), preferences.getPressureThresold(),
+                                preferences.getWindSpeedThresold(), preferences.getWindGustThresold(), preferences.getCloudCoverThresold(), preferences.getVisibilityThresold(),
+                                preferences.getPrecipitationIntensitySwitch(), preferences.getPrecipitationProbabilitySwitch(), preferences.getTemperatureSwitch(),
+                                progress, preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
+                                preferences.getVisibilitySwitch());
+
+                        weatherViewModel.deleteAllPreferences();
+                        weatherViewModel.insertPreferences(preferences_1);
+                        return true;
+                    }
+                });
+                windSpeedSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        Boolean progress = Boolean.parseBoolean(String.valueOf(newValue));
+                        Preferences preferences_1 = new Preferences(preferences.getPrecipitationIntensityThresold(), preferences.getPrecipitationProbabilityThresold(),
+                                preferences.getTemperatureThresold(), preferences.getPressureThresold(),
+                                preferences.getWindSpeedThresold(), preferences.getWindGustThresold(), preferences.getCloudCoverThresold(), preferences.getVisibilityThresold(),
+                                preferences.getPrecipitationIntensitySwitch(), preferences.getPrecipitationProbabilitySwitch(), preferences.getTemperatureSwitch(),
+                                preferences.getPressureSwitch(), progress, preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
+                                preferences.getVisibilitySwitch());
+
+                        weatherViewModel.deleteAllPreferences();
+                        weatherViewModel.insertPreferences(preferences_1);
+                        return true;
+                    }
+                });
+                windGustSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        Boolean progress = Boolean.parseBoolean(String.valueOf(newValue));
+                        Preferences preferences_1 = new Preferences(preferences.getPrecipitationIntensityThresold(), preferences.getPrecipitationProbabilityThresold(),
+                                preferences.getTemperatureThresold(), preferences.getPressureThresold(),
+                                preferences.getWindSpeedThresold(), preferences.getWindGustThresold(), preferences.getCloudCoverThresold(), preferences.getVisibilityThresold(),
+                                preferences.getPrecipitationIntensitySwitch(), preferences.getPrecipitationProbabilitySwitch(), preferences.getTemperatureSwitch(),
+                                preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), progress, preferences.getCloudCoverSwitch(),
+                                preferences.getVisibilitySwitch());
+
+                        weatherViewModel.deleteAllPreferences();
+                        weatherViewModel.insertPreferences(preferences_1);
+                        return true;
+                    }
+                });
+                cloudCoverSwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        Boolean progress = Boolean.parseBoolean(String.valueOf(newValue));
+                        Preferences preferences_1 = new Preferences(preferences.getPrecipitationIntensityThresold(), preferences.getPrecipitationProbabilityThresold(),
+                                preferences.getTemperatureThresold(), preferences.getPressureThresold(),
+                                preferences.getWindSpeedThresold(), preferences.getWindGustThresold(), preferences.getCloudCoverThresold(), preferences.getVisibilityThresold(),
+                                preferences.getPrecipitationIntensitySwitch(), preferences.getPrecipitationProbabilitySwitch(), preferences.getTemperatureSwitch(),
+                                preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), progress,
+                                preferences.getVisibilitySwitch());
+
+                        weatherViewModel.deleteAllPreferences();
+                        weatherViewModel.insertPreferences(preferences_1);
+                        return true;
+                    }
+                });
+                visibilitySwitch.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                    @Override
+                    public boolean onPreferenceChange(Preference preference, Object newValue) {
+                        Boolean progress = Boolean.parseBoolean(String.valueOf(newValue));
+                        Preferences preferences_1 = new Preferences(preferences.getPrecipitationIntensityThresold(), preferences.getPrecipitationProbabilityThresold(),
+                                preferences.getTemperatureThresold(), preferences.getPressureThresold(),
+                                preferences.getWindSpeedThresold(), preferences.getWindGustThresold(), preferences.getCloudCoverThresold(), preferences.getVisibilityThresold(),
+                                preferences.getPrecipitationIntensitySwitch(), preferences.getPrecipitationProbabilitySwitch(), preferences.getTemperatureSwitch(),
+                                preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
+                                progress);
+
+                        weatherViewModel.deleteAllPreferences();
+                        weatherViewModel.insertPreferences(preferences_1);
+                        return true;
+                    }
+                });
+            }
+        });
+
     }
 
     public void resetDefault() {
-        windSeekBar.setValue(getResources().getInteger(R.integer.wind_default));
-        windGustSeekBar.setValue(getResources().getInteger(R.integer.wind_gust_default));
-        precipitationSeekBar.setValue(getResources().getInteger(R.integer.precipitation_default));
-        precipitationProbabilitySeekBar.setValue(getResources().getInteger(R.integer.precipitation_probability_default));
-        temperatureSeekBar.setValue(getResources().getInteger(R.integer.temperature_default));
-        cloudCoverSeekBar.setValue(getResources().getInteger(R.integer.cloud_cover_default));
-        visibilitySeekBar.setValue(getResources().getInteger(R.integer.visibility_default));
 
+        Utils utils = new Utils();
 
-        windSwitch.setChecked(getResources().getBoolean(R.bool.wind_default));
-        windGustSwitch.setChecked(getResources().getBoolean(R.bool.wind_gust_default));
-        //sunshineSwitch.setChecked(getResources().getBoolean(R.bool.sunshine_default));
-        precipitationSwitch.setChecked(getResources().getBoolean(R.bool.precipitation_default));
+        Preferences preferences = utils.getPreferences();
 
-    }
+        final WeatherViewModel weatherViewModel = new ViewModelProvider.AndroidViewModelFactory(Objects.requireNonNull(getActivity()).getApplication()).create(WeatherViewModel.class);
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        weatherViewModel.deleteAllPreferences();
+        weatherViewModel.insertPreferences(preferences);
 
-        windSeekBar.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                final int progress = Integer.parseInt(String.valueOf(newValue));
-//                preference.setSummary(String.format("Current value: %d", progress));
-                Preferences.getPreferences().setWindThresold(progress);
-                return true;
-            }
-        });
-
-
-        windGustSeekBar.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                final int progress = Integer.parseInt(String.valueOf(newValue));
-//                preference.setSummary(String.format("Current value: %d", progress));
-                Preferences.getPreferences().setWindGustThresold(progress);
-                return true;
-            }
-        });
-
-
-        precipitationSeekBar.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                final int progress = Integer.parseInt(String.valueOf(newValue));
-//                preference.setSummary(String.format("Current value: %d", progress));
-                Preferences.getPreferences().setPrecipitationThresold(progress);
-                return true;
-            }
-        });
-
-        precipitationProbabilitySeekBar.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                final int progress = Integer.parseInt(String.valueOf(newValue));
-//                preference.setSummary(String.format("Current value: %d", progress));
-                Preferences.getPreferences().setPrecipitationProbabilityThresold(progress);
-                return true;
-            }
-        });
-
-        temperatureSeekBar.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                final int progress = Integer.parseInt(String.valueOf(newValue));
-//                preference.setSummary(String.format("Current value: %d", progress));
-                Preferences.getPreferences().setTemperatureThresold(progress);
-                return true;
-            }
-        });
-
-
-        cloudCoverSeekBar.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                final int progress = Integer.parseInt(String.valueOf(newValue));
-//                preference.setSummary(String.format("Current value: %d", progress));
-                Preferences.getPreferences().setCloudCoverThresold(progress);
-                return true;
-            }
-        });
-
-
-        visibilitySeekBar.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                final int progress = Integer.parseInt(String.valueOf(newValue));
-//                preference.setSummary(String.format("Current value: %d", progress));
-                Preferences.getPreferences().setVisibilityThresold(progress);
-                return true;
-            }
-        });
-
-
-        findPreference("wind_switch").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                final boolean progress = Boolean.parseBoolean(String.valueOf(newValue));
-//                preference.setSummary(String.format("Current value: %d", progress));
-                Preferences.getPreferences().setWindSwitch(progress);
-                return true;
-            }
-        });
-
-        findPreference("wind_gust_switch").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                final boolean progress = Boolean.parseBoolean(String.valueOf(newValue));
-//                preference.setSummary(String.format("Current value: %d", progress));
-                Preferences.getPreferences().setWindGustSwitch(progress);
-                return true;
-            }
-        });
-
-        findPreference("sunshine_switch").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                final boolean progress = Boolean.parseBoolean(String.valueOf(newValue));
-//                preference.setSummary(String.format("Current value: %d", progress));
-                Preferences.getPreferences().setSunshineSwitch(progress);
-                return true;
-            }
-        });
-
-        findPreference("precipitation_switch").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                final boolean progress = Boolean.parseBoolean(String.valueOf(newValue));
-//                preference.setSummary(String.format("Current value: %d", progress));
-                Preferences.getPreferences().setPrecipitationSwitch(progress);
-                return true;
-            }
-        });
-
-    }
-
-    @Override
-    public boolean onPreferenceChange(Preference preference, Object newValue) {
-        Log.i("onPreferenceChange", "changed value is " + newValue);
-        return false;
     }
 }

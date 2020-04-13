@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#000000</color>
-    <color name="colorPrimaryDark">#000000</color>
-    <color name="colorAccent">#000000</color>
+    <color name="colorPrimary">#1A4FA6</color>
+    <color name="colorPrimaryDark">#1A4FA6</color>
+    <color name="colorAccent">#1A4FA6</color>
     <color name="greenStatus">#00C853</color>
     <color name="tab_indicator">#ffffff</color>
-    <color name="colorWhite">#ffffff</color>
+
 
     <color name="all_ok">#00C853</color>
     <color name="not_ok">#ff5722</color>
