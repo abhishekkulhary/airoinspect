@@ -124,12 +124,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             @Override
             public Observable<Map<String, List<String>>> call() throws Exception {
                 Log.i("In Observable", "Hello done till here");
-                Map<String, Map<String, ArrayList<Float>>> currentWeatherData = utilsWeatherDataRead.readWeatherData(myApplication.getFilename()[0]);
+                Map<String, Map<String, ArrayList<Float>>> currentWeatherData = utilsWeatherDataRead.readWeatherDataFromFile(myApplication.getFilename()[0]);
                 Map<String, List<String>> currentWeatherCondition = utilsWeatherDataRead.getCurrentWeatherConditions(currentWeatherData);
 
                 Log.i("In Observable2", "Hello done till here");
 
-                weatherData = utilsWeatherDataRead.readWeatherData(myApplication.getFilename()[1]);
+                weatherData = utilsWeatherDataRead.readWeatherDataFromFile(myApplication.getFilename()[1]);
 
                 return Observable.just(currentWeatherCondition);
             }

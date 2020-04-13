@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarEntry;
 import com.weather.air_o_inspect.R;
 import com.weather.air_o_inspect.service.UtilsWeatherDataRead;
 
@@ -32,14 +33,16 @@ public class ChartFragment extends Fragment {
 
     private final CompositeDisposable disposables = new CompositeDisposable();
     private String[] LABELS;
+    private String[] UNITS;
     private UtilsWeatherDataRead utilsWeatherDataRead;
     private Map<String, ArrayList<Float>> weatherData;
 
-    static ChartFragment newInstance(int index, Map<String, ArrayList<Float>> weatherData, String[] LABELS, UtilsWeatherDataRead utilsWeatherDataRead) {
+    static ChartFragment newInstance(int index, Map<String, ArrayList<Float>> weatherData, String[] LABELS, String[] UNITS, UtilsWeatherDataRead utilsWeatherDataRead) {
 
         ChartFragment chartFragment = new ChartFragment();
         chartFragment.weatherData = weatherData;
         chartFragment.LABELS = LABELS;
+        chartFragment.UNITS = UNITS;
         chartFragment.utilsWeatherDataRead = utilsWeatherDataRead;
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_SECTION_NUMBER, index);
@@ -61,13 +64,13 @@ public class ChartFragment extends Fragment {
         allCharts.setLayoutManager(new LinearLayoutManager(getContext()));
 
         Map<String, ArrayList<Float>> weatherDataRefined = utilsWeatherDataRead.getChartItems(weatherData);
-        Map<String, Object> mappedArrayEntries = utilsWeatherDataRead.getMappedArrayListOfEntries(weatherDataRefined);
+        Map<String, ArrayList<BarEntry>> mappedArrayEntries = utilsWeatherDataRead.getMappedArrayListOfEntries(weatherDataRefined);
         ArrayList<BarData> mappedBarData = utilsWeatherDataRead.generateBarData(mappedArrayEntries);
         final ArrayList<ChartsData> chartsDataList = new ArrayList<>();
 
         if (mappedBarData != null) {
             for (int i = 0; i < mappedBarData.size(); i++) {
-                chartsDataList.add(new ChartsData(mappedBarData.get(i), LABELS[i], "UNIT", utilsWeatherDataRead.getxValues()));
+                chartsDataList.add(new ChartsData(mappedBarData.get(i), LABELS[i], UNITS[i], utilsWeatherDataRead.getxValues()));
             }
         }
         ChartDataAdapter cda = new ChartDataAdapter(chartsDataList);

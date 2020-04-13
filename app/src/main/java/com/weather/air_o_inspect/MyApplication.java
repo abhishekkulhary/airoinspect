@@ -35,6 +35,10 @@ public class MyApplication extends Application implements LocationListener, Seri
     private final String[] TAB_SUBTEXT = {"Today", "Tomorrow", "Day After"};
     private final String[] LABELS = {"Precipitation Intensity", "Precipitation Probability", "Temperature", "Pressure", "Wind Speed", "Wind Gust", "Cloud Cover", "Visibility"};
 
+
+
+    private final String[] UNITS = {"mm", "Percent", "Celsius", "Pa", "m/s", "m/s", "Percent", "km"};
+
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
     private final SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH", Locale.getDefault());
     private final SimpleDateFormat simpleTimesFormat = new SimpleDateFormat("dd MMM yyyy HH:mm:ss", Locale.getDefault());
@@ -112,6 +116,8 @@ public class MyApplication extends Application implements LocationListener, Seri
     public String[] getLABELS() {
         return LABELS;
     }
+
+    public String[] getUNITS() { return UNITS; }
 
     public SimpleDateFormat getSimpleDateFormat() {
         return simpleDateFormat;

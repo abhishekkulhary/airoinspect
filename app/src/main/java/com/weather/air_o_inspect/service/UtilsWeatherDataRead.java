@@ -46,29 +46,20 @@ public class UtilsWeatherDataRead {
         Map<String, List<String>> currentWeatherCondition = new HashMap<>();
 
         List<String> titleLine = new ArrayList<>();
-
         titleLine.add(myApplication.getxColumn());
 
         if (!weatherData.isEmpty()) {
-
-
             titleLine.addAll(Arrays.asList(myApplication.getCOLUMNS()));
-
             Set<String> keys = weatherData.keySet();
-
             Map<String, ArrayList<Float>> currentStatus = weatherData.get("" + keys.toArray()[0]);
-
             List<String> values = new ArrayList<>();
 
             assert currentStatus != null;
             values.add((String) currentStatus.keySet().toArray()[0]);
 
             for (Float i : currentStatus.get(currentStatus.keySet().toArray()[0])) {
-
                 values.add("" + i);
-
             }
-
             currentWeatherCondition.put("titles", titleLine);
             currentWeatherCondition.put("values", values);
         }
@@ -77,51 +68,35 @@ public class UtilsWeatherDataRead {
         return currentWeatherCondition;
     }
 
-    //TODO: 3. Separate the Data Retrivel from API and Chart creation.
     //TODO: 5. Important UI UPDATE Time and date show on x-axis(UtilsWeatherDataRead, ChartDataAdapter)
     public Map<String, ArrayList<Float>> getChartItems(Map<String, ArrayList<Float>> weatherData) {
 
         Log.i("getChartItems 1", "start");
         Map<String, ArrayList<Float>> yLabelValues = new HashMap<>();
-
         List<String> titleLine;
 
         if (!weatherData.isEmpty()) {
-
             titleLine = Arrays.asList(myApplication.getCOLUMNS());
-
             xValues = new ArrayList<>();
 
             for (String s : weatherData.keySet()) {
-
                 xValues.add(Long.parseLong(s));
-
             }
-
             Collections.sort(xValues);
-
             for (String column : myApplication.getCOLUMNS()) {
-
                 int index = titleLine.indexOf(column);
-
                 ArrayList<Float> colValues = new ArrayList<>();
-
                 for (Long x : xValues) {
-
                     colValues.add(Objects.requireNonNull(weatherData.get("" + x)).get(index));
-
                 }
-
                 yLabelValues.put(column, colValues);
             }
-
             System.out.println("getChartItems" + xValues);
         }
-
         return yLabelValues;
     }
 
-    public Map<String, Map<String, ArrayList<Float>>> readWeatherData(String filename) {
+    public Map<String, Map<String, ArrayList<Float>>> readWeatherDataFromFile(String filename) {
         Map<String, Map<String, ArrayList<Float>>> weatherData = new HashMap<>();
         FileInputStream is = null;
         BufferedReader reader = null;
@@ -227,23 +202,35 @@ public class UtilsWeatherDataRead {
         }
     }
 
-    //TODO: 1. Remove the Line chart from the combined chart
-    //TODO: 2. Add colors to the bars based on some conditions.
-    public ArrayList<BarData> generateBarData(Map<String, Object> values) {
+    public Map<String, ArrayList<BarEntry>> getMappedArrayListOfEntries(Map<String, ArrayList<Float>> yLabelValues) {
+        Map<String, ArrayList<BarEntry>> mappedBarEntries = new HashMap<>();
+        if (yLabelValues != null && !yLabelValues.isEmpty()) {
+            for (Map.Entry<String, ArrayList<Float>> entry : yLabelValues.entrySet()) {
+                ArrayList<BarEntry> barEntries = new ArrayList<>();
+                int i = 0;
+                for (Float val : entry.getValue()) {
+                    barEntries.add(new BarEntry(i, val));
+                    i++;
+                }
+                mappedBarEntries.put(entry.getKey(), barEntries);
+            }
+        }
+        return mappedBarEntries;
+    }
+
+    public ArrayList<BarData> generateBarData(Map<String, ArrayList<BarEntry>> values) {
         int green = Color.rgb(110, 190, 102);
         int red = Color.rgb(211, 74, 88);
 
         ArrayList<BarData> bardata_arraylist = new ArrayList<>();
 
-
         if (values != null && !values.isEmpty()) {
             for (String label : myApplication.getCOLUMNS()) {
                 ArrayList<IBarDataSet> barDataSets = new ArrayList<>();
                 List<Integer> colors = new ArrayList<>();
-                ArrayList<BarEntry> yValues = ((Map<String, ArrayList<BarEntry>>) Objects.requireNonNull(values.get("bar"))).get(label);
+                ArrayList<BarEntry> yValues = values.get(label);
                 assert yValues != null;
                 for (BarEntry data : yValues) {
-
                     float threshold = getThreshold(label);
                     Log.i("GenerateBarData", "label threshold : " + label + String.valueOf(threshold));
                     if (data.getY() < threshold) {
@@ -264,25 +251,6 @@ public class UtilsWeatherDataRead {
             }
         }
         return bardata_arraylist;
-    }
-
-    public Map<String, Object> getMappedArrayListOfEntries(Map<String, ArrayList<Float>> yLabelValues) {
-        Map<String, Object> mappedEntries = new HashMap<>();
-        if (yLabelValues != null && !yLabelValues.isEmpty()) {
-            Map<String, ArrayList<BarEntry>> mappedBarEntries = new HashMap<>();
-
-            for (Map.Entry<String, ArrayList<Float>> entry : yLabelValues.entrySet()) {
-                ArrayList<BarEntry> barEntries = new ArrayList<>();
-                int i = 0;
-                for (Float val : entry.getValue()) {
-                    barEntries.add(new BarEntry(i, val));
-                    i++;
-                }
-                mappedBarEntries.put(entry.getKey(), barEntries);
-            }
-            mappedEntries.put("bar", mappedBarEntries);
-        }
-        return mappedEntries;
     }
 
     public ArrayList<Long> getxValues() {
