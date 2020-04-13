@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.location.Location;
 import android.location.LocationManager;
@@ -175,13 +176,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                     currentTimePlace = findViewById(R.id.current_time_place);
                     TextView flyingStatus = findViewById(R.id.current_fly_status);
                     if (currentStatusData.isCurrent_fly_status()) {
-
-                        flyingStatus.setBackgroundColor(R.color.all_ok);
+                        flyingStatus.setBackgroundColor(getResources().getColor(R.color.all_ok));
                         Log.i("flyingstatuscolor","Clear for takeoff");
                     } else {
-
                         Log.i("flyingstatuscolor","Not clear for takeoff");
-                        flyingStatus.setBackgroundColor(R.color.not_ok);
+                        flyingStatus.setBackgroundColor(getResources().getColor(R.color.not_ok));
 
                     }
                     currentTemperature.setText(currentStatusData.getCurrent_temperature());

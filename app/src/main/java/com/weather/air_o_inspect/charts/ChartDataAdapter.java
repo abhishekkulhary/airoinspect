@@ -53,7 +53,7 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
         final ArrayList<Long> xValues = chartsData.getxValues();
 
         if (data != null) {
-            data.setValueTextColor(Color.BLACK);
+            data.setValueTextColor(Color.WHITE);
             data.setHighlightEnabled(false);
             data.setValueTextSize(5f);
 
@@ -83,6 +83,7 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
             //xAxis.setLabelRotationAngle(-80f);
 
             xAxis.setCenterAxisLabels(false);
+            xAxis.setTextColor(Color.WHITE);
 
             // Y - axis
             YAxis rightAxis = holder.chart.getAxisRight();
@@ -93,6 +94,7 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
             rightAxis.setLabelCount(7, true);
             rightAxis.setMinWidth(35f);
             rightAxis.setMaxWidth(40f);
+            rightAxis.setTextColor(Color.WHITE);
 
             YAxis leftAxis = holder.chart.getAxisLeft();
             leftAxis.enableGridDashedLine(10f, 5f, 0f);
@@ -100,6 +102,7 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
             leftAxis.setLabelCount(7, true);
             leftAxis.setMinWidth(35f);
             leftAxis.setMaxWidth(40f);
+            leftAxis.setTextColor(Color.WHITE);
 
             rightAxis.setAxisMaximum(myApplication.getCOLUMNS_MAXVALUE()[position] + (myApplication.getCOLUMNS_MAXVALUE()[position] + data.getYMin()) / 2);
             leftAxis.setAxisMaximum(myApplication.getCOLUMNS_MAXVALUE()[position] + (myApplication.getCOLUMNS_MAXVALUE()[position] + data.getYMin()) / 2);

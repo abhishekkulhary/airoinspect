@@ -58,12 +58,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
         windSwitch =findPreference("wind_switch");
         windGustSwitch = findPreference("wind_gust_switch");
-        sunshineSwitch = findPreference("sunshine_switch");
+        //sunshineSwitch = findPreference("sunshine_switch");
         precipitationSwitch = findPreference("precipitation_switch");
 
         Preferences.getPreferences().setWindSwitch(windSwitch.isChecked());
         Preferences.getPreferences().setWindGustSwitch(windGustSwitch.isChecked());
-        Preferences.getPreferences().setSunshineSwitch(sunshineSwitch.isChecked());
+        //Preferences.getPreferences().setSunshineSwitch(sunshineSwitch.isChecked());
         Preferences.getPreferences().setPrecipitationSwitch(precipitationSwitch.isChecked());
 
 //        Log.i("onCreatePref", String.valueOf(Preferences.getPreferences().getWindThresold()));
@@ -99,7 +99,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Shared
 
         windSwitch.setChecked(getResources().getBoolean(R.bool.wind_default));
         windGustSwitch.setChecked(getResources().getBoolean(R.bool.wind_gust_default));
-        sunshineSwitch.setChecked(getResources().getBoolean(R.bool.sunshine_default));
+        //sunshineSwitch.setChecked(getResources().getBoolean(R.bool.sunshine_default));
         precipitationSwitch.setChecked(getResources().getBoolean(R.bool.precipitation_default));
 
     }
