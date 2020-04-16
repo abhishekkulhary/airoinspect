@@ -1,18 +1,17 @@
 package com.weather.air_o_inspect.Entities;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.weather.air_o_inspect.MyApp;
+import com.weather.air_o_inspect.MyApplication;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
+@Entity(tableName = "weather_forecast")
+public class WeatherForecast {
 
-@Entity(tableName = "weather_update")
-public class WeatherUpdate {
-
-    private String currentTime;
-
+    @PrimaryKey(autoGenerate = true)
+    private Integer id;
+    private Long timeInMillis;
     private Float precipIntensity;
     private Float precipProbability;
     private Float temperature;
@@ -21,13 +20,11 @@ public class WeatherUpdate {
     private Float windGust;
     private Float cloudCover;
     private Float visibility;
+    private String date;
 
-    @PrimaryKey
-    private Long time;
-
-    public WeatherUpdate(Long time, Float precipIntensity, Float precipProbability,
-                         Float temperature, Float pressure, Float windSpeed,
-                         Float windGust, Float cloudCover, Float visibility) {
+    public WeatherForecast(@NonNull Long timeInMillis, @NonNull Float precipIntensity, @NonNull Float precipProbability,
+                           @NonNull Float temperature, @NonNull Float pressure, @NonNull Float windSpeed,
+                           @NonNull Float windGust, @NonNull Float cloudCover, @NonNull Float visibility) {
         this.precipIntensity = precipIntensity;
         this.precipProbability = precipProbability;
         this.temperature = temperature;
@@ -36,23 +33,8 @@ public class WeatherUpdate {
         this.windGust = windGust;
         this.cloudCover = cloudCover;
         this.visibility = visibility;
-        this.time = time;
-    }
-
-    public void setCurrentTime(Long time) {
-
-        this.setCurrentTime(MyApp.getSimpleDateFormat().format(time * 1000));
-
-    }
-
-    public void setCurrentTime(String currentTime) {
-
-        this.currentTime = currentTime;
-
-    }
-
-    public String getCurrentTime() {
-        return currentTime;
+        this.timeInMillis = timeInMillis;
+        this.date = MyApplication.getSimpleDateFormat().format(timeInMillis * 1000);
     }
 
     public Float getPrecipIntensity() {
@@ -87,8 +69,26 @@ public class WeatherUpdate {
         return visibility;
     }
 
-    public Long getTime() {
-        return time;
+    public Long getTimeInMillis() {
+        return timeInMillis;
     }
 
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+
+        this.date = date;
+
+    }
+
+    @NonNull
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(@NonNull Integer id) {
+        this.id = id;
+    }
 }

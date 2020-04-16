@@ -9,27 +9,24 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.sqlite.db.SupportSQLiteDatabase;
 
-import com.weather.air_o_inspect.DAO.CurrentStatusDAO;
-import com.weather.air_o_inspect.DAO.PreferenceDAO;
-import com.weather.air_o_inspect.DAO.WeatherUpdateDAO;
-import com.weather.air_o_inspect.Entities.CurrentStatus;
 import com.weather.air_o_inspect.Entities.Preferences;
-import com.weather.air_o_inspect.Entities.WeatherUpdate;
-import com.weather.air_o_inspect.MyApp;
-import com.weather.air_o_inspect.Utils.Utils;
+import com.weather.air_o_inspect.Entities.WeatherCurrent;
+import com.weather.air_o_inspect.Entities.WeatherForecast;
+import com.weather.air_o_inspect.MyApplication;
 
 import java.util.List;
 
-@Database(entities = {CurrentStatus.class, WeatherUpdate.class, Preferences.class}, version = 1)
+@Database(entities = {WeatherCurrent.class, WeatherForecast.class, Preferences.class}, version = 1, exportSchema = false)
 public abstract class WeatherDatabase extends RoomDatabase {
 
     private static WeatherDatabase instance;
-
-    public abstract CurrentStatusDAO currentStatusDAO();
-
-    public abstract WeatherUpdateDAO weatherUpdateDAO();
-
-    public abstract PreferenceDAO preferenceDAO();
+    private static RoomDatabase.Callback roomCallBack = new RoomDatabase.Callback() {
+        @Override
+        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+            super.onCreate(db);
+            new PopulateDbAsyncTask(instance).execute();
+        }
+    };
 
     public static synchronized WeatherDatabase getInstance(Context context) {
         if (instance == null) {
@@ -42,61 +39,29 @@ public abstract class WeatherDatabase extends RoomDatabase {
         return instance;
     }
 
-    private static RoomDatabase.Callback roomCallBack = new RoomDatabase.Callback(){
-        @Override
-        public void onCreate(@NonNull SupportSQLiteDatabase db) {
-            super.onCreate(db);
-            new PopulateDbAsyncTask(instance).execute();
-            new PopulateDbPreferencesAsyncTask(instance).execute();
-        }
-    };
+    public abstract WeatherForecastDAO weatherUpdateDAO();
 
     public static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
 
-        private CurrentStatusDAO currentStatusDAO;
-        private WeatherUpdateDAO weatherUpdateDAO;
+        private WeatherForecastDAO weatherForecastDAO;
 
-        public PopulateDbAsyncTask(WeatherDatabase db) {
-            currentStatusDAO = db.currentStatusDAO();
-            weatherUpdateDAO = db.weatherUpdateDAO();
+        PopulateDbAsyncTask(WeatherDatabase db) {
+            weatherForecastDAO = db.weatherUpdateDAO();
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
 
-            Utils utils = new Utils();
+            DatabaseUtils databaseUtils = new DatabaseUtils();
 
-            String dataFromUrl = utils.getDataFromUrl(MyApp.getLongLat(), MyApp.getQuery());
+            String dataFromUrl = databaseUtils.getDataFromUrl(MyApplication.getLongLat(), MyApplication.getQuery());
 
-            List<WeatherUpdate> weatherUpdateList = utils.convertJsonToWeatherUpdateList(dataFromUrl);
-            CurrentStatus currentStatus = utils.convertJsonToCurrentStatus(dataFromUrl);
+            List<WeatherForecast> weatherForecastList = databaseUtils.convertJsonToWeatherForecastList(dataFromUrl);
+            WeatherCurrent weatherCurrent = databaseUtils.convertJsonToWeatherCurrent(dataFromUrl);
 
-            weatherUpdateDAO.deleteAll();
-            currentStatusDAO.deleteAll();
-
-            weatherUpdateDAO.insert(weatherUpdateList.toArray(new WeatherUpdate[weatherUpdateList.size()]));
-            currentStatusDAO.insert(currentStatus);
-
-            return null;
-        }
-    }
-
-    public static class PopulateDbPreferencesAsyncTask extends AsyncTask<Void, Void, Void> {
-        private PreferenceDAO preferenceDAO;
-
-        public PopulateDbPreferencesAsyncTask(WeatherDatabase db) {
-            preferenceDAO = db.preferenceDAO();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            Utils utils = new Utils();
-
-            Preferences preferences = utils.getPreferences();
-
-            preferenceDAO.deleteAll();
-            preferenceDAO.insert(preferences);
+            weatherForecastDAO.insertWeatherForecast(weatherForecastList.toArray(new WeatherForecast[weatherForecastList.size()]));
+            weatherForecastDAO.insertWeatherCurrent(weatherCurrent);
+            weatherForecastDAO.insertPreferences(new Preferences());
 
             return null;
         }

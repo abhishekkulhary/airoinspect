@@ -1,20 +1,22 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout
+    android:layout_marginTop="10dp"
     android:layout_width="match_parent"
-    android:layout_height="175dp">
+    android:layout_height="175dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:weightSum="3">
+        android:baselineAligned="false"
+        tools:ignore="UselessParent">
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:weightSum="5">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -60,7 +62,8 @@
                 android:layout_height="0dp"
                 android:layout_weight="2"
                 android:orientation="horizontal"
-                tools:ignore="NestedWeights">
+                tools:ignore="NestedWeights"
+                android:baselineAligned="false">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -75,12 +78,14 @@
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:src="@drawable/temp_icon" />
+                        android:src="@drawable/temp_icon"
+                        android:contentDescription="TODO"
+                        tools:ignore="ContentDescription,HardcodedText" />
 
                     <TextView
                         android:id="@+id/current_temperature"
                         style="@style/TextviewStyle"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
@@ -105,12 +110,14 @@
 
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:src="@drawable/rain_icon" />
+                        android:src="@drawable/rain_icon"
+                        android:contentDescription="TODO"
+                        tools:ignore="ContentDescription,HardcodedText" />
 
                     <TextView
                         android:id="@+id/current_rain_status"
                         style="@style/TextviewStyle"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
@@ -128,7 +135,8 @@
                 android:layout_weight="2"
                 android:orientation="horizontal"
                 android:weightSum="2"
-                tools:ignore="NestedWeights">
+                tools:ignore="NestedWeights"
+                android:baselineAligned="false">
 
 
                 <LinearLayout
@@ -145,12 +153,14 @@
 
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:src="@drawable/wind_icon" />
+                        android:src="@drawable/wind_icon"
+                        android:contentDescription="TODO"
+                        tools:ignore="ContentDescription,HardcodedText" />
 
                     <TextView
                         android:id="@+id/current_wind"
                         style="@style/TextviewStyle"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
@@ -172,18 +182,18 @@
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:src="@drawable/visibility_icon" />
+                        android:src="@drawable/visibility_icon"
+                        android:contentDescription="TODO"
+                        tools:ignore="ContentDescription,HardcodedText" />
 
                     <TextView
                         android:id="@+id/current_visibility"
                         style="@style/TextviewStyle"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
                         android:text="@string/sun_or_visibility">
-
-
                     </TextView>
                 </LinearLayout>
 

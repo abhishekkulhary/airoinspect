@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.weather.air_o_inspect">
+    package="com.weather.air_o_inspect"
+    xmlns:dist="http://schemas.android.com/apk/distribution">
+
+    <dist:module dist:instant="true" />
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -13,7 +16,7 @@
         android:roundIcon="@mipmap/weather_app"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar"
-        android:name=".MyApp">
+        android:name=".MyApplication">
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +24,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".Service.LoadWeatherService" />
     </application>
 
 </manifest>

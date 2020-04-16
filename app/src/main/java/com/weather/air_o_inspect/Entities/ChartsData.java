@@ -1,4 +1,4 @@
-package com.weather.air_o_inspect.Charts;
+package com.weather.air_o_inspect.Entities;
 
 import com.github.mikephil.charting.data.BarData;
 

@@ -25,8 +25,8 @@ import java.util.List;
 
 /**
  * Utilities class that has some helper methods. Needs to be initialized by
- * calling Utils.init(...) before usage. Inside the Chart.init() method, this is
- * done, if the Utils are used before that, Utils.init(...) needs to be called
+ * calling DatabaseUtils.init(...) before usage. Inside the Chart.init() method, this is
+ * done, if the DatabaseUtils are used before that, DatabaseUtils.init(...) needs to be called
  * manually.
  *
  * @author Philipp Jahoda
@@ -59,8 +59,8 @@ public abstract class Utils {
             // noinspection deprecation
             mMaximumFlingVelocity = ViewConfiguration.getMaximumFlingVelocity();
 
-            Log.e("MPChartLib-Utils"
-                    , "Utils.init(...) PROVIDED CONTEXT OBJECT IS NULL");
+            Log.e("MPChartLib-DatabaseUtils"
+                    , "DatabaseUtils.init(...) PROVIDED CONTEXT OBJECT IS NULL");
 
         } else {
             ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
@@ -102,9 +102,9 @@ public abstract class Utils {
 
         if (mMetrics == null) {
 
-            Log.e("MPChartLib-Utils",
-                    "Utils NOT INITIALIZED. You need to call Utils.init(...) at least once before" +
-                            " calling Utils.convertDpToPixel(...). Otherwise conversion does not " +
+            Log.e("MPChartLib-DatabaseUtils",
+                    "DatabaseUtils NOT INITIALIZED. You need to call DatabaseUtils.init(...) at least once before" +
+                            " calling DatabaseUtils.convertDpToPixel(...). Otherwise conversion does not " +
                             "take place.");
             return dp;
         }
@@ -123,9 +123,9 @@ public abstract class Utils {
 
         if (mMetrics == null) {
 
-            Log.e("MPChartLib-Utils",
-                    "Utils NOT INITIALIZED. You need to call Utils.init(...) at least once before" +
-                            " calling Utils.convertPixelsToDp(...). Otherwise conversion does not" +
+            Log.e("MPChartLib-DatabaseUtils",
+                    "DatabaseUtils NOT INITIALIZED. You need to call DatabaseUtils.init(...) at least once before" +
+                            " calling DatabaseUtils.convertPixelsToDp(...). Otherwise conversion does not" +
                             " take place.");
             return px;
         }

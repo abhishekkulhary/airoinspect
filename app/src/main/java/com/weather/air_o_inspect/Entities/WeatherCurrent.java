@@ -1,21 +1,18 @@
 package com.weather.air_o_inspect.Entities;
 
+import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.weather.air_o_inspect.MyApp;
+import com.weather.air_o_inspect.MyApplication;
 
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
-@Entity(tableName = "current_status")
-public class CurrentStatus {
-
-    private String currentFlyStatus;
-    private String currentTime;
+@Entity(tableName = "weather_current")
+public class WeatherCurrent {
 
     @PrimaryKey
-    private Long time;
+    private Integer id = 1;
+
+    private Long timeInMillis;
     private Float precipIntensity;
     private Float precipProbability;
     private Float temperature;
@@ -24,10 +21,11 @@ public class CurrentStatus {
     private Float windGust;
     private Float cloudCover;
     private Float visibility;
+    private String dateTime;
 
-    public CurrentStatus(Long time, Float precipIntensity, Float precipProbability,
-                         Float temperature, Float pressure, Float windSpeed,
-                         Float windGust, Float cloudCover, Float visibility) {
+    public WeatherCurrent(@NonNull Long timeInMillis, @NonNull Float precipIntensity, @NonNull Float precipProbability,
+                          @NonNull Float temperature, @NonNull Float pressure, @NonNull Float windSpeed,
+                          @NonNull Float windGust, @NonNull Float cloudCover, @NonNull Float visibility) {
         this.precipIntensity = precipIntensity;
         this.precipProbability = precipProbability;
         this.temperature = temperature;
@@ -36,29 +34,17 @@ public class CurrentStatus {
         this.windGust = windGust;
         this.cloudCover = cloudCover;
         this.visibility = visibility;
-        this.time = time;
+        this.timeInMillis = timeInMillis;
+        this.dateTime = MyApplication.getSimpleDateWithTimeFormat().format(timeInMillis * 1000);
     }
 
-    public void setCurrentFlyStatus(String currentFlyStatus) {
-        this.currentFlyStatus = currentFlyStatus;
+    public void setDateTime(String dateTime) {
+
+        this.dateTime = dateTime;
     }
 
-    public void setCurrentTime(Long time) {
-
-        this.setCurrentTime(MyApp.getSimpleDateWithTimeFormat().format(time * 1000));
-    }
-
-    public void setCurrentTime(String currentTime) {
-
-        this.currentTime = currentTime;
-    }
-
-    public String getCurrentFlyStatus() {
-        return currentFlyStatus;
-    }
-
-    public String getCurrentTime() {
-        return currentTime;
+    public String getDateTime() {
+        return dateTime;
     }
 
     public Float getPrecipIntensity() {
@@ -93,7 +79,16 @@ public class CurrentStatus {
         return visibility;
     }
 
-    public Long getTime() {
-        return time;
+    public Long getTimeInMillis() {
+        return timeInMillis;
+    }
+
+    @NonNull
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(@NonNull Integer id) {
+        this.id = id;
     }
 }

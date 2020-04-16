@@ -68,8 +68,8 @@ public class LineDataSet extends LineRadarDataSet<Entry> implements ILineDataSet
     public LineDataSet(List<Entry> yVals, String label) {
         super(yVals, label);
 
-        // mCircleRadius = Utils.convertDpToPixel(4f);
-        // mLineWidth = Utils.convertDpToPixel(1f);
+        // mCircleRadius = DatabaseUtils.convertDpToPixel(4f);
+        // mLineWidth = DatabaseUtils.convertDpToPixel(1f);
 
         if (mCircleColors == null) {
             mCircleColors = new ArrayList<Integer>();

@@ -1,38 +1,27 @@
-package com.weather.air_o_inspect.Utils;
+package com.weather.air_o_inspect.Database;
 
-import android.content.Context;
 import android.util.Log;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.weather.air_o_inspect.Entities.CurrentStatus;
-import com.weather.air_o_inspect.Entities.Preferences;
-import com.weather.air_o_inspect.Entities.WeatherUpdate;
-import com.weather.air_o_inspect.MyApp;
+import com.weather.air_o_inspect.Entities.WeatherCurrent;
+import com.weather.air_o_inspect.Entities.WeatherForecast;
 
-import org.json.CDL;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class Utils {
+public class DatabaseUtils {
 
     public String getDataFromUrl(String longLat, String query) {
 
-        Log.i("BackgroundTask","Getting data from url");
+        Log.i("BackgroundTask", "Getting data from url");
         HttpURLConnection connection = null;
         BufferedReader br = null;
         StringBuilder result = new StringBuilder();
@@ -50,7 +39,7 @@ public class Utils {
                 result.append(line);
             }
         } catch (Exception e) {
-            Log.e("getDataFromUrlWrit 1", "Exception in Utils", e);
+            Log.e("getDataFromUrlWrit 1", "Exception in DatabaseUtils", e);
         } finally {
             try {
                 if (br != null)
@@ -64,60 +53,51 @@ public class Utils {
         return result.toString();
     }
 
-    public List<WeatherUpdate> convertJsonToWeatherUpdateList(String result) {
-        List<WeatherUpdate> weatherUpdateList = null;
+    public List<WeatherForecast> convertJsonToWeatherForecastList(String result) {
+        List<WeatherForecast> weatherForecastList = null;
         try {
             JSONObject resultJson = new JSONObject(result);
             JSONArray finalResultJson = resultJson.getJSONObject("hourly").getJSONArray("data");
-            weatherUpdateList = new ArrayList<>();
+            weatherForecastList = new ArrayList<>();
             for (int i = 0; i < finalResultJson.length(); i++) {
-                WeatherUpdate weatherUpdate = null;
+                WeatherForecast weatherForecast;
 
                 JSONObject obj = (JSONObject) finalResultJson.get(i);
 
-                weatherUpdate = new WeatherUpdate(obj.getLong("time"),
+                weatherForecast = new WeatherForecast(obj.getLong("time"),
                         Float.valueOf("" + obj.get("precipIntensity")), Float.valueOf("" + obj.get("precipProbability")),
                         Float.valueOf("" + obj.get("temperature")), Float.valueOf("" + obj.get("pressure")),
                         Float.valueOf("" + obj.get("windSpeed")),
                         Float.valueOf("" + obj.get("windGust")), Float.valueOf("" + obj.get("cloudCover")),
                         Float.valueOf("" + obj.get("visibility")));
-                weatherUpdate.setCurrentTime(obj.getLong("time"));
-
-                weatherUpdateList.add(weatherUpdate);
+                weatherForecastList.add(weatherForecast);
             }
 
         } catch (JSONException e) {
-            Log.e("convertJsonToCSV", "" , e);
+            Log.e("convertJsonToCSV", "", e);
         }
 
-        return weatherUpdateList;
+        return weatherForecastList;
     }
-    public CurrentStatus convertJsonToCurrentStatus(String result) {
-        CurrentStatus currentStatus = null;
+
+    public WeatherCurrent convertJsonToWeatherCurrent(String result) {
+        WeatherCurrent weatherCurrent = null;
         try {
             JSONObject resultJson = new JSONObject(result);
             JSONObject obj = resultJson.getJSONObject("currently");
 
-            currentStatus = new CurrentStatus(obj.getLong("time"),
+            weatherCurrent = new WeatherCurrent(obj.getLong("time"),
                     Float.valueOf("" + obj.get("precipIntensity")), Float.valueOf("" + obj.get("precipProbability")),
                     Float.valueOf("" + obj.get("temperature")), Float.valueOf("" + obj.get("pressure")),
                     Float.valueOf("" + obj.get("windSpeed")),
                     Float.valueOf("" + obj.get("windGust")), Float.valueOf("" + obj.get("cloudCover")),
                     Float.valueOf("" + obj.get("visibility")));
-            currentStatus.setCurrentTime(obj.getLong("time"));
 
         } catch (JSONException e) {
-            Log.e("convertJsonToCSV", "" , e);
+            Log.e("convertJsonToCSV", "", e);
         }
 
-        return currentStatus;
+        return weatherCurrent;
     }
 
-    public Preferences getPreferences(){
-        Float[] COLUMN_THRESOLD = MyApp.getColumnsThresold();
-        Boolean[] COLUMN_SWITCH = MyApp.getColumnsSwitch();
-        return new Preferences(COLUMN_THRESOLD[0], COLUMN_THRESOLD[1], COLUMN_THRESOLD[2], COLUMN_THRESOLD[3], COLUMN_THRESOLD[4],
-                COLUMN_THRESOLD[5], COLUMN_THRESOLD[6],COLUMN_THRESOLD[7], COLUMN_SWITCH[0], COLUMN_SWITCH[1], COLUMN_SWITCH[2],
-                COLUMN_SWITCH[3], COLUMN_SWITCH[4], COLUMN_SWITCH[5], COLUMN_SWITCH[6], COLUMN_SWITCH[7]);
-    }
 }

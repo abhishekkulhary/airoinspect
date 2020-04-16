@@ -16,7 +16,6 @@ import androidx.preference.SwitchPreferenceCompat;
 
 import com.weather.air_o_inspect.Entities.Preferences;
 import com.weather.air_o_inspect.R;
-import com.weather.air_o_inspect.Utils.Utils;
 import com.weather.air_o_inspect.Viewmodel.WeatherViewModel;
 
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Objects;
 
-public class SettingsFragment extends PreferenceFragmentCompat  {
+public class SettingsFragment extends PreferenceFragmentCompat {
 
 
     private SeekBarPreference precipitationIntensitySeekBar;
@@ -59,11 +58,11 @@ public class SettingsFragment extends PreferenceFragmentCompat  {
         visibilitySeekBar = findPreference("visibility_seek");
 
         precipitationIntensitySwitch = findPreference("precip_intensity_switch");
-        precipitationProbabilitySwitch =findPreference("precip_probability_switch");
+        precipitationProbabilitySwitch = findPreference("precip_probability_switch");
         temperatureSwitch = findPreference("temperature_switch");
         pressureSwitch = findPreference("pressure_switch");
         windSpeedSwitch = findPreference("wind_speed_switch");
-        windGustSwitch =findPreference("wind_gust_switch");
+        windGustSwitch = findPreference("wind_gust_switch");
         cloudCoverSwitch = findPreference("cloud_cover_switch");
         visibilitySwitch = findPreference("visibility_switch");
     }
@@ -110,8 +109,7 @@ public class SettingsFragment extends PreferenceFragmentCompat  {
                                 preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
                                 preferences.getVisibilitySwitch());
 
-                        weatherViewModel.deleteAllPreferences();
-                        weatherViewModel.insertPreferences(preferences_1);
+                        weatherViewModel.updatePreferences(preferences_1);
                         return true;
                     }
                 });
@@ -126,8 +124,7 @@ public class SettingsFragment extends PreferenceFragmentCompat  {
                                 preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
                                 preferences.getVisibilitySwitch());
 
-                        weatherViewModel.deleteAllPreferences();
-                        weatherViewModel.insertPreferences(preferences_1);
+                        weatherViewModel.updatePreferences(preferences_1);
                         return true;
                     }
                 });
@@ -142,8 +139,7 @@ public class SettingsFragment extends PreferenceFragmentCompat  {
                                 preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
                                 preferences.getVisibilitySwitch());
 
-                        weatherViewModel.deleteAllPreferences();
-                        weatherViewModel.insertPreferences(preferences_1);
+                        weatherViewModel.updatePreferences(preferences_1);
                         return true;
                     }
                 });
@@ -158,8 +154,7 @@ public class SettingsFragment extends PreferenceFragmentCompat  {
                                 preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
                                 preferences.getVisibilitySwitch());
 
-                        weatherViewModel.deleteAllPreferences();
-                        weatherViewModel.insertPreferences(preferences_1);
+                        weatherViewModel.updatePreferences(preferences_1);
                         return true;
                     }
                 });
@@ -174,8 +169,7 @@ public class SettingsFragment extends PreferenceFragmentCompat  {
                                 preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
                                 preferences.getVisibilitySwitch());
 
-                        weatherViewModel.deleteAllPreferences();
-                        weatherViewModel.insertPreferences(preferences_1);
+                        weatherViewModel.updatePreferences(preferences_1);
                         return true;
                     }
                 });
@@ -190,8 +184,7 @@ public class SettingsFragment extends PreferenceFragmentCompat  {
                                 preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
                                 preferences.getVisibilitySwitch());
 
-                        weatherViewModel.deleteAllPreferences();
-                        weatherViewModel.insertPreferences(preferences_1);
+                        weatherViewModel.updatePreferences(preferences_1);
                         return true;
                     }
                 });
@@ -206,8 +199,7 @@ public class SettingsFragment extends PreferenceFragmentCompat  {
                                 preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
                                 preferences.getVisibilitySwitch());
 
-                        weatherViewModel.deleteAllPreferences();
-                        weatherViewModel.insertPreferences(preferences_1);
+                        weatherViewModel.updatePreferences(preferences_1);
                         return true;
                     }
                 });
@@ -222,8 +214,7 @@ public class SettingsFragment extends PreferenceFragmentCompat  {
                                 preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
                                 preferences.getVisibilitySwitch());
 
-                        weatherViewModel.deleteAllPreferences();
-                        weatherViewModel.insertPreferences(preferences_1);
+                        weatherViewModel.updatePreferences(preferences_1);
                         return true;
                     }
                 });
@@ -238,8 +229,7 @@ public class SettingsFragment extends PreferenceFragmentCompat  {
                                 preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
                                 preferences.getVisibilitySwitch());
 
-                        weatherViewModel.deleteAllPreferences();
-                        weatherViewModel.insertPreferences(preferences_1);
+                        weatherViewModel.updatePreferences(preferences_1);
                         return true;
                     }
                 });
@@ -254,8 +244,7 @@ public class SettingsFragment extends PreferenceFragmentCompat  {
                                 preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
                                 preferences.getVisibilitySwitch());
 
-                        weatherViewModel.deleteAllPreferences();
-                        weatherViewModel.insertPreferences(preferences_1);
+                        weatherViewModel.updatePreferences(preferences_1);
                         return true;
                     }
                 });
@@ -270,8 +259,7 @@ public class SettingsFragment extends PreferenceFragmentCompat  {
                                 preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
                                 preferences.getVisibilitySwitch());
 
-                        weatherViewModel.deleteAllPreferences();
-                        weatherViewModel.insertPreferences(preferences_1);
+                        weatherViewModel.updatePreferences(preferences_1);
                         return true;
                     }
                 });
@@ -286,8 +274,7 @@ public class SettingsFragment extends PreferenceFragmentCompat  {
                                 progress, preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
                                 preferences.getVisibilitySwitch());
 
-                        weatherViewModel.deleteAllPreferences();
-                        weatherViewModel.insertPreferences(preferences_1);
+                        weatherViewModel.updatePreferences(preferences_1);
                         return true;
                     }
                 });
@@ -302,8 +289,7 @@ public class SettingsFragment extends PreferenceFragmentCompat  {
                                 preferences.getPressureSwitch(), progress, preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
                                 preferences.getVisibilitySwitch());
 
-                        weatherViewModel.deleteAllPreferences();
-                        weatherViewModel.insertPreferences(preferences_1);
+                        weatherViewModel.updatePreferences(preferences_1);
                         return true;
                     }
                 });
@@ -318,8 +304,7 @@ public class SettingsFragment extends PreferenceFragmentCompat  {
                                 preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), progress, preferences.getCloudCoverSwitch(),
                                 preferences.getVisibilitySwitch());
 
-                        weatherViewModel.deleteAllPreferences();
-                        weatherViewModel.insertPreferences(preferences_1);
+                        weatherViewModel.updatePreferences(preferences_1);
                         return true;
                     }
                 });
@@ -334,8 +319,7 @@ public class SettingsFragment extends PreferenceFragmentCompat  {
                                 preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), progress,
                                 preferences.getVisibilitySwitch());
 
-                        weatherViewModel.deleteAllPreferences();
-                        weatherViewModel.insertPreferences(preferences_1);
+                        weatherViewModel.updatePreferences(preferences_1);
                         return true;
                     }
                 });
@@ -350,8 +334,7 @@ public class SettingsFragment extends PreferenceFragmentCompat  {
                                 preferences.getPressureSwitch(), preferences.getWindSpeedSwitch(), preferences.getWindGustSwitch(), preferences.getCloudCoverSwitch(),
                                 progress);
 
-                        weatherViewModel.deleteAllPreferences();
-                        weatherViewModel.insertPreferences(preferences_1);
+                        weatherViewModel.updatePreferences(preferences_1);
                         return true;
                     }
                 });
@@ -360,16 +343,15 @@ public class SettingsFragment extends PreferenceFragmentCompat  {
 
     }
 
-    public void resetDefault() {
-
-        Utils utils = new Utils();
-
-        Preferences preferences = utils.getPreferences();
-
-        final WeatherViewModel weatherViewModel = new ViewModelProvider.AndroidViewModelFactory(Objects.requireNonNull(getActivity()).getApplication()).create(WeatherViewModel.class);
-
-        weatherViewModel.deleteAllPreferences();
-        weatherViewModel.insertPreferences(preferences);
-
-    }
+//    public void resetDefault() {
+//
+//        DatabaseUtils utils = new DatabaseUtils();
+//
+//        Preferences preferences = utils.getPreferences();
+//
+//        final WeatherViewModel weatherViewModel = new ViewModelProvider.AndroidViewModelFactory(Objects.requireNonNull(getActivity()).getApplication()).create(WeatherViewModel.class);
+//
+//        weatherViewModel.updatePreferences(preferences);
+//
+//    }
 }

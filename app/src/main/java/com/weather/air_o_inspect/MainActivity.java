@@ -2,46 +2,44 @@ package com.weather.air_o_inspect;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatTextView;
-import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.viewpager.widget.ViewPager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.Utils;
-import com.google.android.material.tabs.TabLayout;
-import com.weather.air_o_inspect.Entities.CurrentStatus;
-import com.weather.air_o_inspect.Entities.Preferences;
-import com.weather.air_o_inspect.Entities.WeatherUpdate;
-import com.weather.air_o_inspect.Viewmodel.WeatherViewModel;
-import com.weather.air_o_inspect.Service.LoadWeatherService;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.simmorsal.library.ConcealerNestedScrollView;
+import com.weather.air_o_inspect.Charts.ChartDataAdapter;
+import com.weather.air_o_inspect.Entities.ChartsData;
+import com.weather.air_o_inspect.Entities.WeatherCurrentRequired;
 import com.weather.air_o_inspect.Settings.SettingsFragment;
-import com.weather.air_o_inspect.ui.main.SectionsPagerAdapter;
+import com.weather.air_o_inspect.Viewmodel.WeatherViewModel;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
-    private ViewPager viewPager;
-    private TabLayout tabs;
 
     private TextView currentFlyStatus;
     private TextView currentTemperature;
@@ -49,15 +47,19 @@ public class MainActivity extends AppCompatActivity {
     private TextView currentWind;
     private TextView currentVisibility;
     private TextView currentTimePlace;
+    private RecyclerView allCharts;
+    private BarChart flyingStatusChart;
+    private TextView flyingStatusChartName;
+    private TextView flyingStatusUnit;
 
-    private SectionsPagerAdapter sectionsPagerAdapter;
+    private ConcealerNestedScrollView nestedScrollView;
+    private CardView headerView;
+    private FloatingActionButton floatingActionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         currentFlyStatus = findViewById(R.id.current_fly_status);
         currentTemperature = findViewById(R.id.current_temperature);
@@ -65,9 +67,38 @@ public class MainActivity extends AppCompatActivity {
         currentWind = findViewById(R.id.current_wind);
         currentVisibility = findViewById(R.id.current_visibility);
         currentTimePlace = findViewById(R.id.current_time_place);
+        nestedScrollView = findViewById(R.id.concealerNSV);
+        headerView = findViewById(R.id.crdHeaderView);
 
-        tabs = findViewById(R.id.tabs);
-        viewPager = findViewById(R.id.view_pager);
+        floatingActionButton = findViewById(R.id.fab);
+
+        floatingActionButton.post(new Runnable() {
+            @Override
+            public void run() {
+                nestedScrollView.setFooterView(floatingActionButton, 0);
+            }
+        });
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new SettingsFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
+        headerView.post(new Runnable() {
+            @Override
+            public void run() {
+                nestedScrollView.setHeaderView(headerView, 15);
+            }
+        });
+
+
+        allCharts = findViewById(R.id.all_charts);
 
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -76,146 +107,119 @@ public class MainActivity extends AppCompatActivity {
 
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                    MyApp.getREQUEST_CODE());
+                    MyApplication.getREQUEST_CODE());
         }
 
-
+        final WeatherViewModel weatherViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication()).create(WeatherViewModel.class);
+        weatherViewModel.getWeatherCurrentLiveData().observe(this, new Observer<WeatherCurrentRequired>() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onChanged(WeatherCurrentRequired weatherCurrent) {
+                if (weatherCurrent != null) {
+                    currentTemperature.setText("" + weatherCurrent.getTemperature() + " " + MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(MyApplication.getTemperatureColumn())));
+                    currentRainStatus.setText("" + weatherCurrent.getPrecipProbability() + " " + MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(MyApplication.getPrecipProbabilityColumn())));
+                    currentWind.setText("" + weatherCurrent.getWindSpeed() + " " + MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(MyApplication.getWindSpeedColumn())));
+                    currentVisibility.setText("" + weatherCurrent.getVisibility() + " " + MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(MyApplication.getVisibilityColumn())));
+                    currentTimePlace.setText("" + weatherCurrent.getDateTime());
+                    currentFlyStatus.setTextColor(weatherCurrent.getFlyStatus());
+                }
+            }
+        });
 
         Utils.init(this);
 
-        Intent intent = new Intent(getApplicationContext(), LoadWeatherService.class);
-        startService(intent);
-
-        final WeatherViewModel weatherViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication()).create(WeatherViewModel.class);
-        weatherViewModel.getAllWeatherUpdate().observe(MainActivity.this, new Observer<List<WeatherUpdate>>() {
+        weatherViewModel.getWeatherForecastFlyStatus().observe(this, new Observer<ChartsData>() {
             @Override
-            public void onChanged(List<WeatherUpdate> weatherUpdates) {
-                Toast.makeText(MainActivity.this, "onChanged", Toast.LENGTH_SHORT).show();
-                List<String> allDistinctDates = new ArrayList<>();
-                for (WeatherUpdate weatherUpdate : weatherUpdates) {
-                    if (!allDistinctDates.contains(weatherUpdate.getCurrentTime()))
-                        allDistinctDates.add(weatherUpdate.getCurrentTime());
-                }
-                Collections.sort(allDistinctDates);
-                System.out.println(allDistinctDates);
+            public void onChanged(ChartsData chartsData) {
+                if (chartsData != null) {
+                    flyingStatusChart = findViewById(R.id.fly_status_chart);
+                    flyingStatusChartName = findViewById(R.id.fly_status_chart_name);
+                    flyingStatusUnit = findViewById(R.id.fly_status_unit_value);
 
-                sectionsPagerAdapter = new SectionsPagerAdapter(getApplicationContext(), allDistinctDates.size(),
-                        getSupportFragmentManager());
-                sectionsPagerAdapter.setTAB_TITLES(allDistinctDates);
-                sectionsPagerAdapter.setWeatherUpdates(weatherUpdates);
-                viewPager.setAdapter(sectionsPagerAdapter);
-                tabs.setupWithViewPager(viewPager);
+                    flyingStatusUnit.setText(chartsData.getUnit_value());
+                    flyingStatusChartName.setText(chartsData.getChart_name());
+                    final ArrayList<Long> xValues = chartsData.getxValues();
+                    System.out.println(xValues);
+                    BarData data = chartsData.getData();
+                    data.setValueTextColor(Color.BLACK);
+                    data.setHighlightEnabled(true);
+                    data.setValueTextSize(5f);
 
-                for (int i = 0; i < tabs.getTabCount(); i++) {
-                    TabLayout.Tab tab = tabs.getTabAt(i);
-                    assert tab != null;
-                    tab.setCustomView(sectionsPagerAdapter.getTabView(i));
-                }
-                tabs.addOnTabSelectedListener(new TabListner());
-            }
-        });
+                    XAxis xAxis = flyingStatusChart.getXAxis();
 
-        weatherViewModel.getCurrentStatusLiveData().observe(MainActivity.this, new Observer<List<CurrentStatus>>() {
-            @SuppressLint("SetTextI18n")
-            @Override
-            public void onChanged(List<CurrentStatus> currentStatus) {
-                if (!currentStatus.isEmpty()) {
+                    xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                    xAxis.setGranularityEnabled(true);
+                    xAxis.setDrawGridLines(false);
+                    xAxis.setGranularity(1f);
+                    xAxis.setAxisMaxLabels(data.getEntryCount() + 2);
+                    xAxis.setLabelCount(data.getEntryCount() + 2);
+                    xAxis.setAxisMinimum(data.getXMin() - 1);
+                    xAxis.setAxisMaximum(data.getXMax() + 1);
+                    xAxis.setDrawLabels(true);
+                    xAxis.setValueFormatter(new ValueFormatter() {
+                        String temp = "";
 
-                    final CurrentStatus currentStatus1 = currentStatus.get(0);
-                    currentTemperature.setText("" + currentStatus1.getTemperature());
-                    currentRainStatus.setText("" + currentStatus1.getPrecipProbability());
-                    currentWind.setText("" + currentStatus1.getWindSpeed());
-                    currentVisibility.setText("" + currentStatus1.getVisibility());
-                    currentTimePlace.setText("" + currentStatus1.getCurrentTime());
-
-                    weatherViewModel.getPreferencesLiveData().observe(MainActivity.this, new Observer<List<Preferences>>() {
-                        @SuppressLint("ResourceAsColor")
                         @Override
-                        public void onChanged(List<Preferences> preferences) {
-
-                            if (!preferences.isEmpty()) {
-
-                                Preferences preferences1 = preferences.get(0);
-
-                                Boolean[] checks = {preferences1.getPrecipitationIntensitySwitch(), preferences1.getPrecipitationProbabilitySwitch(),
-                                        preferences1.getTemperatureSwitch(), preferences1.getPressureSwitch(), preferences1.getWindSpeedSwitch(),
-                                        preferences1.getWindGustSwitch(), preferences1.getCloudCoverSwitch(), preferences1.getVisibilitySwitch()};
-
-                                Boolean[] thresoldChecks = {currentStatus1.getPrecipIntensity() < preferences1.getPrecipitationIntensityThresold(),
-                                        currentStatus1.getPrecipProbability() < preferences1.getPrecipitationProbabilityThresold(),
-                                        currentStatus1.getTemperature() < preferences1.getTemperatureThresold(),
-                                        currentStatus1.getPressure() < preferences1.getPressureThresold(),
-                                        currentStatus1.getWindSpeed() < preferences1.getWindSpeedThresold(),
-                                        currentStatus1.getWindGust() < preferences1.getWindGustThresold(),
-                                        currentStatus1.getCloudCover() < preferences1.getCloudCoverThresold(),
-                                        currentStatus1.getVisibility() < preferences1.getVisibilityThresold()};
-                                boolean finalDecision = true;
-                                int i = 0;
-                                for (Boolean check : checks) {
-
-                                    if (check) {
-
-                                        if (!thresoldChecks[i]) {
-
-                                            finalDecision = false;
-                                            break;
-                                        }
-
-                                    }
-                                    i++;
-                                }
-                                int green = Color.rgb(110, 190, 102);
-                                int red = Color.rgb(211, 74, 88);
-                                if (finalDecision) {
-                                    currentFlyStatus.setTextColor(green);
+                        public String getAxisLabel(float value, AxisBase axis) {
+                            if (value >= 0 && value < xValues.size()) {
+                                if (temp.equals(MyApplication.getSimpleDateFormat().format(xValues.get((int) value) * 1000))) {
+                                    return MyApplication.getSimpleTimeFormat().format(xValues.get((int) value) * 1000);
                                 } else {
-
-                                    currentFlyStatus.setTextColor(red);
+                                    temp = MyApplication.getSimpleDateFormat().format(xValues.get((int) value) * 1000);
+                                    return MyApplication.getSimpleDateWithTimeInChart().format(xValues.get((int) value) * 1000);
                                 }
                             }
-
+                            return "";
                         }
                     });
+
+                    xAxis.setCenterAxisLabels(false);
+
+                    // Y - axis
+                    YAxis rightAxis = flyingStatusChart.getAxisRight();
+                    rightAxis.setEnabled(false);
+
+                    YAxis leftAxis = flyingStatusChart.getAxisLeft();
+                    leftAxis.enableGridDashedLine(10f, 5f, 0f);
+                    leftAxis.setDrawLimitLinesBehindData(true);
+                    leftAxis.setDrawLabels(false);
+                    leftAxis.setMinWidth(35f);
+                    leftAxis.setMaxWidth(40f);
+
+                    leftAxis.setAxisMaximum(1f);
+
+                    leftAxis.setAxisMinimum(0f);
+
+                    Legend legend = flyingStatusChart.getLegend();
+                    legend.setEnabled(false);
+
+
+                    flyingStatusChart.getDescription().setEnabled(false);
+                    flyingStatusChart.setVisibleXRangeMaximum(7f);
+                    flyingStatusChart.setScaleEnabled(false);
+
+
+                    flyingStatusChart.setData(data);
+                    flyingStatusChart.invalidate();
                 }
             }
         });
 
-    }
-
-    private final class TabListner implements TabLayout.OnTabSelectedListener {
-
-        @Override
-        public void onTabSelected(TabLayout.Tab tab) {
-            View view = tab.getCustomView();
-            if (view instanceof LinearLayout) {
-                for (int i = 0; i < ((LinearLayout) view).getChildCount(); i++) {
-                    ((AppCompatTextView) ((LinearLayout) view).getChildAt(i)).setTypeface(Typeface.DEFAULT_BOLD);
-                    ((AppCompatTextView) ((LinearLayout) view).getChildAt(i)).setTextAppearance(getApplicationContext(),
-                            android.R.style.TextAppearance_DeviceDefault_Widget_TabWidget);
-
-                }
+        weatherViewModel.getChartsData().observe(this, new Observer<List<ChartsData>>() {
+            @Override
+            public void onChanged(List<ChartsData> chartsData) {
+                LinearLayoutManager llm = new LinearLayoutManager(MainActivity.this);
+                llm.setOrientation(LinearLayoutManager.VERTICAL);
+                final ChartDataAdapter cda = new ChartDataAdapter();
+                cda.setChartsDataList(chartsData);
+                cda.notifyDataSetChanged();
+                allCharts.setLayoutManager(llm);
+                allCharts.setAdapter(cda);
+                allCharts.invalidate();
             }
-        }
+        });
 
-        @Override
-        public void onTabUnselected(TabLayout.Tab tab) {
-            View view = tab.getCustomView();
-            if (view instanceof LinearLayout) {
-                for (int i = 0; i < ((LinearLayout) view).getChildCount(); i++) {
-                    ((AppCompatTextView) ((LinearLayout) view).getChildAt(i)).setTypeface(Typeface.DEFAULT);
-                    ((AppCompatTextView) ((LinearLayout) view).getChildAt(i)).setTextAppearance(getApplicationContext(),
-                            android.R.style.TextAppearance_DeviceDefault_Widget_TabWidget);
-                }
-            }
-        }
-
-        @Override
-        public void onTabReselected(TabLayout.Tab tab) {
-
-        }
     }
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -244,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.i("MainActivity:", "onRequestPermissionResult");
-        if (requestCode == MyApp.getREQUEST_CODE()) {
+        if (requestCode == MyApplication.getREQUEST_CODE()) {
             for (int result : grantResults) {
                 if (result != PackageManager.PERMISSION_GRANTED) {
                     Log.d("onRequestPermissionsRe:", "Permission Not Granted");
