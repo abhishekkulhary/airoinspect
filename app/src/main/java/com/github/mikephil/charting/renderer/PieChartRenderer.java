@@ -770,7 +770,7 @@ public class PieChartRenderer extends DataRenderer {
                         Layout.Alignment.ALIGN_CENTER, 1.f, 0.f, false);
             }
 
-            //float layoutWidth = Utils.getStaticLayoutMaxWidth(mCenterTextLayout);
+            //float layoutWidth = DatabaseUtils.getStaticLayoutMaxWidth(mCenterTextLayout);
             float layoutHeight = mCenterTextLayout.getHeight();
 
             c.save();

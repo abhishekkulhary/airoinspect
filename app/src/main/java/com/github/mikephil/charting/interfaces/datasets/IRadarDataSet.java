@@ -16,7 +16,7 @@ public interface IRadarDataSet extends ILineRadarDataSet<RadarEntry> {
     int getHighlightCircleFillColor();
 
     /// The stroke color for highlight circle.
-    /// If Utils.COLOR_NONE, the color of the dataset is taken.
+    /// If DatabaseUtils.COLOR_NONE, the color of the dataset is taken.
     int getHighlightCircleStrokeColor();
 
     int getHighlightCircleStrokeAlpha();

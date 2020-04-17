@@ -1,65 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/viewApp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:scrollbars="vertical|horizontal"
     tools:context=".MainActivity"
-    android:background="@color/cardview_dark_background"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    android:background="@color/colorPrimary"
+    android:theme="@style/AppTheme.PopupOverlay"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<com.google.android.material.appbar.AppBarLayout
-    android:id="@+id/appBarLayout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
-
-    <com.google.android.material.appbar.CollapsingToolbarLayout
+    <com.simmorsal.library.ConcealerNestedScrollView
+        android:id="@+id/concealerNSV"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_scrollFlags="scroll"
-        app:titleEnabled="true">
+        android:layout_height="match_parent">
+
+
 
         <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/cardview_dark_background"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+                android:layout_height="200dp"/>
 
-            <include layout="@layout/current_status"
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="175dp" />
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                app:cardBackgroundColor="@color/tab_indicator"
+                android:layout_height="200dp"
+                app:cardCornerRadius="10dp"
+                app:cardMaxElevation="20dp"
+                app:cardPreventCornerOverlap="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/fly_status_chart_name"
+                        android:layout_width="0dp"
+                        android:layout_height="25dp"
+                        android:layout_weight="1"
+                        android:text="@string/unit_for_chart"
+                        android:gravity="start"
+                        android:layout_marginStart="5dp"
+                        tools:ignore="NestedWeights">
+
+                    </TextView>
+
+                    <TextView
+                        android:id="@+id/fly_status_unit_value"
+                        android:layout_width="0dp"
+                        android:layout_height="25dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:layout_marginEnd="5dp"
+                        android:text="@string/maximum_unit"
+                        tools:ignore="NestedWeights">
+
+                    </TextView>
+
+                </LinearLayout>
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/fly_status_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="165dp"
+                    android:layout_marginTop="25dp"
+                    android:layout_marginBottom="10dp"
+                    android:scrollbars="horizontal"/>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/all_charts"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp">
+            </androidx.recyclerview.widget.RecyclerView>
+
         </LinearLayout>
+    </com.simmorsal.library.ConcealerNestedScrollView>
 
-    </com.google.android.material.appbar.CollapsingToolbarLayout>
-
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabs"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/crdHeaderView"
         android:layout_width="match_parent"
+        app:cardBackgroundColor="@color/colorPrimary"
+        android:layout_height="185dp"
+        android:layout_marginTop="-15dp"
+        app:cardMaxElevation="20dp"
+        app:cardPreventCornerOverlap="true">
+
+        <include layout="@layout/current_status" />
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:tabGravity="fill"
-        app:tabIndicatorColor="@color/tab_indicator"
-        android:background="@color/cardview_dark_background"
-        app:tabMode="fixed" >
-
-    </com.google.android.material.tabs.TabLayout>
-
-</com.google.android.material.appbar.AppBarLayout>
-
-<androidx.viewpager.widget.ViewPager
-    android:id="@+id/view_pager"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    />
-
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+        android:layout_gravity="bottom|start"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@drawable/ic_settings" />
+</RelativeLayout>

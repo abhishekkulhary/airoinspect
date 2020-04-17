@@ -19,11 +19,12 @@
 
 
     <style name="TextviewStyle" parent="@android:style/Widget.TextView">
-        <item name="android:textColor">#ffffff</item>
-<!--        <item name="android:textStyle">bold</item>-->
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/tab_indicator</item>
         <item name="android:textSize">15sp</item>
     </style>
     <style name="TextviewStyleFly" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/greenStatus</item>
         <item name="android:textStyle">italic</item>
         <item name="android:textSize">40sp</item>
     </style>

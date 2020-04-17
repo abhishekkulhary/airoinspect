@@ -2,133 +2,138 @@ package com.weather.air_o_inspect;
 
 
 import android.app.Application;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
-
-import com.weather.air_o_inspect.settings.Preferences;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
 
 public class MyApplication extends Application implements LocationListener, Serializable {
+    private static final int REQUEST_CODE = 15;
     // Called when the application is starting, before any other application objects have been created.
     // Overriding this method is totally optional!
-    private static final String[] filename = new String[]{"currentforecast.csv", "forecast.csv"};
+    private static final String PRECIP_INTENSITY_COLUMN = "precipIntensity";
+    private static final String PRECIP_PROBABILITY_COLUMN = "precipProbability";
+    private static final String TEMPERATURE_COLUMN = "temperature";
+    private static final String PRESSURE_COLUMN = "pressure";
+    private static final String WIND_SPEED_COLUMN = "windSpeed";
+    private static final String WIND_GUST_COLUMN = "windGust";
+    private static final String CLOUD_COVER_COLUMN = "cloudCover";
+    private static final String VISIBILITY_COLUMN = "visibility";
+    private final static List<String> COLUMNS = Arrays.asList(PRECIP_INTENSITY_COLUMN, PRECIP_PROBABILITY_COLUMN,
+            TEMPERATURE_COLUMN, PRESSURE_COLUMN, WIND_SPEED_COLUMN, WIND_GUST_COLUMN, CLOUD_COVER_COLUMN, VISIBILITY_COLUMN);
+    private final static List<String> LABELS = Arrays.asList("Precipitation Intensity", "Precipitation Probability",
+            "Temperature", "Pressure", "Wind Speed", "Wind Gust", "Cloud Cover", "Visibility");
+    private final static List<String> UNITS = Arrays.asList("mm", "Percent", "Celsius", "Pa", "m/s", "m/s", "Percent", "km");
+    private final static String query = "units=si";
+    private final static Long timeDelay = 20L; // Time in mins
+    private final static SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH", Locale.getDefault());
+    private static final SimpleDateFormat simpleDateWithTimeFormat = new SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault());
+    private static final SimpleDateFormat simpleDateWithTimeInChart = new SimpleDateFormat("dd MMM HH:mm", Locale.getDefault());
+    private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
     private static String longLat = "52.307108,10.530236";
-    private static String query = "units=si";
-    private static Long timeDelay = 20L; // Time in mins
-    private final Integer REQUEST_CODE = 15;
+    private static MyApplication instance;
 
-    private final String xColumn = "time";
-    private final String[] COLUMNS = {"precipIntensity", "precipProbability", "temperature", "pressure",
-            "windSpeed", "windGust", "cloudCover", "visibility"};
-    private static Float[] COLUMNS_MAXVALUE = new Float[]{0f, 0f, 0f, 0f, 0f, 0f, 0f, 0f};
+    public static synchronized MyApplication getInstance() {
+        if (instance == null) {
+            instance = new MyApplication();
+        }
+        return instance;
+    }
 
-    private final String[] TAB_SUBTEXT = {"Today", "Tomorrow", "Day After"};
-    private final String[] LABELS = {"Precipitation Intensity", "Precipitation Probability", "Temperature", "Pressure", "Wind Speed", "Wind Gust", "Cloud Cover", "Visibility"};
+    public static String getPrecipIntensityColumn() {
+        return PRECIP_INTENSITY_COLUMN;
+    }
 
+    public static String getPrecipProbabilityColumn() {
+        return PRECIP_PROBABILITY_COLUMN;
+    }
 
+    public static String getTemperatureColumn() {
+        return TEMPERATURE_COLUMN;
+    }
 
-    private final String[] UNITS = {"mm", "Percent", "Celsius", "Pa", "m/s", "m/s", "Percent", "km"};
+    public static String getPressureColumn() {
+        return PRESSURE_COLUMN;
+    }
 
-    private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
-    private final SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH", Locale.getDefault());
-    private final SimpleDateFormat simpleTimesFormat = new SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault());
+    public static String getWindSpeedColumn() {
+        return WIND_SPEED_COLUMN;
+    }
 
-    private MyApplication myApplication = null;
+    public static String getWindGustColumn() {
+        return WIND_GUST_COLUMN;
+    }
 
-    SharedPreferences sharedPref;
+    public static String getCloudCoverColumn() {
+        return CLOUD_COVER_COLUMN;
+    }
+
+    public static String getVisibilityColumn() {
+        return VISIBILITY_COLUMN;
+    }
+
+    public static List<String> getUNITS() {
+        return UNITS;
+    }
+
+    public static List<String> getLABELS() {
+        return LABELS;
+    }
+
+    public static SimpleDateFormat getSimpleDateWithTimeFormat() {
+        return simpleDateWithTimeFormat;
+    }
+
+    public static SimpleDateFormat getSimpleDateFormat() {
+        return simpleDateFormat;
+    }
+
+    public static SimpleDateFormat getSimpleDateWithTimeInChart() {
+        return simpleDateWithTimeInChart;
+    }
+
+    public static String getLongLat() {
+        return longLat;
+    }
+
+    public static String getQuery() {
+        return query;
+    }
+
+    public static Long getTimeDelay() {
+        return timeDelay;
+    }
+
+    public static int getREQUEST_CODE() {
+        return REQUEST_CODE;
+    }
+
+    public static List<String> getCOLUMNS() {
+        return COLUMNS;
+    }
+
+    public static SimpleDateFormat getSimpleTimeFormat() {
+        return simpleTimeFormat;
+    }
 
     @Override
     public void onCreate() {
-//        Log.d("MyApp: OnCreate: ", "Start");
+//        Log.d("MyApplication: OnCreate: ", "Start");
         super.onCreate();
-        setTheme(R.style.AppTheme);
-        Preferences.getPreferences(getApplicationContext());
-
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        fetchValueString();
-//        Log.d("MyApp: OnCreate: ", "End");
-    }
-
-
-    public void fetchValueString() {
-        Preferences.getPreferences().setWindThresold(sharedPref.getInt("wind_seek", (getResources().getInteger(R.integer.wind_default))));
-        Preferences.getPreferences().setWindGustThresold(sharedPref.getInt("wind_gust_seek", (getResources().getInteger(R.integer.wind_gust_default))));
-        Preferences.getPreferences().setPrecipitationThresold(sharedPref.getInt("precipitation_seek", (getResources().getInteger(R.integer.precipitation_default))));
-        Preferences.getPreferences().setPrecipitationProbabilityThresold(sharedPref.getInt("precipitation_probability_seek", (getResources().getInteger(R.integer.precipitation_probability_default))));
-        Preferences.getPreferences().setTemperatureThresold(sharedPref.getInt("temperature_seek",(getResources().getInteger(R.integer.temperature_default))));
-        Preferences.getPreferences().setCloudCoverThresold(sharedPref.getInt("cloud_cover_seek",(getResources().getInteger(R.integer.cloud_cover_default))));
-        Preferences.getPreferences().setVisibilityThresold(sharedPref.getInt("visibility_seek", (getResources().getInteger(R.integer.visibility_default))));
 
     }
 
     void fn_update(Location location) {
-//        Log.d("MyApp: fn_update: ", "Start");
+//        Log.d("MyApplication: fn_update: ", "Start");
         longLat = location.getLatitude() + "," + location.getLongitude();
-//        Log.d("MyApp: fn_update: ", "End");
-    }
-
-    public String getxColumn() {
-        return xColumn;
-    }
-
-    public String[] getFilename() {
-        return filename;
-    }
-
-    public String getLongLat() {
-        return longLat;
-    }
-
-    public void setLongLat(String longLat) {
-        MyApplication.longLat = longLat;
-    }
-
-    public String getQuery() {
-        return query;
-    }
-
-    public void setQuery(String query) {
-        MyApplication.query = query;
-    }
-
-    public Long getTimeDelay() {
-        return timeDelay;
-    }
-
-    public void setTimeDelay(Long timeDelay) {
-        MyApplication.timeDelay = timeDelay;
-    }
-
-    public String[] getCOLUMNS() {
-        return COLUMNS;
-    }
-
-    public String[] getLABELS() {
-        return LABELS;
-    }
-
-    public String[] getUNITS() { return UNITS; }
-
-    public SimpleDateFormat getSimpleDateFormat() {
-        return simpleDateFormat;
-    }
-
-    public SimpleDateFormat getSimpleTimeFormat() {
-        return simpleTimeFormat;
-    }
-
-    public SimpleDateFormat getSimpleTimesFormat() {
-        return simpleTimesFormat;
     }
 
     // Called by the system when the device configuration changes while your component is running.
@@ -146,15 +151,10 @@ public class MyApplication extends Application implements LocationListener, Seri
         super.onLowMemory();
     }
 
-    public Integer getREQUEST_CODE() {
-        return REQUEST_CODE;
-    }
-
     @Override
     public void onLocationChanged(Location location) {
-//        Log.i("MyApp:onLocChanged:", "Start");
+//        Log.i("MyApplication:onLocChanged:", "Start");
         fn_update(location);
-//        Log.i("MyApp:onLocChanged:", "End");
     }
 
     @Override
@@ -170,17 +170,5 @@ public class MyApplication extends Application implements LocationListener, Seri
     @Override
     public void onProviderDisabled(String provider) {
 
-    }
-
-    public String[] getTAB_SUBTEXT() {
-        return TAB_SUBTEXT;
-    }
-
-    public Float[] getCOLUMNS_MAXVALUE() {
-        return COLUMNS_MAXVALUE;
-    }
-
-    public void setCOLUMNS_MAXVALUE(Float[] COLUMNS_MAXVALUE) {
-        MyApplication.COLUMNS_MAXVALUE = COLUMNS_MAXVALUE;
     }
 }
