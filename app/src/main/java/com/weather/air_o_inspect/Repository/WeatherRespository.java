@@ -305,7 +305,7 @@ public class WeatherRespository {
                             Preferences preferences1 = preferences.get(0);
                             ArrayList<BarEntry> flyStatusBarEntry = new ArrayList<>();
                             for (int i = 0; i < weatherForecasts.size(); i++) {
-                                flyStatusBarEntry.add(new BarEntry(i, 1f));
+                                flyStatusBarEntry.add(new BarEntry(i, 1));
                             }
                             int green = Color.rgb(110, 190, 102);
                             int red = Color.rgb(211, 74, 88);

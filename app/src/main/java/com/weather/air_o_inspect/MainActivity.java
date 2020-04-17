@@ -126,15 +126,16 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        flyingStatusChart = findViewById(R.id.fly_status_chart);
+        flyingStatusChartName = findViewById(R.id.fly_status_chart_name);
+        flyingStatusUnit = findViewById(R.id.fly_status_unit_value);
+
         Utils.init(this);
 
         weatherViewModel.getWeatherForecastFlyStatus().observe(this, new Observer<ChartsData>() {
             @Override
             public void onChanged(ChartsData chartsData) {
-                if (chartsData != null) {
-                    flyingStatusChart = findViewById(R.id.fly_status_chart);
-                    flyingStatusChartName = findViewById(R.id.fly_status_chart_name);
-                    flyingStatusUnit = findViewById(R.id.fly_status_unit_value);
+                if (chartsData != null && !chartsData.getxValues().isEmpty()) {
 
                     flyingStatusUnit.setText(chartsData.getUnit_value());
                     flyingStatusChartName.setText(chartsData.getChart_name());
@@ -200,6 +201,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                     flyingStatusChart.setData(data);
+                    flyingStatusChart.notifyDataSetChanged();
                     flyingStatusChart.invalidate();
                 }
             }
