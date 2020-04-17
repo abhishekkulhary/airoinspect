@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_chart"
     android:layout_width="match_parent"
     android:layout_height="200dp"
-    android:layout_marginLeft="15dp"
-    android:layout_marginRight="15dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardBackgroundColor="@color/tab_indicator"
+    android:layout_marginStart="15dp"
     android:layout_marginTop="2dp"
+    android:layout_marginEnd="15dp"
+    app:cardBackgroundColor="@color/tab_indicator"
     app:cardCornerRadius="10dp"
     app:cardMaxElevation="20dp"
     app:cardPreventCornerOverlap="true">
@@ -22,10 +22,10 @@
             android:id="@+id/chart_name"
             android:layout_width="0dp"
             android:layout_height="25dp"
-            android:layout_weight="1"
-            android:text="@string/unit_for_chart"
-            android:gravity="start"
             android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:gravity="start"
+            android:text="@string/unit_for_chart"
             tools:ignore="NestedWeights">
 
         </TextView>
@@ -34,9 +34,9 @@
             android:id="@+id/unit_value"
             android:layout_width="0dp"
             android:layout_height="25dp"
+            android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:gravity="end"
-            android:layout_marginEnd="5dp"
             android:text="@string/maximum_unit"
             tools:ignore="NestedWeights">
 
@@ -50,5 +50,5 @@
         android:layout_height="165dp"
         android:layout_marginTop="25dp"
         android:layout_marginBottom="10dp"
-        android:scrollbars="horizontal"/>
+        android:scrollbars="horizontal" />
 </androidx.cardview.widget.CardView>

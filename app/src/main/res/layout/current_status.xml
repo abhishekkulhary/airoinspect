@@ -1,15 +1,14 @@
-<LinearLayout
-    android:layout_marginTop="10dp"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="175dp"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_marginTop="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
         android:baselineAligned="false"
+        android:orientation="horizontal"
         tools:ignore="UselessParent">
 
         <LinearLayout
@@ -61,9 +60,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
-                tools:ignore="NestedWeights"
-                android:baselineAligned="false">
+                tools:ignore="NestedWeights">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -78,8 +77,8 @@
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:src="@drawable/temp_icon"
                         android:contentDescription="TODO"
+                        android:src="@drawable/temp_icon"
                         tools:ignore="ContentDescription,HardcodedText" />
 
                     <TextView
@@ -110,8 +109,8 @@
 
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:src="@drawable/rain_icon"
                         android:contentDescription="TODO"
+                        android:src="@drawable/rain_icon"
                         tools:ignore="ContentDescription,HardcodedText" />
 
                     <TextView
@@ -133,10 +132,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="2"
+                android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:weightSum="2"
-                tools:ignore="NestedWeights"
-                android:baselineAligned="false">
+                tools:ignore="NestedWeights">
 
 
                 <LinearLayout
@@ -153,8 +152,8 @@
 
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:src="@drawable/wind_icon"
                         android:contentDescription="TODO"
+                        android:src="@drawable/wind_icon"
                         tools:ignore="ContentDescription,HardcodedText" />
 
                     <TextView
@@ -182,8 +181,8 @@
                         android:layout_height="25dp"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:src="@drawable/visibility_icon"
                         android:contentDescription="TODO"
+                        android:src="@drawable/visibility_icon"
                         tools:ignore="ContentDescription,HardcodedText" />
 
                     <TextView
@@ -193,8 +192,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:text="@string/sun_or_visibility">
-                    </TextView>
+                        android:text="@string/sun_or_visibility" />
                 </LinearLayout>
 
             </LinearLayout>

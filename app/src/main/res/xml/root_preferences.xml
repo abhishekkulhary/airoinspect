@@ -68,7 +68,7 @@
             android:key="pressure_seek"
             android:max="3000"
             android:min="0"
-            android:summary="Max. Wind Speed allowed for Flight."
+            android:summary="Max. Pressure allowed for Flight."
             android:title="Pressure"
             app:showSeekBarValue="true" />
 

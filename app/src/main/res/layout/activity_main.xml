@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/viewApp"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbars="vertical|horizontal"
-    tools:context=".MainActivity"
     android:background="@color/colorPrimary"
+    android:scrollbars="vertical|horizontal"
     android:theme="@style/AppTheme.PopupOverlay"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    tools:context=".MainActivity">
 
     <com.simmorsal.library.ConcealerNestedScrollView
         android:id="@+id/concealerNSV"
@@ -16,31 +16,30 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="200dp"/>
+                android:layout_height="200dp" />
 
             <ProgressBar
                 android:id="@+id/pBar"
                 style="?android:attr/progressBarStyleLarge"
-                android:background="@color/tab_indicator"
-                android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
                 android:layout_marginTop="20dp"
-                android:visibility="gone"/>
+                android:background="@color/tab_indicator" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/status_card"
                 android:layout_width="match_parent"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                app:cardBackgroundColor="@color/tab_indicator"
                 android:layout_height="200dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                app:cardBackgroundColor="@color/tab_indicator"
                 app:cardCornerRadius="10dp"
                 app:cardMaxElevation="20dp"
                 app:cardPreventCornerOverlap="true">
@@ -54,10 +53,10 @@
                         android:id="@+id/fly_status_chart_name"
                         android:layout_width="0dp"
                         android:layout_height="25dp"
-                        android:layout_weight="1"
-                        android:text="@string/unit_for_chart"
-                        android:gravity="start"
                         android:layout_marginStart="5dp"
+                        android:layout_weight="1"
+                        android:gravity="start"
+                        android:text="@string/unit_for_chart"
                         tools:ignore="NestedWeights">
 
                     </TextView>
@@ -66,9 +65,9 @@
                         android:id="@+id/fly_status_unit_value"
                         android:layout_width="0dp"
                         android:layout_height="25dp"
+                        android:layout_marginEnd="5dp"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:layout_marginEnd="5dp"
                         android:text="@string/maximum_unit"
                         tools:ignore="NestedWeights">
 
@@ -82,15 +81,14 @@
                     android:layout_height="165dp"
                     android:layout_marginTop="25dp"
                     android:layout_marginBottom="10dp"
-                    android:scrollbars="horizontal"/>
+                    android:scrollbars="horizontal" />
             </androidx.cardview.widget.CardView>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/all_charts"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="20dp">
-            </androidx.recyclerview.widget.RecyclerView>
+                android:layout_marginBottom="20dp" />
 
         </LinearLayout>
     </com.simmorsal.library.ConcealerNestedScrollView>
@@ -98,9 +96,9 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/crdHeaderView"
         android:layout_width="match_parent"
-        app:cardBackgroundColor="@color/colorPrimary"
         android:layout_height="185dp"
         android:layout_marginTop="-15dp"
+        app:cardBackgroundColor="@color/colorPrimary"
         app:cardMaxElevation="20dp"
         app:cardPreventCornerOverlap="true">
 
@@ -111,9 +109,9 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|start"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="bottom|start"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@drawable/ic_settings" />
 </RelativeLayout>
