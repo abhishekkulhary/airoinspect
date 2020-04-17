@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
 
     private ConcealerNestedScrollView nestedScrollView;
     private CardView headerView;
+    private CardView statusCard;
+    private ProgressBar progressBar;
     private FloatingActionButton floatingActionButton;
 
     @Override
@@ -69,8 +72,31 @@ public class MainActivity extends AppCompatActivity {
         currentTimePlace = findViewById(R.id.current_time_place);
         nestedScrollView = findViewById(R.id.concealerNSV);
         headerView = findViewById(R.id.crdHeaderView);
+        statusCard = findViewById(R.id.status_card);
+        progressBar = findViewById(R.id.pBar);
+        allCharts = findViewById(R.id.all_charts);
+
+        flyingStatusChart = findViewById(R.id.fly_status_chart);
+        flyingStatusChartName = findViewById(R.id.fly_status_chart_name);
+        flyingStatusUnit = findViewById(R.id.fly_status_unit_value);
+
+        progressBar.setVisibility(View.VISIBLE);
+
+        statusCard.setVisibility(View.GONE);
+        allCharts.setVisibility(View.GONE);
+        headerView.setVisibility(View.GONE);
 
         floatingActionButton = findViewById(R.id.fab);
+
+        if (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                    MyApplication.getREQUEST_CODE());
+        }
 
         floatingActionButton.post(new Runnable() {
             @Override
@@ -97,19 +123,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        allCharts = findViewById(R.id.all_charts);
-
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                    MyApplication.getREQUEST_CODE());
-        }
-
         final WeatherViewModel weatherViewModel = new ViewModelProvider.AndroidViewModelFactory(this.getApplication()).create(WeatherViewModel.class);
         weatherViewModel.getWeatherCurrentLiveData().observe(this, new Observer<WeatherCurrentRequired>() {
             @SuppressLint("SetTextI18n")
@@ -126,17 +139,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        flyingStatusChart = findViewById(R.id.fly_status_chart);
-        flyingStatusChartName = findViewById(R.id.fly_status_chart_name);
-        flyingStatusUnit = findViewById(R.id.fly_status_unit_value);
-
         Utils.init(this);
 
         weatherViewModel.getWeatherForecastFlyStatus().observe(this, new Observer<ChartsData>() {
             @Override
             public void onChanged(ChartsData chartsData) {
                 if (chartsData != null && !chartsData.getxValues().isEmpty()) {
-
                     flyingStatusUnit.setText(chartsData.getUnit_value());
                     flyingStatusChartName.setText(chartsData.getChart_name());
                     final ArrayList<Long> xValues = chartsData.getxValues();
@@ -202,6 +210,12 @@ public class MainActivity extends AppCompatActivity {
 
                     flyingStatusChart.setData(data);
                     flyingStatusChart.notifyDataSetChanged();
+
+                    progressBar.setVisibility(View.GONE);
+                    statusCard.setVisibility(View.VISIBLE);
+                    allCharts.setVisibility(View.VISIBLE);
+                    headerView.setVisibility(View.VISIBLE);
+
                     flyingStatusChart.invalidate();
                 }
             }
