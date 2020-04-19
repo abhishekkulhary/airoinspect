@@ -89,6 +89,7 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
             });
 
             xAxis.setCenterAxisLabels(false);
+            xAxis.setLabelRotationAngle(-80f);
 
             // Y - axis
             YAxis rightAxis = holder.chart.getAxisRight();
@@ -101,7 +102,11 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
             leftAxis.setMinWidth(40f);
             leftAxis.setMaxWidth(40f);
 
-            leftAxis.setAxisMaximum(data.getYMax() + (data.getYMax() + 0) / 2);
+            if (data.getYMax() == 0.0f) {
+                leftAxis.setAxisMaximum(1f);
+            } else {
+                leftAxis.setAxisMaximum(data.getYMax() + (data.getYMax() + 0) / 2);
+            }
 
             leftAxis.setAxisMinimum(0f);
 
@@ -109,7 +114,7 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
             legend.setEnabled(false);
 
             holder.chart.getDescription().setEnabled(false);
-            holder.chart.setVisibleXRangeMaximum(7f);
+            holder.chart.setVisibleXRangeMaximum(24f);
 
             holder.chart.setScaleEnabled(false);
 

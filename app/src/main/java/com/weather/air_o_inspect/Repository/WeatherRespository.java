@@ -281,6 +281,7 @@ public class WeatherRespository {
                                     barDataSet.setDrawValues(false);
                                     barDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
                                     barData.addDataSet(barDataSet);
+
                                     chartsData = new ChartsData(barData, MyApplication.getLABELS().get(MyApplication.getCOLUMNS().indexOf(column)), MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(column)), timesInMillis);
                                 }
                                 chartDataList.add(chartsData);
@@ -307,8 +308,6 @@ public class WeatherRespository {
                             for (int i = 0; i < weatherForecasts.size(); i++) {
                                 flyStatusBarEntry.add(new BarEntry(i, 1));
                             }
-                            int green = Color.rgb(110, 190, 102);
-                            int red = Color.rgb(211, 74, 88);
                             BarData barData;
                             ArrayList<Integer> colors = new ArrayList<>();
                             ArrayList<IBarDataSet> barDataSets = new ArrayList<>();
@@ -358,9 +357,9 @@ public class WeatherRespository {
                                     }
                                 }
                                 if (i == 0) {
-                                    colors.add(green);
+                                    colors.add(Color.GREEN);
                                 } else {
-                                    colors.add(red);
+                                    colors.add(Color.RED);
                                 }
                             }
                             // Here each dataset would be processed, temp, sunshine etc.

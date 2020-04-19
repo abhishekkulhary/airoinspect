@@ -207,6 +207,7 @@ public class MainActivity extends AppCompatActivity {
                     });
 
                     xAxis.setCenterAxisLabels(false);
+                    xAxis.setLabelRotationAngle(-80f);
 
                     // Y - axis
                     YAxis rightAxis = flyingStatusChart.getAxisRight();
@@ -234,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                     flyingStatusChart.getDescription().setEnabled(false);
-                    flyingStatusChart.setVisibleXRangeMaximum(7f);
+                    flyingStatusChart.setVisibleXRangeMaximum(24f);
                     flyingStatusChart.setScaleEnabled(false);
 
 
