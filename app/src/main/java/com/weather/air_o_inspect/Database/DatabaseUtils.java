@@ -64,7 +64,7 @@ public class DatabaseUtils {
 
                 JSONObject obj = (JSONObject) finalResultJson.get(i);
 
-                weatherForecast = new WeatherForecast(obj.getLong("time"),
+                weatherForecast = new WeatherForecast(i, obj.getLong("time"),
                         Float.valueOf("" + obj.get("precipIntensity")), Float.valueOf("" + obj.get("precipProbability")),
                         Float.valueOf("" + obj.get("temperature")), Float.valueOf("" + obj.get("pressure")),
                         Float.valueOf("" + obj.get("windSpeed")),

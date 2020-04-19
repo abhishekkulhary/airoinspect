@@ -2,6 +2,7 @@ package com.weather.air_o_inspect.Repository;
 
 import android.app.Application;
 import android.graphics.Color;
+import android.os.AsyncTask;
 
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;
@@ -12,6 +13,7 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
+import com.weather.air_o_inspect.Database.DatabaseUtils;
 import com.weather.air_o_inspect.Database.WeatherDatabase;
 import com.weather.air_o_inspect.Database.WeatherForecastDAO;
 import com.weather.air_o_inspect.Entities.ChartsData;
@@ -31,7 +33,7 @@ public class WeatherRespository {
     private final static Integer UPDATE_OPERTION = 1;
     private final static Integer DELETE_OPERTION = 2;
 
-    private WeatherForecastDAO weatherForecastDAO;
+    private static WeatherForecastDAO weatherForecastDAO;
 
     private LiveData<List<WeatherForecast>> weatherForecastLiveData;
     private LiveData<List<WeatherCurrent>> weatherCurrentLiveData;
@@ -41,7 +43,6 @@ public class WeatherRespository {
 
         WeatherDatabase weatherDatabase = WeatherDatabase.getInstance(application);
         weatherForecastDAO = weatherDatabase.weatherUpdateDAO();
-
 
         weatherForecastLiveData = weatherForecastDAO.getAllWeatherForecast();
 
@@ -95,28 +96,28 @@ public class WeatherRespository {
         return Transformations.switchMap(weatherCurrentLiveData, new Function<List<WeatherCurrent>, LiveData<WeatherCurrentRequired>>() {
             @Override
             public LiveData<WeatherCurrentRequired> apply(final List<WeatherCurrent> weatherCurrents) {
-            return Transformations.map(preferencesLiveData, new Function<List<Preferences>, WeatherCurrentRequired>() {
-                @Override
-                public WeatherCurrentRequired apply(List<Preferences> preferences) {
-                if (weatherCurrents != null && !weatherCurrents.isEmpty() && preferences != null && !preferences.isEmpty()) {
-                    WeatherCurrentRequired required = new WeatherCurrentRequired();
-                    Preferences preference = preferences.get(0);
-                    WeatherCurrent weatherCurrent = weatherCurrents.get(0);
-                    required.setPrecipIntensity(weatherCurrent.getPrecipIntensity());
-                    required.setPrecipProbability(weatherCurrent.getPrecipProbability());
-                    required.setTemperature(weatherCurrent.getTemperature());
-                    required.setPressure(weatherCurrent.getPressure());
-                    required.setWindSpeed(weatherCurrent.getWindSpeed());
-                    required.setWindGust(weatherCurrent.getWindGust());
-                    required.setCloudCover(weatherCurrent.getCloudCover());
-                    required.setVisibility(weatherCurrent.getVisibility());
-                    required.setDateTime(weatherCurrent.getDateTime());
-                    required.setFlyStatus(getFlyStatusColor(weatherCurrent, preference));
-                    return required;
-                }
-                return null;
-                }
-            });
+                return Transformations.map(preferencesLiveData, new Function<List<Preferences>, WeatherCurrentRequired>() {
+                    @Override
+                    public WeatherCurrentRequired apply(List<Preferences> preferences) {
+                        if (weatherCurrents != null && !weatherCurrents.isEmpty() && preferences != null && !preferences.isEmpty()) {
+                            WeatherCurrentRequired required = new WeatherCurrentRequired();
+                            Preferences preference = preferences.get(0);
+                            WeatherCurrent weatherCurrent = weatherCurrents.get(0);
+                            required.setPrecipIntensity(weatherCurrent.getPrecipIntensity());
+                            required.setPrecipProbability(weatherCurrent.getPrecipProbability());
+                            required.setTemperature(weatherCurrent.getTemperature());
+                            required.setPressure(weatherCurrent.getPressure());
+                            required.setWindSpeed(weatherCurrent.getWindSpeed());
+                            required.setWindGust(weatherCurrent.getWindGust());
+                            required.setCloudCover(weatherCurrent.getCloudCover());
+                            required.setVisibility(weatherCurrent.getVisibility());
+                            required.setDateTime(weatherCurrent.getDateTime());
+                            required.setFlyStatus(getFlyStatusColor(weatherCurrent, preference));
+                            return required;
+                        }
+                        return null;
+                    }
+                });
 
             }
         });
@@ -124,17 +125,17 @@ public class WeatherRespository {
 
     private int getFlyStatusColor(WeatherCurrent weatherCurrent1, Preferences preferences1) {
         Boolean[] checks = {preferences1.getPrecipitationIntensitySwitch(), preferences1.getPrecipitationProbabilitySwitch(),
-            preferences1.getTemperatureSwitch(), preferences1.getPressureSwitch(), preferences1.getWindSpeedSwitch(),
-            preferences1.getWindGustSwitch(), preferences1.getCloudCoverSwitch(), preferences1.getVisibilitySwitch()};
+                preferences1.getTemperatureSwitch(), preferences1.getPressureSwitch(), preferences1.getWindSpeedSwitch(),
+                preferences1.getWindGustSwitch(), preferences1.getCloudCoverSwitch(), preferences1.getVisibilitySwitch()};
 
         Boolean[] thresoldChecks = {weatherCurrent1.getPrecipIntensity() < preferences1.getPrecipitationIntensityThresold(),
-            weatherCurrent1.getPrecipProbability() < preferences1.getPrecipitationProbabilityThresold(),
-            weatherCurrent1.getTemperature() < preferences1.getTemperatureThresold(),
-            weatherCurrent1.getPressure() < preferences1.getPressureThresold(),
-            weatherCurrent1.getWindSpeed() < preferences1.getWindSpeedThresold(),
-            weatherCurrent1.getWindGust() < preferences1.getWindGustThresold(),
-            weatherCurrent1.getCloudCover() < preferences1.getCloudCoverThresold(),
-            weatherCurrent1.getVisibility() < preferences1.getVisibilityThresold()};
+                weatherCurrent1.getPrecipProbability() < preferences1.getPrecipitationProbabilityThresold(),
+                weatherCurrent1.getTemperature() < preferences1.getTemperatureThresold(),
+                weatherCurrent1.getPressure() < preferences1.getPressureThresold(),
+                weatherCurrent1.getWindSpeed() < preferences1.getWindSpeedThresold(),
+                weatherCurrent1.getWindGust() < preferences1.getWindGustThresold(),
+                weatherCurrent1.getCloudCover() < preferences1.getCloudCoverThresold(),
+                weatherCurrent1.getVisibility() < preferences1.getVisibilityThresold()};
         boolean finalDecision = true;
         int i = 0;
         for (Boolean check : checks) {
@@ -162,223 +163,244 @@ public class WeatherRespository {
         return Transformations.switchMap(weatherForecastLiveData, new Function<List<WeatherForecast>, LiveData<List<ChartsData>>>() {
             @Override
             public LiveData<List<ChartsData>> apply(final List<WeatherForecast> weatherForecasts) {
-            return Transformations.map(preferencesLiveData, new Function<List<Preferences>, List<ChartsData>>() {
-                @Override
-                public List<ChartsData> apply(final List<Preferences> preferences) {
-                List<ChartsData> chartDataList = new ArrayList<>();
-                if (preferences != null && !preferences.isEmpty()) {
-                    Preferences preferences1 = preferences.get(0);
-                    for (String column : MyApplication.getCOLUMNS()) {
-                        ArrayList<BarEntry> barEntries = new ArrayList<>();
-                        ArrayList<Integer> colors = new ArrayList<>();
-                        ArrayList<Long> timesInMillis = new ArrayList<>();
-                        for (int i = 0; i < weatherForecasts.size(); i++) {
-                            WeatherForecast forecast = weatherForecasts.get(i);
-                            if (column.equals(MyApplication.getPrecipIntensityColumn())) {
-                                barEntries.add(new BarEntry(i, forecast.getPrecipIntensity()));
-                                if (preferences1.getPrecipitationIntensitySwitch()) {
-                                    if (forecast.getPrecipIntensity() <= preferences1.getPrecipitationIntensityThresold()) {
-                                        colors.add(Color.GREEN);
-                                    } else {
-                                        colors.add(Color.RED);
+                return Transformations.map(preferencesLiveData, new Function<List<Preferences>, List<ChartsData>>() {
+                    @Override
+                    public List<ChartsData> apply(final List<Preferences> preferences) {
+                        List<ChartsData> chartDataList = new ArrayList<>();
+                        if (preferences != null && !preferences.isEmpty()) {
+                            Preferences preferences1 = preferences.get(0);
+                            for (String column : MyApplication.getCOLUMNS()) {
+                                ArrayList<BarEntry> barEntries = new ArrayList<>();
+                                ArrayList<Integer> colors = new ArrayList<>();
+                                ArrayList<Long> timesInMillis = new ArrayList<>();
+                                for (int i = 0; i < weatherForecasts.size(); i++) {
+                                    WeatherForecast forecast = weatherForecasts.get(i);
+                                    if (column.equals(MyApplication.getPrecipIntensityColumn())) {
+                                        barEntries.add(new BarEntry(i, forecast.getPrecipIntensity()));
+                                        if (preferences1.getPrecipitationIntensitySwitch()) {
+                                            if (forecast.getPrecipIntensity() <= preferences1.getPrecipitationIntensityThresold()) {
+                                                colors.add(Color.GREEN);
+                                            } else {
+                                                colors.add(Color.RED);
+                                            }
+                                        } else {
+                                            colors.add(Color.DKGRAY);
+                                        }
+                                        timesInMillis.add(forecast.getTimeInMillis());
+                                    } else if (column.equals(MyApplication.getPrecipProbabilityColumn())) {
+                                        barEntries.add(new BarEntry(i, forecast.getPrecipProbability()));
+                                        if (preferences1.getPrecipitationProbabilitySwitch()) {
+                                            if (forecast.getPrecipProbability() <= preferences1.getPrecipitationProbabilityThresold()) {
+                                                colors.add(Color.GREEN);
+                                            } else {
+                                                colors.add(Color.RED);
+                                            }
+                                        } else {
+                                            colors.add(Color.DKGRAY);
+                                        }
+                                        timesInMillis.add(forecast.getTimeInMillis());
+                                    } else if (column.equals(MyApplication.getTemperatureColumn())) {
+                                        barEntries.add(new BarEntry(i, forecast.getTemperature()));
+                                        if (preferences1.getTemperatureSwitch()) {
+                                            if (forecast.getTemperature() <= preferences1.getTemperatureThresold()) {
+                                                colors.add(Color.GREEN);
+                                            } else {
+                                                colors.add(Color.RED);
+                                            }
+                                        } else {
+                                            colors.add(Color.DKGRAY);
+                                        }
+                                        timesInMillis.add(forecast.getTimeInMillis());
+                                    } else if (column.equals(MyApplication.getPressureColumn())) {
+                                        barEntries.add(new BarEntry(i, forecast.getPressure()));
+                                        if (preferences1.getPressureSwitch()) {
+                                            if (forecast.getPressure() <= preferences1.getPressureThresold()) {
+                                                colors.add(Color.GREEN);
+                                            } else {
+                                                colors.add(Color.RED);
+                                            }
+                                        } else {
+                                            colors.add(Color.DKGRAY);
+                                        }
+                                        timesInMillis.add(forecast.getTimeInMillis());
+                                    } else if (column.equals(MyApplication.getWindSpeedColumn())) {
+                                        barEntries.add(new BarEntry(i, forecast.getWindSpeed()));
+                                        if (preferences1.getWindSpeedSwitch()) {
+                                            if (forecast.getWindSpeed() <= preferences1.getWindSpeedThresold()) {
+                                                colors.add(Color.GREEN);
+                                            } else {
+                                                colors.add(Color.RED);
+                                            }
+                                        } else {
+                                            colors.add(Color.DKGRAY);
+                                        }
+                                        timesInMillis.add(forecast.getTimeInMillis());
+                                    } else if (column.equals(MyApplication.getWindGustColumn())) {
+                                        barEntries.add(new BarEntry(i, forecast.getWindGust()));
+                                        if (preferences1.getWindGustSwitch()) {
+                                            if (forecast.getWindGust() <= preferences1.getWindGustThresold()) {
+                                                colors.add(Color.GREEN);
+                                            } else {
+                                                colors.add(Color.RED);
+                                            }
+                                        } else {
+                                            colors.add(Color.DKGRAY);
+                                        }
+                                        timesInMillis.add(forecast.getTimeInMillis());
+                                    } else if (column.equals(MyApplication.getCloudCoverColumn())) {
+                                        barEntries.add(new BarEntry(i, forecast.getCloudCover()));
+                                        if (preferences1.getCloudCoverSwitch()) {
+                                            if (forecast.getCloudCover() <= preferences1.getCloudCoverThresold()) {
+                                                colors.add(Color.GREEN);
+                                            } else {
+                                                colors.add(Color.RED);
+                                            }
+                                        } else {
+                                            colors.add(Color.DKGRAY);
+                                        }
+                                        timesInMillis.add(forecast.getTimeInMillis());
+                                    } else if (column.equals(MyApplication.getVisibilityColumn())) {
+                                        barEntries.add(new BarEntry(i, forecast.getVisibility()));
+                                        if (preferences1.getVisibilitySwitch()) {
+                                            if (forecast.getVisibility() <= preferences1.getVisibilityThresold()) {
+                                                colors.add(Color.GREEN);
+                                            } else {
+                                                colors.add(Color.RED);
+                                            }
+                                        } else {
+                                            colors.add(Color.DKGRAY);
+                                        }
+                                        timesInMillis.add(forecast.getTimeInMillis());
                                     }
-                                } else {
-                                    colors.add(Color.DKGRAY);
                                 }
-                                timesInMillis.add(forecast.getTimeInMillis());
-                            } else if (column.equals(MyApplication.getPrecipProbabilityColumn())) {
-                                barEntries.add(new BarEntry(i, forecast.getPrecipProbability()));
-                                if (preferences1.getPrecipitationProbabilitySwitch()) {
-                                    if (forecast.getPrecipProbability() <= preferences1.getPrecipitationProbabilityThresold()) {
-                                        colors.add(Color.GREEN);
-                                    } else {
-                                        colors.add(Color.RED);
-                                    }
-                                } else {
-                                    colors.add(Color.DKGRAY);
+                                BarData barData = new BarData();
+                                ChartsData chartsData = null;
+                                if (!barEntries.isEmpty()) {
+                                    BarDataSet barDataSet = new BarDataSet(barEntries, "");
+                                    barDataSet.setColors(colors);
+                                    barDataSet.setDrawValues(false);
+                                    barDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+                                    barData.addDataSet(barDataSet);
+                                    chartsData = new ChartsData(barData, MyApplication.getLABELS().get(MyApplication.getCOLUMNS().indexOf(column)), MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(column)), timesInMillis);
                                 }
-                                timesInMillis.add(forecast.getTimeInMillis());
-                            } else if (column.equals(MyApplication.getTemperatureColumn())) {
-                                barEntries.add(new BarEntry(i, forecast.getTemperature()));
-                                if (preferences1.getTemperatureSwitch()) {
-                                    if (forecast.getTemperature() <= preferences1.getTemperatureThresold()) {
-                                        colors.add(Color.GREEN);
-                                    } else {
-                                        colors.add(Color.RED);
-                                    }
-                                } else {
-                                    colors.add(Color.DKGRAY);
-                                }
-                                timesInMillis.add(forecast.getTimeInMillis());
-                            } else if (column.equals(MyApplication.getPressureColumn())) {
-                                barEntries.add(new BarEntry(i, forecast.getPressure()));
-                                if (preferences1.getPressureSwitch()) {
-                                    if (forecast.getPressure() <= preferences1.getPressureThresold()) {
-                                        colors.add(Color.GREEN);
-                                    } else {
-                                        colors.add(Color.RED);
-                                    }
-                                } else {
-                                    colors.add(Color.DKGRAY);
-                                }
-                                timesInMillis.add(forecast.getTimeInMillis());
-                            } else if (column.equals(MyApplication.getWindSpeedColumn())) {
-                                barEntries.add(new BarEntry(i, forecast.getWindSpeed()));
-                                if (preferences1.getWindSpeedSwitch()) {
-                                    if (forecast.getWindSpeed() <= preferences1.getWindSpeedThresold()) {
-                                        colors.add(Color.GREEN);
-                                    } else {
-                                        colors.add(Color.RED);
-                                    }
-                                } else {
-                                    colors.add(Color.DKGRAY);
-                                }
-                                timesInMillis.add(forecast.getTimeInMillis());
-                            } else if (column.equals(MyApplication.getWindGustColumn())) {
-                                barEntries.add(new BarEntry(i, forecast.getWindGust()));
-                                if (preferences1.getWindGustSwitch()) {
-                                    if (forecast.getWindGust() <= preferences1.getWindGustThresold()) {
-                                        colors.add(Color.GREEN);
-                                    } else {
-                                        colors.add(Color.RED);
-                                    }
-                                } else {
-                                    colors.add(Color.DKGRAY);
-                                }
-                                timesInMillis.add(forecast.getTimeInMillis());
-                            } else if (column.equals(MyApplication.getCloudCoverColumn())) {
-                                barEntries.add(new BarEntry(i, forecast.getCloudCover()));
-                                if (preferences1.getCloudCoverSwitch()) {
-                                    if (forecast.getCloudCover() <= preferences1.getCloudCoverThresold()) {
-                                        colors.add(Color.GREEN);
-                                    } else {
-                                        colors.add(Color.RED);
-                                    }
-                                } else {
-                                    colors.add(Color.DKGRAY);
-                                }
-                                timesInMillis.add(forecast.getTimeInMillis());
-                            } else if (column.equals(MyApplication.getVisibilityColumn())) {
-                                barEntries.add(new BarEntry(i, forecast.getVisibility()));
-                                if (preferences1.getVisibilitySwitch()) {
-                                    if (forecast.getVisibility() <= preferences1.getVisibilityThresold()) {
-                                        colors.add(Color.GREEN);
-                                    } else {
-                                        colors.add(Color.RED);
-                                    }
-                                } else {
-                                    colors.add(Color.DKGRAY);
-                                }
-                                timesInMillis.add(forecast.getTimeInMillis());
+                                chartDataList.add(chartsData);
                             }
                         }
-                        BarData barData = new BarData();
-                        ChartsData chartsData = null;
-                        if (!barEntries.isEmpty()) {
-                            BarDataSet barDataSet = new BarDataSet(barEntries, "");
-                            barDataSet.setColors(colors);
-                            barDataSet.setDrawValues(false);
-                            barDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-                            barData.addDataSet(barDataSet);
-                            chartsData = new ChartsData(barData, MyApplication.getLABELS().get(MyApplication.getCOLUMNS().indexOf(column)), MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(column)), timesInMillis);
-                        }
-                        chartDataList.add(chartsData);
+                        return chartDataList;
                     }
-                }
-                return chartDataList;
-                }
-            });
+                });
             }
         });
     }
-
 
     public LiveData<ChartsData> getWeatherForecastFlyStatus() {
         return Transformations.switchMap(weatherForecastLiveData, new Function<List<WeatherForecast>, LiveData<ChartsData>>() {
             @Override
             public LiveData<ChartsData> apply(final List<WeatherForecast> weatherForecasts) {
-            return Transformations.map(preferencesLiveData, new Function<List<Preferences>, ChartsData>() {
-                @Override
-                public ChartsData apply(final List<Preferences> preferences) {
-                ChartsData chartDataList = null;
-                if (preferences != null && !preferences.isEmpty()) {
-                    Preferences preferences1 = preferences.get(0);
-                    ArrayList<BarEntry> flyStatusBarEntry = new ArrayList<>();
-                    for (int i = 0; i < weatherForecasts.size(); i++) {
-                        flyStatusBarEntry.add(new BarEntry(i, 1));
+                return Transformations.map(preferencesLiveData, new Function<List<Preferences>, ChartsData>() {
+                    @Override
+                    public ChartsData apply(final List<Preferences> preferences) {
+                        ChartsData chartDataList = null;
+                        if (preferences != null && !preferences.isEmpty()) {
+                            Preferences preferences1 = preferences.get(0);
+                            ArrayList<BarEntry> flyStatusBarEntry = new ArrayList<>();
+                            for (int i = 0; i < weatherForecasts.size(); i++) {
+                                flyStatusBarEntry.add(new BarEntry(i, 1));
+                            }
+                            int green = Color.rgb(110, 190, 102);
+                            int red = Color.rgb(211, 74, 88);
+                            BarData barData;
+                            ArrayList<Integer> colors = new ArrayList<>();
+                            ArrayList<IBarDataSet> barDataSets = new ArrayList<>();
+                            ArrayList<Long> timesInMillis = new ArrayList<>();
+
+                            for (WeatherForecast forecast : weatherForecasts) {
+                                int i = 0;
+                                timesInMillis.add(forecast.getTimeInMillis());
+                                if (preferences1.getPrecipitationIntensitySwitch()) {
+                                    if (forecast.getPrecipIntensity() > preferences1.getPrecipitationIntensityThresold()) {
+                                        i++;
+                                    }
+                                }
+                                if (preferences1.getPrecipitationProbabilitySwitch()) {
+                                    if (forecast.getPrecipProbability() > preferences1.getPrecipitationProbabilityThresold()) {
+                                        i++;
+                                    }
+                                }
+                                if (preferences1.getTemperatureSwitch()) {
+                                    if (forecast.getTemperature() > preferences1.getTemperatureThresold()) {
+                                        i++;
+                                    }
+                                }
+                                if (preferences1.getPressureSwitch()) {
+                                    if (forecast.getPressure() > preferences1.getPressureThresold()) {
+                                        i++;
+                                    }
+                                }
+                                if (preferences1.getWindSpeedSwitch()) {
+                                    if (forecast.getWindSpeed() > preferences1.getWindSpeedThresold()) {
+                                        i++;
+                                    }
+                                }
+                                if (preferences1.getWindGustSwitch()) {
+                                    if (forecast.getWindGust() > preferences1.getWindGustThresold()) {
+                                        i++;
+                                    }
+                                }
+                                if (preferences1.getCloudCoverSwitch()) {
+                                    if (forecast.getCloudCover() > preferences1.getCloudCoverThresold()) {
+                                        i++;
+                                    }
+                                }
+                                if (preferences1.getVisibilitySwitch()) {
+                                    if (forecast.getVisibility() > preferences1.getVisibilityThresold()) {
+                                        i++;
+                                    }
+                                }
+                                if (i == 0) {
+                                    colors.add(green);
+                                } else {
+                                    colors.add(red);
+                                }
+                            }
+                            // Here each dataset would be processed, temp, sunshine etc.
+                            BarDataSet barDataSet = new BarDataSet(flyStatusBarEntry, "Flying Status");
+                            barDataSet.setColors(colors);
+
+                            barDataSet.setDrawValues(false);
+                            barDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+                            barDataSets.add(barDataSet);
+
+                            barData = new BarData(barDataSets);
+
+                            chartDataList = new ChartsData(barData, "Fly Status", "Color: green/red", timesInMillis);
+                        }
+                        return chartDataList;
                     }
-                    int green = Color.rgb(110, 190, 102);
-                    int red = Color.rgb(211, 74, 88);
-                    BarData barData;
-                    ArrayList<Integer> colors = new ArrayList<>();
-                    ArrayList<IBarDataSet> barDataSets = new ArrayList<>();
-                    ArrayList<Long> timesInMillis = new ArrayList<>();
-
-                    for (WeatherForecast forecast : weatherForecasts) {
-                        int i = 0;
-                        timesInMillis.add(forecast.getTimeInMillis());
-                        if (preferences1.getPrecipitationIntensitySwitch()) {
-                            if (forecast.getPrecipIntensity() > preferences1.getPrecipitationIntensityThresold()) {
-                                i++;
-                            }
-                        }
-                        if (preferences1.getPrecipitationProbabilitySwitch()) {
-                            if (forecast.getPrecipProbability() > preferences1.getPrecipitationProbabilityThresold()) {
-                                i++;
-                            }
-                        }
-                        if (preferences1.getTemperatureSwitch()) {
-                            if (forecast.getTemperature() > preferences1.getTemperatureThresold()) {
-                                i++;
-                            }
-                        }
-                        if (preferences1.getPressureSwitch()) {
-                            if (forecast.getPressure() > preferences1.getPressureThresold()) {
-                                i++;
-                            }
-                        }
-                        if (preferences1.getWindSpeedSwitch()) {
-                            if (forecast.getWindSpeed() > preferences1.getWindSpeedThresold()) {
-                                i++;
-                            }
-                        }
-                        if (preferences1.getWindGustSwitch()) {
-                            if (forecast.getWindGust() > preferences1.getWindGustThresold()) {
-                                i++;
-                            }
-                        }
-                        if (preferences1.getCloudCoverSwitch()) {
-                            if (forecast.getCloudCover() > preferences1.getCloudCoverThresold()) {
-                                i++;
-                            }
-                        }
-                        if (preferences1.getVisibilitySwitch()) {
-                            if (forecast.getVisibility() > preferences1.getVisibilityThresold()) {
-                                i++;
-                            }
-                        }
-                        if (i == 0) {
-                            colors.add(green);
-                        } else {
-                            colors.add(red);
-                        }
-                    }
-                    // Here each dataset would be processed, temp, sunshine etc.
-                    BarDataSet barDataSet = new BarDataSet(flyStatusBarEntry, "Flying Status");
-                    barDataSet.setColors(colors);
-
-                    barDataSet.setDrawValues(false);
-                    barDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-                    barDataSets.add(barDataSet);
-
-                    barData = new BarData(barDataSets);
-
-                    chartDataList = new ChartsData(barData, "Fly Status", "Color: green/red", timesInMillis);
-                }
-                return chartDataList;
-                }
-            });
+                });
             }
         });
+    }
+
+    public static class RePopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            DatabaseUtils databaseUtils = new DatabaseUtils();
+
+            String dataFromUrl = databaseUtils.getDataFromUrl(MyApplication.getLongLat(), MyApplication.getQuery());
+
+            List<WeatherForecast> weatherForecastList = databaseUtils.convertJsonToWeatherForecastList(dataFromUrl);
+            WeatherCurrent weatherCurrent = databaseUtils.convertJsonToWeatherCurrent(dataFromUrl);
+
+            weatherForecastDAO.updateWeatherCurrent(weatherCurrent);
+
+            for (WeatherForecast forecast : weatherForecastList) {
+                weatherForecastDAO.updateWeatherForecast(forecast);
+            }
+
+            return null;
+        }
     }
 }

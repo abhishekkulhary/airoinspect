@@ -41,7 +41,7 @@ public abstract class WeatherDatabase extends RoomDatabase {
 
     public abstract WeatherForecastDAO weatherUpdateDAO();
 
-    public static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
+    private static class PopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
 
         private WeatherForecastDAO weatherForecastDAO;
 

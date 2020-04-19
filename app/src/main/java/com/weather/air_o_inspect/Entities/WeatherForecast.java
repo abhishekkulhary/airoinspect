@@ -4,12 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import com.weather.air_o_inspect.MyApplication;
-
 @Entity(tableName = "weather_forecast")
 public class WeatherForecast {
 
-    @PrimaryKey(autoGenerate = true)
+    @PrimaryKey
     private Integer id;
     private Long timeInMillis;
     private Float precipIntensity;
@@ -20,11 +18,12 @@ public class WeatherForecast {
     private Float windGust;
     private Float cloudCover;
     private Float visibility;
-    private String date;
 
-    public WeatherForecast(@NonNull Long timeInMillis, @NonNull Float precipIntensity, @NonNull Float precipProbability,
+    public WeatherForecast(@NonNull Integer id, @NonNull Long timeInMillis, @NonNull Float precipIntensity, @NonNull Float precipProbability,
                            @NonNull Float temperature, @NonNull Float pressure, @NonNull Float windSpeed,
                            @NonNull Float windGust, @NonNull Float cloudCover, @NonNull Float visibility) {
+        this.id = id;
+        this.timeInMillis = timeInMillis;
         this.precipIntensity = precipIntensity;
         this.precipProbability = precipProbability;
         this.temperature = temperature;
@@ -33,8 +32,6 @@ public class WeatherForecast {
         this.windGust = windGust;
         this.cloudCover = cloudCover;
         this.visibility = visibility;
-        this.timeInMillis = timeInMillis;
-        this.date = MyApplication.getSimpleDateFormat().format(timeInMillis * 1000);
     }
 
     public Float getPrecipIntensity() {
@@ -73,22 +70,8 @@ public class WeatherForecast {
         return timeInMillis;
     }
 
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-
-        this.date = date;
-
-    }
-
     @NonNull
     public Integer getId() {
         return id;
-    }
-
-    public void setId(@NonNull Integer id) {
-        this.id = id;
     }
 }

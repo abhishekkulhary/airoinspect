@@ -33,7 +33,7 @@ public class MyApplication extends Application implements LocationListener, Seri
             "Temperature", "Pressure", "Wind Speed", "Wind Gust", "Cloud Cover", "Visibility");
     private final static List<String> UNITS = Arrays.asList("mm", "Percent", "Celsius", "Pa", "m/s", "m/s", "Percent", "km");
     private final static String query = "units=si";
-    private final static Long timeDelay = 20L; // Time in mins
+    private final static Long timeDelay = 30L; // Time in mins
     private final static SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH", Locale.getDefault());
     private static final SimpleDateFormat simpleDateWithTimeFormat = new SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault());
     private static final SimpleDateFormat simpleDateWithTimeInChart = new SimpleDateFormat("dd MMM HH:mm", Locale.getDefault());

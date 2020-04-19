@@ -1,8 +1,10 @@
 package com.weather.air_o_inspect.Charts;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -16,7 +18,10 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.weather.air_o_inspect.Entities.ChartsData;
+import com.weather.air_o_inspect.MainActivity;
 import com.weather.air_o_inspect.MyApplication;
 import com.weather.air_o_inspect.R;
 
@@ -36,6 +41,7 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
         return new ChartViewHolder(v);
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onBindViewHolder(@NonNull final ChartViewHolder holder, final int position) {
@@ -92,7 +98,7 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
             leftAxis.enableGridDashedLine(10f, 5f, 0f);
             leftAxis.setDrawLimitLinesBehindData(true);
             leftAxis.setLabelCount(5, true);
-            leftAxis.setMinWidth(35f);
+            leftAxis.setMinWidth(40f);
             leftAxis.setMaxWidth(40f);
 
             leftAxis.setAxisMaximum(data.getYMax() + (data.getYMax() + 0) / 2);
@@ -108,9 +114,53 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
             holder.chart.setScaleEnabled(false);
 
             holder.chart.setData(data);
+            holder.chart.notifyDataSetChanged();
 
             holder.chart.invalidate();
         }
+
+        holder.chart.setOnChartGestureListener(new OnChartGestureListener() {
+            @Override
+            public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+            }
+
+            @Override
+            public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+            }
+
+            @Override
+            public void onChartLongPressed(MotionEvent me) {
+
+            }
+
+            @Override
+            public void onChartDoubleTapped(MotionEvent me) {
+
+            }
+
+            @Override
+            public void onChartSingleTapped(MotionEvent me) {
+
+            }
+
+            @Override
+            public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+            }
+
+            @Override
+            public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+
+            }
+
+            @Override
+            public void onChartTranslate(MotionEvent me, float dX, float dY) {
+                MainActivity.scrollCharts(holder.chart.getLowestVisibleX(), position);
+            }
+        });
+
     }
 
     // Replace the contents of a view (invoked by the layout manager)

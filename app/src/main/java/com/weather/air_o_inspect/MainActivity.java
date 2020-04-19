@@ -2,17 +2,18 @@ package com.weather.air_o_inspect;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
@@ -20,24 +21,29 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.utils.Utils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.simmorsal.library.ConcealerNestedScrollView;
 import com.weather.air_o_inspect.Charts.ChartDataAdapter;
 import com.weather.air_o_inspect.Entities.ChartsData;
 import com.weather.air_o_inspect.Entities.WeatherCurrentRequired;
+import com.weather.air_o_inspect.Repository.WeatherRespository;
+import com.weather.air_o_inspect.Services.ReloadWeatherService;
 import com.weather.air_o_inspect.Settings.SettingsFragment;
 import com.weather.air_o_inspect.Viewmodel.WeatherViewModel;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,8 +54,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView currentWind;
     private TextView currentVisibility;
     private TextView currentTimePlace;
-    private RecyclerView allCharts;
-    private BarChart flyingStatusChart;
+    private static RecyclerView allCharts;
+    private static BarChart flyingStatusChart;
     private TextView flyingStatusChartName;
     private TextView flyingStatusUnit;
 
@@ -58,9 +64,38 @@ public class MainActivity extends AppCompatActivity {
     private CardView statusCard;
     private ProgressBar progressBar;
     private FloatingActionButton floatingActionButton;
+    private SwipeRefreshLayout refreshLayout;
 
-    @RequiresApi(api = Build.VERSION_CODES.M)
-    @SuppressLint("ClickableViewAccessibility")
+    private String lastRefreshTime = "";
+
+    public static void scrollCharts(float lowestVisibleX, int position) {
+        flyingStatusChart.moveViewToX(lowestVisibleX);
+        flyingStatusChart.invalidate();
+
+        for (int i = 0; i < allCharts.getChildCount(); i++) {
+            if (i != position) {
+                BarChart chart = allCharts.getChildAt(i).findViewById(R.id.chart);
+                chart.moveViewToX(lowestVisibleX);
+                chart.invalidate();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Log.i("MainActivity:", "onRequestPermissionResult");
+        if (requestCode == MyApplication.getREQUEST_CODE()) {
+            for (int result : grantResults) {
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    Log.d("onRequestPermissionsRe:", "Permission Not Granted");
+                    return;
+                }
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,6 +116,7 @@ public class MainActivity extends AppCompatActivity {
         flyingStatusChart = findViewById(R.id.fly_status_chart);
         flyingStatusChartName = findViewById(R.id.fly_status_chart_name);
         flyingStatusUnit = findViewById(R.id.fly_status_unit_value);
+        refreshLayout = findViewById(R.id.swiperefresh);
 
         progressBar.setVisibility(View.VISIBLE);
 
@@ -137,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
                     currentVisibility.setText("" + weatherCurrent.getVisibility() + " " + MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(MyApplication.getVisibilityColumn())));
                     currentTimePlace.setText("" + weatherCurrent.getDateTime());
                     currentFlyStatus.setTextColor(weatherCurrent.getFlyStatus());
+                    lastRefreshTime = weatherCurrent.getDateTime();
                 }
             }
         });
@@ -150,7 +187,6 @@ public class MainActivity extends AppCompatActivity {
                     flyingStatusUnit.setText(chartsData.getUnit_value());
                     flyingStatusChartName.setText(chartsData.getChart_name());
                     final ArrayList<Long> xValues = chartsData.getxValues();
-                    System.out.println(xValues);
                     BarData data = chartsData.getData();
                     data.setValueTextColor(Color.BLACK);
                     data.setHighlightEnabled(true);
@@ -169,9 +205,8 @@ public class MainActivity extends AppCompatActivity {
                     xAxis.setDrawLabels(true);
                     xAxis.setValueFormatter(new ValueFormatter() {
                         String temp = "";
-
                         @Override
-                        public String getAxisLabel(float value, AxisBase axis) {
+                        public String getFormattedValue(float value) {
                             if (value >= 0 && value < xValues.size()) {
                                 if (temp.equals(MyApplication.getSimpleDateFormat().format(xValues.get((int) value) * 1000))) {
                                     return MyApplication.getSimpleTimeFormat().format(xValues.get((int) value) * 1000);
@@ -193,9 +228,15 @@ public class MainActivity extends AppCompatActivity {
                     YAxis leftAxis = flyingStatusChart.getAxisLeft();
                     leftAxis.enableGridDashedLine(10f, 5f, 0f);
                     leftAxis.setDrawLimitLinesBehindData(true);
-                    leftAxis.setDrawLabels(false);
-                    leftAxis.setMinWidth(35f);
+                    leftAxis.setDrawLabels(true);
+                    leftAxis.setMinWidth(40f);
                     leftAxis.setMaxWidth(40f);
+                    leftAxis.setValueFormatter(new ValueFormatter() {
+                        @Override
+                        public String getFormattedValue(float value) {
+                            return "";
+                        }
+                    });
 
                     leftAxis.setAxisMaximum(1f);
 
@@ -237,20 +278,76 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-    }
+        flyingStatusChart.setOnChartGestureListener(new OnChartGestureListener() {
+            @Override
+            public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.i("MainActivity:", "onRequestPermissionResult");
-        if (requestCode == MyApplication.getREQUEST_CODE()) {
-            for (int result : grantResults) {
-                if (result != PackageManager.PERMISSION_GRANTED) {
-                    Log.d("onRequestPermissionsRe:", "Permission Not Granted");
-                    return;
+            }
+
+            @Override
+            public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+            }
+
+            @Override
+            public void onChartLongPressed(MotionEvent me) {
+
+            }
+
+            @Override
+            public void onChartDoubleTapped(MotionEvent me) {
+
+            }
+
+            @Override
+            public void onChartSingleTapped(MotionEvent me) {
+
+            }
+
+            @Override
+            public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+
+            }
+
+            @Override
+            public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+
+            }
+
+            @Override
+            public void onChartTranslate(MotionEvent me, float dX, float dY) {
+                for (int i = 0; i < allCharts.getChildCount(); i++) {
+                    BarChart chart = allCharts.getChildAt(i).findViewById(R.id.chart);
+                    chart.moveViewToX(flyingStatusChart.getLowestVisibleX());
+                    chart.invalidate();
                 }
             }
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
+        });
+
+        Intent intent = new Intent(getApplicationContext(), ReloadWeatherService.class);
+        startService(intent);
+
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Handler handler = new Handler();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!lastRefreshTime.equals(MyApplication.getSimpleDateWithTimeFormat().format(Calendar.getInstance().getTimeInMillis()))) {
+                            System.out.println("Into");
+                            new WeatherRespository.RePopulateDbAsyncTask().execute();
+                        }
+                    }
+                });
+                weatherViewModel.getWeatherCurrentLiveData().observe(MainActivity.this, new Observer<WeatherCurrentRequired>() {
+                    @Override
+                    public void onChanged(WeatherCurrentRequired weatherCurrentRequired) {
+                        refreshLayout.setRefreshing(false);
+                    }
+                });
+            }
+        });
+
     }
 }
