@@ -312,6 +312,7 @@ public class MainActivity extends AppCompatActivity {
                 for (int i = 0; i < allCharts.getChildCount(); i++) {
                     BarChart chart = allCharts.getChildAt(i).findViewById(R.id.chart);
                     chart.moveViewToX(flyingStatusChart.getLowestVisibleX());
+                    chart.enableScroll();
                     chart.invalidate();
                 }
             }
@@ -328,7 +329,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (!lastRefreshTime.equals(MyApplication.getSimpleDateWithTimeFormat().format(Calendar.getInstance().getTimeInMillis()))) {
-                            System.out.println("Into");
                             new WeatherRespository.RePopulateDbAsyncTask().execute();
                         }
                     }
