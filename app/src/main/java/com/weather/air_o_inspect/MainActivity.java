@@ -68,19 +68,6 @@ public class MainActivity extends AppCompatActivity {
 
     private String lastRefreshTime = "";
 
-    public static void scrollCharts(float lowestVisibleX, int position) {
-        flyingStatusChart.moveViewToX(lowestVisibleX);
-        flyingStatusChart.invalidate();
-
-        for (int i = 0; i < allCharts.getChildCount(); i++) {
-            if (i != position) {
-                BarChart chart = allCharts.getChildAt(i).findViewById(R.id.chart);
-                chart.moveViewToX(lowestVisibleX);
-                chart.invalidate();
-            }
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         Log.i("MainActivity:", "onRequestPermissionResult");
