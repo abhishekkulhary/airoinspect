@@ -23,15 +23,13 @@
                 android:layout_weight="4"
                 tools:ignore="NestedWeights">
 
-                <TextView
+                <ImageView
                     android:id="@+id/current_fly_status"
                     style="@style/TextviewStyleFly"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="@string/fly">
-
-                </TextView>
+                    android:text="@string/fly" />
             </LinearLayout>
 
             <LinearLayout

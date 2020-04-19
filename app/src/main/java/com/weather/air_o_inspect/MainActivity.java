@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -48,7 +49,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView currentFlyStatus;
+    private ImageView currentFlyStatus;
     private TextView currentTemperature;
     private TextView currentRainStatus;
     private TextView currentWind;
@@ -159,7 +160,11 @@ public class MainActivity extends AppCompatActivity {
                     currentWind.setText("" + weatherCurrent.getWindSpeed() + " " + MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(MyApplication.getWindSpeedColumn())));
                     currentVisibility.setText("" + weatherCurrent.getVisibility() + " " + MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(MyApplication.getVisibilityColumn())));
                     currentTimePlace.setText("" + weatherCurrent.getDateTime());
-                    currentFlyStatus.setTextColor(weatherCurrent.getFlyStatus());
+                    if (weatherCurrent.getFlyStatus() == Color.GREEN) {
+                        currentFlyStatus.setImageResource(R.drawable.ic_fly_foreground);
+                    } else {
+                        currentFlyStatus.setImageResource(R.drawable.ic_not_fly_foreground);
+                    }
                     lastRefreshTime = weatherCurrent.getDateTime();
                 }
             }
