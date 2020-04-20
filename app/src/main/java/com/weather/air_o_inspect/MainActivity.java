@@ -29,9 +29,12 @@ import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.simmorsal.library.ConcealerNestedScrollView;
@@ -268,6 +271,26 @@ public class MainActivity extends AppCompatActivity {
                 allCharts.setLayoutManager(llm);
                 allCharts.setAdapter(cda);
                 allCharts.invalidate();
+            }
+        });
+
+        flyingStatusChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                for (int i = 0; i < allCharts.getChildCount(); i++) {
+                    BarChart chart = allCharts.getChildAt(i).findViewById(R.id.chart);
+                    chart.highlightValue(e.getX(), h.getDataSetIndex());
+                    chart.invalidate();
+                }
+            }
+
+            @Override
+            public void onNothingSelected() {
+                for (int i = 0; i < allCharts.getChildCount(); i++) {
+                    BarChart chart = allCharts.getChildAt(i).findViewById(R.id.chart);
+                    chart.highlightValue(null);
+                    chart.invalidate();
+                }
             }
         });
 
