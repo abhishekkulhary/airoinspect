@@ -58,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView currentWind;
     private TextView currentVisibility;
     private TextView currentTimePlace;
-    private static RecyclerView allCharts;
-    private static BarChart flyingStatusChart;
+    private RecyclerView allCharts;
+    private BarChart flyingStatusChart;
     private TextView flyingStatusChartName;
     private TextView flyingStatusUnit;
 
