@@ -2,31 +2,21 @@ package com.weather.air_o_inspect.Entities;
 
 public class WeatherCurrentRequired {
 
-    private Float precipIntensity;
-    private Float precipProbability;
+    private Float sunshine;
     private Float temperature;
-    private Float pressure;
     private Float windSpeed;
     private Float windGust;
-    private Float cloudCover;
-    private Float visibility;
+    private Float precipIntensity;
+    private Float precipProbability;
     private String dateTime;
     private int flyStatus;
 
-    public Float getPrecipIntensity() {
-        return precipIntensity;
+    public Float getSunshine() {
+        return sunshine;
     }
 
-    public void setPrecipIntensity(Float precipIntensity) {
-        this.precipIntensity = precipIntensity;
-    }
-
-    public Float getPrecipProbability() {
-        return precipProbability;
-    }
-
-    public void setPrecipProbability(Float precipProbability) {
-        this.precipProbability = precipProbability;
+    public void setSunshine(Float sunshine) {
+        this.sunshine = sunshine;
     }
 
     public Float getTemperature() {
@@ -35,14 +25,6 @@ public class WeatherCurrentRequired {
 
     public void setTemperature(Float temperature) {
         this.temperature = temperature;
-    }
-
-    public Float getPressure() {
-        return pressure;
-    }
-
-    public void setPressure(Float pressure) {
-        this.pressure = pressure;
     }
 
     public Float getWindSpeed() {
@@ -61,20 +43,20 @@ public class WeatherCurrentRequired {
         this.windGust = windGust;
     }
 
-    public Float getCloudCover() {
-        return cloudCover;
+    public Float getPrecipIntensity() {
+        return precipIntensity;
     }
 
-    public void setCloudCover(Float cloudCover) {
-        this.cloudCover = cloudCover;
+    public void setPrecipIntensity(Float precipIntensity) {
+        this.precipIntensity = precipIntensity;
     }
 
-    public Float getVisibility() {
-        return visibility;
+    public Float getPrecipProbability() {
+        return precipProbability;
     }
 
-    public void setVisibility(Float visibility) {
-        this.visibility = visibility;
+    public void setPrecipProbability(Float precipProbability) {
+        this.precipProbability = precipProbability;
     }
 
     public String getDateTime() {

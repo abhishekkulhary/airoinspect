@@ -10,6 +10,7 @@ import androidx.room.Update;
 import com.weather.air_o_inspect.Entities.Preferences;
 import com.weather.air_o_inspect.Entities.WeatherCurrent;
 import com.weather.air_o_inspect.Entities.WeatherForecast;
+import com.weather.air_o_inspect.Entities.WeatherForecastDaily;
 
 import java.util.List;
 
@@ -51,5 +52,17 @@ public interface WeatherForecastDAO {
 
     @Query("SELECT * FROM preferences")
     LiveData<List<Preferences>> getPreferences();
+
+    @Insert
+    void insertWeatherForecastDaily(WeatherForecastDaily... weatherForecastDaily);
+
+    @Update
+    void updateWeatherForecastDaily(WeatherForecastDaily weatherForecastDaily);
+
+    @Delete
+    void deleteWeatherForecastDaily(WeatherForecastDaily weatherForecastDaily);
+
+    @Query("SELECT * FROM weather_forecast_daily ORDER BY timeInMillis ASC")
+    LiveData<List<WeatherForecastDaily>> getAllWeatherForecastDaily();
 
 }

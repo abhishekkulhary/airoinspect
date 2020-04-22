@@ -12,11 +12,13 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.weather.air_o_inspect.Entities.Preferences;
 import com.weather.air_o_inspect.Entities.WeatherCurrent;
 import com.weather.air_o_inspect.Entities.WeatherForecast;
+import com.weather.air_o_inspect.Entities.WeatherForecastDaily;
 import com.weather.air_o_inspect.MyApplication;
 
 import java.util.List;
 
-@Database(entities = {WeatherCurrent.class, WeatherForecast.class, Preferences.class}, version = 1, exportSchema = false)
+@Database(entities = {WeatherCurrent.class, WeatherForecast.class, Preferences.class, WeatherForecastDaily.class},
+        version = 1, exportSchema = false)
 public abstract class WeatherDatabase extends RoomDatabase {
 
     private static WeatherDatabase instance;
@@ -58,10 +60,12 @@ public abstract class WeatherDatabase extends RoomDatabase {
 
             List<WeatherForecast> weatherForecastList = databaseUtils.convertJsonToWeatherForecastList(dataFromUrl);
             WeatherCurrent weatherCurrent = databaseUtils.convertJsonToWeatherCurrent(dataFromUrl);
+            List<WeatherForecastDaily> weatherForecastDailyList = databaseUtils.convertJsonToWeatherForecastDaily(dataFromUrl);
 
             weatherForecastDAO.insertWeatherForecast(weatherForecastList.toArray(new WeatherForecast[weatherForecastList.size()]));
             weatherForecastDAO.insertWeatherCurrent(weatherCurrent);
             weatherForecastDAO.insertPreferences(new Preferences());
+            weatherForecastDAO.insertWeatherForecastDaily(weatherForecastDailyList.toArray(new WeatherForecastDaily[weatherForecastDailyList.size()]));
 
             return null;
         }

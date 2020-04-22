@@ -111,15 +111,34 @@
                 <include layout="@layout/current_status" />
             </androidx.cardview.widget.CardView>
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab"
+            <com.getbase.floatingactionbutton.FloatingActionsMenu
+                android:id="@+id/fab_menu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
                 android:layout_gravity="bottom|start"
-                android:layout_margin="@dimen/fab_margin"
-                app:srcCompat="@drawable/ic_settings" />
+                android:layout_marginEnd="@dimen/fab_margin"
+                android:layout_marginBottom="@dimen/fab_margin"
+                app:fab_addButtonSize="normal">
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:fab_icon="@drawable/ic_date_range_black_24dp"
+                    app:fab_size="mini"
+                    app:fab_title="Daily Forecast" />
+
+                <com.getbase.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/fab_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:fab_icon="@drawable/ic_settings"
+                    app:fab_size="mini"
+                    app:fab_title="Settings" />
+
+            </com.getbase.floatingactionbutton.FloatingActionsMenu>
 
         </RelativeLayout>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -3,114 +3,85 @@
 
     <PreferenceCategory app:title="Activate for Decision">
         <SwitchPreferenceCompat
-            app:key="precip_intensity_switch"
-            app:title="Precipitation Intensity" />
-
-        <SwitchPreferenceCompat
-            app:key="precip_probability_switch"
-            app:title="Precipitation Probability" />
+            app:key="sunshine_switch"
+            app:title="Sunshine" />
         <SwitchPreferenceCompat
             app:key="temperature_switch"
             app:title="Temperature" />
         <SwitchPreferenceCompat
-            app:key="pressure_switch"
-            app:title="Pressure" />
-        <SwitchPreferenceCompat
             app:key="wind_speed_switch"
             app:title="Wind Speed" />
-
         <SwitchPreferenceCompat
             app:key="wind_gust_switch"
             app:title="Wind Gust" />
         <SwitchPreferenceCompat
-            app:key="cloud_cover_switch"
-            app:title="Cloud Cover" />
+            app:key="precip_intensity_switch"
+            app:title="Precipitation Intensity" />
         <SwitchPreferenceCompat
-            app:key="visibility_switch"
-            app:title="Visibility" />
+            app:key="precip_probability_switch"
+            app:title="Precipitation Probability" />
     </PreferenceCategory>
 
     <PreferenceCategory app:title="Threshold">
 
-        <SeekBarPreference
-            android:id="@+id/precipitation_intensity_seek"
-            android:defaultValue="0"
-            android:key="precipitation_intensity_seek"
-            android:max="1"
-            android:min="0"
-            android:summary="Max. Precipitation allowed for Flight."
-            android:title="Precipitation Intensity"
+        <com.weather.air_o_inspect.SeekBar.FloatSeekBarPreference
+            android:id="@+id/sunshine_seek"
+            android:defaultValue="0.0"
+            android:key="sunshine_seek"
+            android:summary="Minimum Sunshine allowed for Flight."
+            android:title="Sunshine"
+            app:maxValue="100.0"
+            app:minValue="0.0"
             app:showSeekBarValue="true" />
 
-        <SeekBarPreference
-            android:id="@+id/precipitation_probability_seek"
-            android:defaultValue="0"
-            android:key="precipitation_probability_seek"
-            android:max="1"
-            android:min="0"
-            android:summary="Max. Precipitation Probability allowed for Flight."
-            android:title="Precipitation Probability"
-            app:showSeekBarValue="true" />
-
-        <SeekBarPreference
+        <com.weather.air_o_inspect.SeekBar.FloatSeekBarPreference
             android:id="@+id/temperature_seek"
-            android:defaultValue="0"
             android:key="temperature_seek"
-            android:max="100"
-            android:min="0"
+            android:defaultValue="0.0"
+            app:maxValue="100.0"
+            app:minValue="0.0"
             android:summary="Max. Temperature allowed for Flight."
             android:title="Temperature"
             app:showSeekBarValue="true" />
 
-        <SeekBarPreference
-            android:id="@+id/pressure_seek"
-            android:defaultValue="10"
-            android:key="pressure_seek"
-            android:max="3000"
-            android:min="0"
-            android:summary="Max. Pressure allowed for Flight."
-            android:title="Pressure"
-            app:showSeekBarValue="true" />
-
-        <SeekBarPreference
+        <com.weather.air_o_inspect.SeekBar.FloatSeekBarPreference
             android:id="@+id/wind_speed_seek"
-            android:defaultValue="10"
             android:key="wind_speed_seek"
-            android:max="25"
-            android:min="0"
+            android:defaultValue="0.0"
+            app:maxValue="25.0"
+            app:minValue="0.0"
             android:summary="Max. Wind Speed allowed for Flight."
             android:title="Wind Speed"
             app:showSeekBarValue="true" />
 
-        <SeekBarPreference
+        <com.weather.air_o_inspect.SeekBar.FloatSeekBarPreference
             android:id="@+id/wind_gust_seek"
-            android:defaultValue="15"
             android:key="wind_gust_seek"
-            android:max="25"
-            android:min="0"
+            android:defaultValue="0.0"
+            app:maxValue="25.0"
+            app:minValue="0.0"
             android:summary="Max. Wind Gust Speed allowed for Flight."
             android:title="Wind Gust"
             app:showSeekBarValue="true" />
 
-
-        <SeekBarPreference
-            android:id="@+id/cloud_cover_seek"
-            android:defaultValue="0"
-            android:key="cloud_cover_seek"
-            android:max="10"
-            android:min="0"
-            android:summary="Max. Cloud Cover allowed for Flight."
-            android:title="Cloud Cover"
+        <com.weather.air_o_inspect.SeekBar.FloatSeekBarPreference
+            android:id="@+id/precipitation_intensity_seek"
+            android:defaultValue="0.0"
+            android:key="precipitation_intensity_seek"
+            android:summary="Max. Precipitation allowed for Flight."
+            android:title="Precipitation Intensity"
+            app:maxValue="1.0"
+            app:minValue="0.0"
             app:showSeekBarValue="true" />
 
-        <SeekBarPreference
-            android:id="@+id/visibility_seek"
-            android:defaultValue="0"
-            android:key="visibility_seek"
-            android:max="100"
-            android:min="0"
-            android:summary="Min. Visibility allowed for Flight."
-            android:title="Visibility"
+        <com.weather.air_o_inspect.SeekBar.FloatSeekBarPreference
+            android:id="@+id/precipitation_probability_seek"
+            android:defaultValue="0.0"
+            android:key="precipitation_probability_seek"
+            android:summary="Max. Precipitation Probability allowed for Flight."
+            android:title="Precipitation Probability"
+            app:maxValue="1.0"
+            app:minValue="0.0"
             app:showSeekBarValue="true" />
 
 

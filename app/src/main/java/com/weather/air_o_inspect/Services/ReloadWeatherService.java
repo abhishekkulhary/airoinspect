@@ -41,7 +41,6 @@ public class ReloadWeatherService extends LifecycleService {
 
                     @Override
                     public void onChanged(List<ChartsData> chartsDataList) {
-
                         if (chartsDataList != null && !chartsDataList.isEmpty()) {
                             ChartsData data = chartsDataList.get(0);
                             if (data != null) {
@@ -54,7 +53,6 @@ public class ReloadWeatherService extends LifecycleService {
                                 }
                             }
                         }
-
                     }
                 });
             }

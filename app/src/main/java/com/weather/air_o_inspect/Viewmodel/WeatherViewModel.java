@@ -11,6 +11,7 @@ import com.weather.air_o_inspect.Entities.Preferences;
 import com.weather.air_o_inspect.Entities.WeatherCurrent;
 import com.weather.air_o_inspect.Entities.WeatherCurrentRequired;
 import com.weather.air_o_inspect.Entities.WeatherForecast;
+import com.weather.air_o_inspect.Entities.WeatherForecastDaily;
 import com.weather.air_o_inspect.Repository.WeatherRespository;
 
 import java.util.List;
@@ -20,6 +21,9 @@ public class WeatherViewModel extends AndroidViewModel {
 
     private LiveData<WeatherCurrentRequired> weatherCurrentLiveData;
     private LiveData<List<Preferences>> preferencesLiveData;
+    private LiveData<List<ChartsData>> weatherForecastLiveData;
+    private LiveData<ChartsData> weatherForecastFlyStatusLiveData;
+    private LiveData<List<WeatherForecastDaily>> weatherForecastDailyLiveData;
 
     public WeatherViewModel(@NonNull Application application) {
         super(application);
@@ -28,6 +32,13 @@ public class WeatherViewModel extends AndroidViewModel {
         weatherCurrentLiveData = weatherRespository.getWeatherCurrentRequiredLiveData();
 
         preferencesLiveData = weatherRespository.getPreferencesLiveData();
+
+        weatherForecastLiveData = weatherRespository.getWeatherForecastIndividually();
+
+        weatherForecastFlyStatusLiveData = weatherRespository.getWeatherForecastFlyStatus();
+
+        weatherForecastDailyLiveData = weatherRespository.getWeatherForecastDailyLiveData();
+
     }
 
     public void insertWeatherCurrent(WeatherCurrent weatherCurrent) {
@@ -58,6 +69,22 @@ public class WeatherViewModel extends AndroidViewModel {
         weatherRespository.deleteAllWeatherForecast();
     }
 
+    public void insertWeatherForecastDaily(List<WeatherForecastDaily> weatherForecastDaily) {
+        for (WeatherForecastDaily forecastDaily : weatherForecastDaily) {
+            weatherRespository.insertWeatherForecastDaily(forecastDaily);
+        }
+    }
+
+    public void updateWeatherForecastDaily(List<WeatherForecastDaily> weatherForecastDaily) {
+        for (WeatherForecastDaily forecastDaily : weatherForecastDaily) {
+            weatherRespository.updateWeatherForecastDaily(forecastDaily);
+        }
+    }
+
+    public void deleteAllWeatherForecastDaily() {
+        weatherRespository.deleteAllWeatherForecastDaily();
+    }
+
     public void insertPreferences(Preferences preferences) {
         weatherRespository.insertPreferences(preferences);
     }
@@ -79,10 +106,14 @@ public class WeatherViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<ChartsData>> getChartsData() {
-        return weatherRespository.getWeatherForecastIndividually();
+        return weatherForecastLiveData;
     }
 
     public LiveData<ChartsData> getWeatherForecastFlyStatus() {
-        return weatherRespository.getWeatherForecastFlyStatus();
+        return weatherForecastFlyStatusLiveData;
+    }
+
+    public LiveData<List<WeatherForecastDaily>> getWeatherForecastDailyLiveData() {
+        return weatherForecastDailyLiveData;
     }
 }

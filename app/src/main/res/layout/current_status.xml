@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="175dp"
@@ -29,7 +30,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
-                    android:text="@string/fly" />
+                    app:srcCompat="@drawable/ic_fly_foreground"
+                    tools:ignore="ContentDescription" />
             </LinearLayout>
 
             <LinearLayout
@@ -101,27 +103,23 @@
                     android:weightSum="2">
 
                     <ImageView
-                        android:id="@+id/imageRain"
+                        android:id="@+id/imageSunshine"
                         android:layout_width="0dp"
                         android:layout_height="25dp"
-
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
                         android:contentDescription="TODO"
-                        android:src="@drawable/rain_icon"
+                        android:src="@drawable/sunshine_icon"
                         tools:ignore="ContentDescription,HardcodedText" />
 
                     <TextView
-                        android:id="@+id/current_rain_status"
+                        android:id="@+id/current_sunshine"
                         style="@style/TextviewStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:gravity="bottom|start"
-                        android:text="@string/precipitation">
-
-                    </TextView>
+                        android:text="@string/sunshine" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -174,23 +172,25 @@
                     android:weightSum="2">
 
                     <ImageView
-                        android:id="@+id/imageVisibility"
+                        android:id="@+id/imageRain"
                         android:layout_width="0dp"
                         android:layout_height="25dp"
+
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
                         android:contentDescription="TODO"
-                        android:src="@drawable/visibility_icon"
+                        android:src="@drawable/rain_icon"
                         tools:ignore="ContentDescription,HardcodedText" />
 
                     <TextView
-                        android:id="@+id/current_visibility"
+                        android:id="@+id/current_rain_status"
                         style="@style/TextviewStyle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1"
-                        android:text="@string/sun_or_visibility" />
+                        android:gravity="bottom|start"
+                        android:text="@string/precipitation" />
                 </LinearLayout>
 
             </LinearLayout>

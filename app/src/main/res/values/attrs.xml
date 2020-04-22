@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="FloatSeekBarPreference">
+        <attr name="minValue" format="float" />
+        <attr name="maxValue" format="float" />
+        <attr name="stepValue" format="float" />
+        <attr name="adjustable" format="boolean" />
+        <attr name="showSeekBarValue" format="boolean" />
+        <attr name="updatesContinuously" format="boolean" />
+    </declare-styleable>
+</resources>

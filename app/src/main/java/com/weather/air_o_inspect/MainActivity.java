@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,6 +25,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
@@ -36,7 +39,6 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.simmorsal.library.ConcealerNestedScrollView;
 import com.weather.air_o_inspect.Charts.ChartDataAdapter;
 import com.weather.air_o_inspect.Entities.ChartsData;
@@ -56,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView currentTemperature;
     private TextView currentRainStatus;
     private TextView currentWind;
-    private TextView currentVisibility;
+    Float translationY = 100f;
     private TextView currentTimePlace;
     private RecyclerView allCharts;
     private BarChart flyingStatusChart;
@@ -67,10 +69,15 @@ public class MainActivity extends AppCompatActivity {
     private CardView headerView;
     private CardView statusCard;
     private ProgressBar progressBar;
-    private FloatingActionButton floatingActionButton;
+    OvershootInterpolator interpolator = new OvershootInterpolator();
+    Boolean isMenuOpen = false;
+    private TextView currentSunshine;
     private SwipeRefreshLayout refreshLayout;
 
     private String lastRefreshTime = "";
+    private FloatingActionsMenu floatingActionMenu;
+    private FloatingActionButton floatingActionButton1;
+    private FloatingActionButton floatingActionButton2;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -96,13 +103,14 @@ public class MainActivity extends AppCompatActivity {
         currentTemperature = findViewById(R.id.current_temperature);
         currentRainStatus = findViewById(R.id.current_rain_status);
         currentWind = findViewById(R.id.current_wind);
-        currentVisibility = findViewById(R.id.current_visibility);
+        currentSunshine = findViewById(R.id.current_sunshine);
         currentTimePlace = findViewById(R.id.current_time_place);
         nestedScrollView = findViewById(R.id.concealerNSV);
         headerView = findViewById(R.id.crdHeaderView);
         statusCard = findViewById(R.id.status_card);
         progressBar = findViewById(R.id.pBar);
         allCharts = findViewById(R.id.all_charts);
+        floatingActionMenu = findViewById(R.id.fab_menu);
 
         flyingStatusChart = findViewById(R.id.fly_status_chart);
         flyingStatusChartName = findViewById(R.id.fly_status_chart_name);
@@ -115,7 +123,8 @@ public class MainActivity extends AppCompatActivity {
         allCharts.setVisibility(View.GONE);
         headerView.setVisibility(View.GONE);
 
-        floatingActionButton = findViewById(R.id.fab);
+        floatingActionButton1 = findViewById(R.id.fab_1);
+        floatingActionButton2 = findViewById(R.id.fab_2);
 
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -127,19 +136,30 @@ public class MainActivity extends AppCompatActivity {
                     MyApplication.getREQUEST_CODE());
         }
 
-        floatingActionButton.post(new Runnable() {
+        floatingActionMenu.post(new Runnable() {
             @Override
             public void run() {
-                nestedScrollView.setFooterView(floatingActionButton, 0);
+                nestedScrollView.setFooterView(floatingActionMenu, 0);
             }
         });
 
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+        floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 getSupportFragmentManager().beginTransaction()
                         .replace(android.R.id.content, new SettingsFragment())
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
+
+        floatingActionButton2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                getSupportFragmentManager().beginTransaction()
+                        .replace(android.R.id.content, new WeatherForecastDailyFragment())
                         .addToBackStack(null)
                         .commit();
             }
@@ -158,10 +178,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onChanged(WeatherCurrentRequired weatherCurrent) {
                 if (weatherCurrent != null) {
-                    currentTemperature.setText("" + weatherCurrent.getTemperature() + " " + MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(MyApplication.getTemperatureColumn())));
-                    currentRainStatus.setText("" + weatherCurrent.getPrecipProbability() + " " + MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(MyApplication.getPrecipProbabilityColumn())));
-                    currentWind.setText("" + weatherCurrent.getWindSpeed() + " " + MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(MyApplication.getWindSpeedColumn())));
-                    currentVisibility.setText("" + weatherCurrent.getVisibility() + " " + MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(MyApplication.getVisibilityColumn())));
+                    currentTemperature.setText("" + Math.round(weatherCurrent.getTemperature()) + " " + MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(MyApplication.getTemperatureColumn())));
+                    currentRainStatus.setText("" + Math.round(weatherCurrent.getPrecipProbability()) + " " + MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(MyApplication.getPrecipProbabilityColumn())));
+                    currentWind.setText("" + Math.round(weatherCurrent.getWindSpeed()) + " " + MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(MyApplication.getWindSpeedColumn())));
+                    currentSunshine.setText("" + Math.round(weatherCurrent.getSunshine()) + " " + MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(MyApplication.getSunshineColumn())));
                     currentTimePlace.setText("" + weatherCurrent.getDateTime());
                     if (weatherCurrent.getFlyStatus() == Color.GREEN) {
                         currentFlyStatus.setImageResource(R.drawable.ic_fly_foreground);

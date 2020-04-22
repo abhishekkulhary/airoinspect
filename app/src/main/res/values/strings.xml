@@ -12,7 +12,7 @@
     <string name="fly">FLY</string>
     <string name="time_and_place">Time and Place</string>
     <string name="wind">Wind Speed</string>
-    <string name="sun_or_visibility">Sun or Visibility</string>
+    <string name="sunshine">Sunshine</string>
     <string name="temperature">Temperature</string>
     <string name="precipitation">Precipitation</string>
     <string name="unit_for_chart">Unit for chart</string>

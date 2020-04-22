@@ -19,25 +19,22 @@ public class MyApplication extends Application implements LocationListener, Seri
     private static final int REQUEST_CODE = 15;
     // Called when the application is starting, before any other application objects have been created.
     // Overriding this method is totally optional!
-    private static final String PRECIP_INTENSITY_COLUMN = "precipIntensity";
-    private static final String PRECIP_PROBABILITY_COLUMN = "precipProbability";
-    private static final String TEMPERATURE_COLUMN = "temperature";
-    private static final String PRESSURE_COLUMN = "pressure";
-    private static final String WIND_SPEED_COLUMN = "windSpeed";
-    private static final String WIND_GUST_COLUMN = "windGust";
-    private static final String CLOUD_COVER_COLUMN = "cloudCover";
-    private static final String VISIBILITY_COLUMN = "visibility";
-    private final static List<String> COLUMNS = Arrays.asList(PRECIP_INTENSITY_COLUMN, PRECIP_PROBABILITY_COLUMN,
-            TEMPERATURE_COLUMN, PRESSURE_COLUMN, WIND_SPEED_COLUMN, WIND_GUST_COLUMN, CLOUD_COVER_COLUMN, VISIBILITY_COLUMN);
-    private final static List<String> LABELS = Arrays.asList("Precipitation Intensity", "Precipitation Probability",
-            "Temperature", "Pressure", "Wind Speed", "Wind Gust", "Cloud Cover", "Visibility");
-    private final static List<String> UNITS = Arrays.asList("mm", "Percent", "Celsius", "Pa", "m/s", "m/s", "Percent", "km");
+    private static final String SUNSHINE_COLUMN = "Sunshine";
+    private static final String TEMPERATURE_COLUMN = "Temperature";
+    private static final String WIND_SPEED_COLUMN = "Wind Speed";
+    private static final String WIND_GUST_COLUMN = "Wind Gust";
+    private static final String PRECIP_INTENSITY_COLUMN = "Precipitation Intensity";
+    private static final String PRECIP_PROBABILITY_COLUMN = "Precipitation Probability";
+    private final static List<String> COLUMNS = Arrays.asList(SUNSHINE_COLUMN, TEMPERATURE_COLUMN, WIND_SPEED_COLUMN, WIND_GUST_COLUMN,
+            PRECIP_INTENSITY_COLUMN, PRECIP_PROBABILITY_COLUMN);
+    private final static List<String> UNITS = Arrays.asList("%", "ºC", "m/s", "m/s", "mm", "%");
     private final static String query = "units=si";
     private final static Long timeDelay = 30L; // Time in mins
     private final static SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH", Locale.getDefault());
     private static final SimpleDateFormat simpleDateWithTimeFormat = new SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault());
     private static final SimpleDateFormat simpleDateWithTimeInChart = new SimpleDateFormat("dd MMM HH:mm", Locale.getDefault());
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
+    private static final SimpleDateFormat simpleTimeWithMinFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
     private static String longLat = "52.307108,10.530236";
     private static MyApplication instance;
 
@@ -48,20 +45,12 @@ public class MyApplication extends Application implements LocationListener, Seri
         return instance;
     }
 
-    public static String getPrecipIntensityColumn() {
-        return PRECIP_INTENSITY_COLUMN;
-    }
-
-    public static String getPrecipProbabilityColumn() {
-        return PRECIP_PROBABILITY_COLUMN;
+    public static String getSunshineColumn() {
+        return SUNSHINE_COLUMN;
     }
 
     public static String getTemperatureColumn() {
         return TEMPERATURE_COLUMN;
-    }
-
-    public static String getPressureColumn() {
-        return PRESSURE_COLUMN;
     }
 
     public static String getWindSpeedColumn() {
@@ -72,20 +61,16 @@ public class MyApplication extends Application implements LocationListener, Seri
         return WIND_GUST_COLUMN;
     }
 
-    public static String getCloudCoverColumn() {
-        return CLOUD_COVER_COLUMN;
+    public static String getPrecipIntensityColumn() {
+        return PRECIP_INTENSITY_COLUMN;
     }
 
-    public static String getVisibilityColumn() {
-        return VISIBILITY_COLUMN;
+    public static String getPrecipProbabilityColumn() {
+        return PRECIP_PROBABILITY_COLUMN;
     }
 
     public static List<String> getUNITS() {
         return UNITS;
-    }
-
-    public static List<String> getLABELS() {
-        return LABELS;
     }
 
     public static SimpleDateFormat getSimpleDateWithTimeFormat() {
@@ -98,6 +83,10 @@ public class MyApplication extends Application implements LocationListener, Seri
 
     public static SimpleDateFormat getSimpleDateWithTimeInChart() {
         return simpleDateWithTimeInChart;
+    }
+
+    public static SimpleDateFormat getSimpleTimeWithMinFormat() {
+        return simpleTimeWithMinFormat;
     }
 
     public static String getLongLat() {

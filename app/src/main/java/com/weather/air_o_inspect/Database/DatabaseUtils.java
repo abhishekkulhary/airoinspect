@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.weather.air_o_inspect.Entities.WeatherCurrent;
 import com.weather.air_o_inspect.Entities.WeatherForecast;
+import com.weather.air_o_inspect.Entities.WeatherForecastDaily;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -98,6 +99,40 @@ public class DatabaseUtils {
         }
 
         return weatherCurrent;
+    }
+
+    public List<WeatherForecastDaily> convertJsonToWeatherForecastDaily(String result) {
+        List<WeatherForecastDaily> weatherForecastDailyList = null;
+        try {
+            JSONObject resultJson = new JSONObject(result);
+            JSONArray finalResultJson = resultJson.getJSONObject("daily").getJSONArray("data");
+            weatherForecastDailyList = new ArrayList<>();
+            for (int i = 0; i < finalResultJson.length(); i++) {
+                WeatherForecastDaily weatherForecastDaily;
+
+                JSONObject obj = (JSONObject) finalResultJson.get(i);
+
+                weatherForecastDaily = new WeatherForecastDaily(i, obj.getLong("time"), obj.getLong("sunriseTime"),
+                        obj.getLong("sunsetTime"), Float.valueOf("" + obj.get("moonPhase")),
+                        Float.valueOf("" + obj.get("precipIntensity")), Float.valueOf("" + obj.get("precipIntensityMax")),
+                        obj.getLong("precipIntensityMaxTime"), Float.valueOf("" + obj.get("precipProbability")),
+                        obj.getString("precipType"), Float.valueOf("" + obj.get("temperatureHigh")),
+                        obj.getLong("temperatureHighTime"), Float.valueOf("" + obj.get("temperatureLow")),
+                        obj.getLong("temperatureLowTime"), Float.valueOf("" + obj.get("dewPoint")),
+                        Float.valueOf("" + obj.get("humidity")), Float.valueOf("" + obj.get("pressure")),
+                        Float.valueOf("" + obj.get("windSpeed")), Float.valueOf("" + obj.get("windGust")),
+                        obj.getLong("windGustTime"), Float.valueOf("" + obj.get("windBearing")),
+                        Float.valueOf("" + obj.get("cloudCover")), Float.valueOf("" + obj.get("uvIndex")),
+                        obj.getLong("uvIndexTime"), Float.valueOf("" + obj.get("visibility")),
+                        Float.valueOf("" + obj.get("ozone")));
+                weatherForecastDailyList.add(weatherForecastDaily);
+            }
+
+        } catch (JSONException e) {
+            Log.e("convertJsonToCSV", "", e);
+        }
+
+        return weatherForecastDailyList;
     }
 
 }
