@@ -30,7 +30,7 @@
             android:key="sunshine_seek"
             android:summary="Minimum Sunshine allowed for Flight."
             android:title="Sunshine"
-            app:maxValue="100.0"
+            app:maxValue="60.0"
             app:minValue="0.0"
             app:showSeekBarValue="true" />
 
@@ -38,7 +38,7 @@
             android:id="@+id/temperature_seek"
             android:key="temperature_seek"
             android:defaultValue="0.0"
-            app:maxValue="100.0"
+            app:maxValue="70.0"
             app:minValue="0.0"
             android:summary="Max. Temperature allowed for Flight."
             android:title="Temperature"
