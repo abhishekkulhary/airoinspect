@@ -28,6 +28,7 @@ public class MyApplication extends Application implements LocationListener, Seri
     private final static List<String> COLUMNS = Arrays.asList(SUNSHINE_COLUMN, WIND_SPEED_COLUMN, WIND_GUST_COLUMN,
             PRECIP_INTENSITY_COLUMN, PRECIP_PROBABILITY_COLUMN, TEMPERATURE_COLUMN);
     private final static List<String> UNITS = Arrays.asList("min", "m/s", "m/s", "mm", "%", "ºC");
+    private final static List<Float> CHART_MAXY_VALUE = Arrays.asList(60f, 20f, 20f, 10f, 100f, 50f);
     private final static String query = "units=si";
     private final static Long timeDelay = 30L; // Time in mins
     private final static SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH", Locale.getDefault());

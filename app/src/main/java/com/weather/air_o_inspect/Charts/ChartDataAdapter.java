@@ -106,7 +106,7 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
             if (data.getYMax() == 0.0f) {
                 leftAxis.setAxisMaximum(1f);
             } else {
-                leftAxis.setAxisMaximum(data.getYMax() + (data.getYMax() + 0) / 2);
+                leftAxis.setAxisMaximum(data.getYMax()*1.2f );
             }
 
             leftAxis.setAxisMinimum(0f);
