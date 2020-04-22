@@ -25,14 +25,15 @@ public class MyApplication extends Application implements LocationListener, Seri
     private static final String WIND_GUST_COLUMN = "Wind Gust";
     private static final String PRECIP_INTENSITY_COLUMN = "Precipitation Intensity";
     private static final String PRECIP_PROBABILITY_COLUMN = "Precipitation Probability";
-    private final static List<String> COLUMNS = Arrays.asList(SUNSHINE_COLUMN, TEMPERATURE_COLUMN, WIND_SPEED_COLUMN, WIND_GUST_COLUMN,
-            PRECIP_INTENSITY_COLUMN, PRECIP_PROBABILITY_COLUMN);
-    private final static List<String> UNITS = Arrays.asList("%", "ºC", "m/s", "m/s", "mm", "%");
+    private final static List<String> COLUMNS = Arrays.asList(SUNSHINE_COLUMN, WIND_SPEED_COLUMN, WIND_GUST_COLUMN,
+            PRECIP_INTENSITY_COLUMN, PRECIP_PROBABILITY_COLUMN, TEMPERATURE_COLUMN);
+    private final static List<String> UNITS = Arrays.asList("min", "m/s", "m/s", "mm", "%", "ºC");
     private final static String query = "units=si";
     private final static Long timeDelay = 30L; // Time in mins
     private final static SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH", Locale.getDefault());
     private static final SimpleDateFormat simpleDateWithTimeFormat = new SimpleDateFormat("dd MMM yyyy HH:mm", Locale.getDefault());
     private static final SimpleDateFormat simpleDateWithTimeInChart = new SimpleDateFormat("dd MMM HH:mm", Locale.getDefault());
+    private static final SimpleDateFormat simpleDateInChart = new SimpleDateFormat("dd MMM", Locale.getDefault());
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
     private static final SimpleDateFormat simpleTimeWithMinFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
     private static String longLat = "52.307108,10.530236";
@@ -112,6 +113,8 @@ public class MyApplication extends Application implements LocationListener, Seri
     public static SimpleDateFormat getSimpleTimeFormat() {
         return simpleTimeFormat;
     }
+
+    public static SimpleDateFormat getSimpleDateInChart() { return simpleDateInChart; }
 
     @Override
     public void onCreate() {

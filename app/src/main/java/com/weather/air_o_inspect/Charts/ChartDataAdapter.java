@@ -56,12 +56,12 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
 
             final ArrayList<Long> xValues = chartsData.getxValues();
 
-            data.setValueTextColor(Color.BLACK);
+            data.setValueTextColor(Color.WHITE);
             data.setHighlightEnabled(true);
             data.setValueTextSize(5f);
 
             XAxis xAxis = holder.chart.getXAxis();
-
+            xAxis.setTextColor(Color.WHITE);
             xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
             xAxis.setGranularityEnabled(true);
             xAxis.setDrawGridLines(false);
@@ -81,7 +81,7 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
                             return MyApplication.getSimpleTimeFormat().format(xValues.get((int) value) * 1000);
                         } else {
                             temp = MyApplication.getSimpleDateFormat().format(xValues.get((int) value) * 1000);
-                            return MyApplication.getSimpleDateWithTimeInChart().format(xValues.get((int) value) * 1000);
+                            return MyApplication.getSimpleDateInChart().format(xValues.get((int) value) * 1000);
                         }
                     }
                     return "";
@@ -89,7 +89,7 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
             });
 
             xAxis.setCenterAxisLabels(false);
-            xAxis.setLabelRotationAngle(-80f);
+            //xAxis.setLabelRotationAngle(-80f);
 
             // Y - axis
             YAxis rightAxis = holder.chart.getAxisRight();
@@ -101,6 +101,7 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
             leftAxis.setLabelCount(5, true);
             leftAxis.setMinWidth(40f);
             leftAxis.setMaxWidth(40f);
+            leftAxis.setTextColor(Color.WHITE);
 
             if (data.getYMax() == 0.0f) {
                 leftAxis.setAxisMaximum(1f);

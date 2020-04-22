@@ -209,6 +209,7 @@ public class MainActivity extends AppCompatActivity {
 
                     XAxis xAxis = flyingStatusChart.getXAxis();
 
+                    xAxis.setTextColor(Color.WHITE);
                     xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
                     xAxis.setGranularityEnabled(true);
                     xAxis.setDrawGridLines(false);
@@ -227,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
                                     return MyApplication.getSimpleTimeFormat().format(xValues.get((int) value) * 1000);
                                 } else {
                                     temp = MyApplication.getSimpleDateFormat().format(xValues.get((int) value) * 1000);
-                                    return MyApplication.getSimpleDateWithTimeInChart().format(xValues.get((int) value) * 1000);
+                                    return MyApplication.getSimpleDateInChart().format(xValues.get((int) value) * 1000);
                                 }
                             }
                             return "";
@@ -235,13 +236,14 @@ public class MainActivity extends AppCompatActivity {
                     });
 
                     xAxis.setCenterAxisLabels(false);
-                    xAxis.setLabelRotationAngle(-80f);
+                    //xAxis.setLabelRotationAngle(-80f);
 
                     // Y - axis
                     YAxis rightAxis = flyingStatusChart.getAxisRight();
                     rightAxis.setEnabled(false);
 
                     YAxis leftAxis = flyingStatusChart.getAxisLeft();
+                    leftAxis.setTextColor(Color.WHITE);
                     leftAxis.enableGridDashedLine(10f, 5f, 0f);
                     leftAxis.setDrawLimitLinesBehindData(true);
                     leftAxis.setDrawLabels(true);

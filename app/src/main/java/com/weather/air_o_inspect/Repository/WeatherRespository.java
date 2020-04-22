@@ -133,7 +133,7 @@ public class WeatherRespository {
                                     }
                                     float sunshine = 0.0f;
                                     if (index != -1) {
-                                        sunshine = (1 - weatherCurrent.getCloudCover()) * 100.0f;
+                                        sunshine = (1 - weatherCurrent.getCloudCover()) * 60.0f;
                                     }
                                     required.setSunshine(sunshine);
                                     required.setTemperature(weatherCurrent.getTemperature());
@@ -225,7 +225,7 @@ public class WeatherRespository {
                                                 }
                                                 float sunshine = 0.0f;
                                                 if (index != -1) {
-                                                    sunshine = (1 - forecast.getCloudCover()) * 100.0f;
+                                                    sunshine = (1 - forecast.getCloudCover()) * 60.0f;
                                                 }
                                                 barEntries.add(new BarEntry(i, sunshine));
                                                 if (preferences1.getSunshineSwitch()) {
