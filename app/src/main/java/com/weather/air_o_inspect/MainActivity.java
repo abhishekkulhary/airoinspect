@@ -42,6 +42,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.Utils;
 import com.simmorsal.library.ConcealerNestedScrollView;
 import com.weather.air_o_inspect.Charts.ChartDataAdapter;
+import com.weather.air_o_inspect.Charts.DoubleXLabelAxisRenderer;
 import com.weather.air_o_inspect.Entities.ChartsData;
 import com.weather.air_o_inspect.Entities.WeatherCurrentRequired;
 import com.weather.air_o_inspect.Repository.WeatherRespository;
@@ -213,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
                     XAxis xAxis = flyingStatusChart.getXAxis();
 
                     xAxis.setTextColor(Color.WHITE);
-                    xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                    xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
                     xAxis.setGranularityEnabled(true);
                     xAxis.setDrawGridLines(false);
                     xAxis.setGranularity(1f);
@@ -222,25 +223,36 @@ public class MainActivity extends AppCompatActivity {
                     xAxis.setAxisMinimum(data.getXMin() - 1);
                     xAxis.setAxisMaximum(data.getXMax() + 1);
                     xAxis.setDrawLabels(true);
-                    xAxis.setValueFormatter(new ValueFormatter() {
-                        String temp = "";
-
-                        @Override
-                        public String getFormattedValue(float value) {
-                            if (value >= 0 && value < xValues.size()) {
-                                if (temp.equals(MyApplication.getSimpleDateFormat().format(xValues.get((int) value) * 1000))) {
-                                    return MyApplication.getSimpleTimeFormat().format(xValues.get((int) value) * 1000);
-                                } else {
-                                    temp = MyApplication.getSimpleDateFormat().format(xValues.get((int) value) * 1000);
-                                    return MyApplication.getSimpleDateInChart().format(xValues.get((int) value) * 1000);
-                                }
-                            }
-                            return "";
-                        }
-                    });
 
                     xAxis.setCenterAxisLabels(false);
                     //xAxis.setLabelRotationAngle(-80f);
+
+                    flyingStatusChart.setXAxisRenderer(new DoubleXLabelAxisRenderer(flyingStatusChart.getViewPortHandler(), xAxis,
+                            flyingStatusChart.getTransformer(YAxis.AxisDependency.LEFT),
+                            new ValueFormatter() {
+                                String temp = "";
+
+                                @Override
+                                public String getFormattedValue(float value) {
+                                    if (value >= 0 && value < xValues.size()) {
+                                        if (temp.equals(MyApplication.getSimpleDateFormat().format(xValues.get((int) value) * 1000))) {
+                                            return "";
+                                        } else {
+                                            temp = MyApplication.getSimpleDateFormat().format(xValues.get((int) value) * 1000);
+                                            return MyApplication.getSimpleDateInChart().format(xValues.get((int) value) * 1000);
+                                        }
+                                    }
+                                    return "";
+                                }
+                            }, new ValueFormatter() {
+                        @Override
+                        public String getFormattedValue(float value) {
+                            if (value >= 0 && value < xValues.size()) {
+                                return MyApplication.getSimpleTimeFormat().format(xValues.get((int) value) * 1000);
+                            }
+                            return "";
+                        }
+                    }));
 
                     // Y - axis
                     YAxis rightAxis = flyingStatusChart.getAxisRight();

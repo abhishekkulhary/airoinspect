@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -58,7 +57,7 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
 
             XAxis xAxis = holder.chart.getXAxis();
             xAxis.setTextColor(Color.WHITE);
-            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+            xAxis.setPosition(XAxis.XAxisPosition.BOTH_SIDED);
             xAxis.setGranularityEnabled(true);
             xAxis.setDrawGridLines(false);
             xAxis.setGranularity(1f);
@@ -67,25 +66,34 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
             xAxis.setAxisMinimum(data.getXMin() - 1);
             xAxis.setAxisMaximum(data.getXMax() + 1);
             xAxis.setDrawLabels(true);
-            xAxis.setValueFormatter(new ValueFormatter() {
-                String temp = "";
+            xAxis.setCenterAxisLabels(false);
 
-                @Override
-                public String getAxisLabel(float value, AxisBase axis) {
-                    if (value >= 0 && value < xValues.size()) {
-                        if (temp.equals(MyApplication.getSimpleDateFormat().format(xValues.get((int) value) * 1000))) {
-                            return MyApplication.getSimpleTimeFormat().format(xValues.get((int) value) * 1000);
-                        } else {
-                            temp = MyApplication.getSimpleDateFormat().format(xValues.get((int) value) * 1000);
-                            return MyApplication.getSimpleDateInChart().format(xValues.get((int) value) * 1000);
+            holder.chart.setXAxisRenderer(new DoubleXLabelAxisRenderer(holder.chart.getViewPortHandler(), xAxis,
+                    holder.chart.getTransformer(YAxis.AxisDependency.LEFT),
+                    new ValueFormatter() {
+                        String temp = "";
+
+                        @Override
+                        public String getFormattedValue(float value) {
+                            if (value >= 0 && value < xValues.size()) {
+                                if (temp.equals(MyApplication.getSimpleDateFormat().format(xValues.get((int) value) * 1000))) {
+                                    return "";
+                                } else {
+                                    temp = MyApplication.getSimpleDateFormat().format(xValues.get((int) value) * 1000);
+                                    return MyApplication.getSimpleDateInChart().format(xValues.get((int) value) * 1000);
+                                }
+                            }
+                            return "";
                         }
+                    }, new ValueFormatter() {
+                @Override
+                public String getFormattedValue(float value) {
+                    if (value >= 0 && value < xValues.size()) {
+                        return MyApplication.getSimpleTimeFormat().format(xValues.get((int) value) * 1000);
                     }
                     return "";
                 }
-            });
-
-            xAxis.setCenterAxisLabels(false);
-            //xAxis.setLabelRotationAngle(-80f);
+            }));
 
             // Y - axis
             YAxis rightAxis = holder.chart.getAxisRight();
