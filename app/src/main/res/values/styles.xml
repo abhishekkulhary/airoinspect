@@ -21,7 +21,7 @@
     <style name="TextviewStyle" parent="@android:style/Widget.TextView">
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/tab_indicator</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="TextviewStyleFly" parent="@android:style/Widget.TextView">

@@ -1,9 +1,11 @@
 package com.weather.air_o_inspect.Services;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleService;
@@ -11,6 +13,7 @@ import androidx.lifecycle.Observer;
 
 import com.weather.air_o_inspect.Entities.ChartsData;
 import com.weather.air_o_inspect.MyApplication;
+import com.weather.air_o_inspect.MyLocation;
 import com.weather.air_o_inspect.Repository.WeatherRespository;
 
 import org.jetbrains.annotations.NotNull;
@@ -49,7 +52,18 @@ public class ReloadWeatherService extends LifecycleService {
                                 String dateWithHour = MyApplication.getSimpleDateFormat().format(xValues.get(0) * 1000) + MyApplication.getSimpleTimeFormat().format(xValues.get(0) * 1000);
                                 String dateWithHour1 = MyApplication.getSimpleDateFormat().format(Calendar.getInstance().getTimeInMillis()) + MyApplication.getSimpleTimeFormat().format(Calendar.getInstance().getTimeInMillis());
                                 if (!dateWithHour.equals(dateWithHour1)) {
-                                    new WeatherRespository.RePopulateDbAsyncTask().execute();
+                                    if (MyApplication.getInstance().isInternetAvailable(getApplicationContext())) {
+                                        MyLocation.LocationResult locationResult = new MyLocation.LocationResult() {
+                                            @Override
+                                            public void gotLocation(Location location) {
+                                                new WeatherRespository.RePopulateDbAsyncTask(location).execute();
+                                            }
+                                        };
+                                        MyLocation myLocation = new MyLocation();
+                                        myLocation.getLocation(getApplicationContext(), locationResult);
+                                    } else {
+                                        Toast.makeText(ReloadWeatherService.this, "Please check the internet connectivity", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             }
                         }

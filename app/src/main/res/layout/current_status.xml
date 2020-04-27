@@ -2,26 +2,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="175dp"
+    android:layout_height="120dp"
     android:layout_marginTop="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:baselineAligned="false"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         tools:ignore="UselessParent">
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
                 tools:ignore="NestedWeights">
 
                 <ImageView
@@ -35,165 +36,168 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1">
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:orientation="vertical"
+                android:weightSum="4">
 
-                <TextView
-                    android:id="@+id/current_time_place"
-                    style="@style/TextviewStyle"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    tools:ignore="NestedWeights">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <ImageView
+                            android:id="@+id/imageTemp"
+                            android:layout_width="0dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:contentDescription="TODO"
+                            android:src="@drawable/temp_icon"
+                            tools:ignore="ContentDescription,HardcodedText" />
+
+                        <TextView
+                            android:id="@+id/current_temperature"
+                            style="@style/TextviewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:gravity="bottom|start"
+                            android:text="@string/temperature">
+
+
+                        </TextView>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <ImageView
+                            android:id="@+id/imageSunshine"
+                            android:layout_width="0dp"
+                            android:layout_height="25dp"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:contentDescription="TODO"
+                            android:src="@drawable/sunshine_icon"
+                            tools:ignore="ContentDescription,HardcodedText" />
+
+                        <TextView
+                            android:id="@+id/current_sunshine"
+                            style="@style/TextviewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:text="@string/sunshine" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="2"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    tools:ignore="NestedWeights">
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <ImageView
+                            android:id="@+id/imageWind"
+                            android:layout_width="0dp"
+                            android:layout_height="25dp"
+
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:contentDescription="TODO"
+                            android:src="@drawable/wind_icon"
+                            tools:ignore="ContentDescription,HardcodedText" />
+
+                        <TextView
+                            android:id="@+id/current_wind"
+                            style="@style/TextviewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:gravity="bottom|start"
+                            android:text="@string/wind" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:weightSum="2">
+
+                        <ImageView
+                            android:id="@+id/imageRain"
+                            android:layout_width="0dp"
+                            android:layout_height="25dp"
+
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:contentDescription="TODO"
+                            android:src="@drawable/rain_icon"
+                            tools:ignore="ContentDescription,HardcodedText" />
+
+                        <TextView
+                            android:id="@+id/current_rain_status"
+                            style="@style/TextviewStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:gravity="bottom|start"
+                            android:text="@string/precipitation" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:orientation="vertical"
-            android:weightSum="4">
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:baselineAligned="false"
-                android:orientation="horizontal"
-                tools:ignore="NestedWeights">
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-
-                    <ImageView
-                        android:id="@+id/imageTemp"
-                        android:layout_width="0dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:contentDescription="TODO"
-                        android:src="@drawable/temp_icon"
-                        tools:ignore="ContentDescription,HardcodedText" />
-
-                    <TextView
-                        android:id="@+id/current_temperature"
-                        style="@style/TextviewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:gravity="bottom|start"
-                        android:text="@string/temperature">
-
-
-                    </TextView>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-
-                    <ImageView
-                        android:id="@+id/imageSunshine"
-                        android:layout_width="0dp"
-                        android:layout_height="25dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:contentDescription="TODO"
-                        android:src="@drawable/sunshine_icon"
-                        tools:ignore="ContentDescription,HardcodedText" />
-
-                    <TextView
-                        android:id="@+id/current_sunshine"
-                        style="@style/TextviewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:text="@string/sunshine" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:baselineAligned="false"
-                android:orientation="horizontal"
-                android:weightSum="2"
-                tools:ignore="NestedWeights">
-
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="68dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-
-                    <ImageView
-                        android:id="@+id/imageWind"
-                        android:layout_width="0dp"
-                        android:layout_height="25dp"
-
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:contentDescription="TODO"
-                        android:src="@drawable/wind_icon"
-                        tools:ignore="ContentDescription,HardcodedText" />
-
-                    <TextView
-                        android:id="@+id/current_wind"
-                        style="@style/TextviewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:gravity="bottom|start"
-                        android:text="@string/wind" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="68dp"
-                    android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-
-                    <ImageView
-                        android:id="@+id/imageRain"
-                        android:layout_width="0dp"
-                        android:layout_height="25dp"
-
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:contentDescription="TODO"
-                        android:src="@drawable/rain_icon"
-                        tools:ignore="ContentDescription,HardcodedText" />
-
-                    <TextView
-                        android:id="@+id/current_rain_status"
-                        style="@style/TextviewStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_weight="1"
-                        android:gravity="bottom|start"
-                        android:text="@string/precipitation" />
-                </LinearLayout>
-
-            </LinearLayout>
-
+            <TextView
+                android:id="@+id/current_time_place"
+                style="@style/TextviewStyle"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                tools:ignore="NestedWeights" />
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

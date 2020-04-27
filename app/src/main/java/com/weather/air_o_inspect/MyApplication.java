@@ -2,13 +2,18 @@ package com.weather.air_o_inspect;
 
 
 import android.app.Application;
+import android.content.Context;
 import android.content.res.Configuration;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -28,7 +33,7 @@ public class MyApplication extends Application implements LocationListener, Seri
     private final static List<String> COLUMNS = Arrays.asList(SUNSHINE_COLUMN, WIND_SPEED_COLUMN, WIND_GUST_COLUMN,
             PRECIP_INTENSITY_COLUMN, PRECIP_PROBABILITY_COLUMN, TEMPERATURE_COLUMN);
     private final static List<String> UNITS = Arrays.asList("min", "m/s", "m/s", "mm", "%", "ºC");
-    private final static List<Float> CHART_MAXY_VALUE = Arrays.asList(60f, 20f, 20f, 10f, 100f, 50f);
+    private final static List<Float> CHART_MAXY_VALUE = Arrays.asList(60f, 25f, 25f, 10f, 100f, 70f);
     private final static String query = "units=si";
     private final static Long timeDelay = 30L; // Time in mins
     private final static SimpleDateFormat simpleTimeFormat = new SimpleDateFormat("HH", Locale.getDefault());
@@ -37,7 +42,9 @@ public class MyApplication extends Application implements LocationListener, Seri
     private static final SimpleDateFormat simpleDateInChart = new SimpleDateFormat("dd MMM", Locale.getDefault());
     private static final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMM yyyy", Locale.getDefault());
     private static final SimpleDateFormat simpleTimeWithMinFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
+
     private static String longLat = "52.307108,10.530236";
+
     private static MyApplication instance;
 
     public static synchronized MyApplication getInstance() {
@@ -45,6 +52,20 @@ public class MyApplication extends Application implements LocationListener, Seri
             instance = new MyApplication();
         }
         return instance;
+    }
+
+    public static String[] getCityName(Context context, Double latitude, Double longitude) {
+        String[] cityName = new String[]{"", "", ""};
+        Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+        List<Address> addresses = null;
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1);
+        } catch (IOException ignored) {
+
+        }
+        if (addresses != null)
+            cityName = addresses.get(0).getAddressLine(0).split(",");
+        return cityName;
     }
 
     public static String getSunshineColumn() {
@@ -115,18 +136,24 @@ public class MyApplication extends Application implements LocationListener, Seri
         return simpleTimeFormat;
     }
 
-    public static SimpleDateFormat getSimpleDateInChart() { return simpleDateInChart; }
+    public static SimpleDateFormat getSimpleDateInChart() {
+        return simpleDateInChart;
+    }
+
+    public static List<Float> getChartMaxyValue() {
+        return CHART_MAXY_VALUE;
+    }
+
+    public boolean isInternetAvailable(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        assert cm != null;
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+    }
 
     @Override
     public void onCreate() {
-//        Log.d("MyApplication: OnCreate: ", "Start");
         super.onCreate();
-
-    }
-
-    void fn_update(Location location) {
-//        Log.d("MyApplication: fn_update: ", "Start");
-        longLat = location.getLatitude() + "," + location.getLongitude();
     }
 
     // Called by the system when the device configuration changes while your component is running.
@@ -146,8 +173,7 @@ public class MyApplication extends Application implements LocationListener, Seri
 
     @Override
     public void onLocationChanged(Location location) {
-//        Log.i("MyApplication:onLocChanged:", "Start");
-        fn_update(location);
+
     }
 
     @Override

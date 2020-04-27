@@ -1,7 +1,9 @@
 package com.weather.air_o_inspect.Repository;
 
 import android.app.Application;
+import android.content.Context;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.AsyncTask;
 
 import androidx.arch.core.util.Function;
@@ -41,6 +43,8 @@ public class WeatherRespository {
     private LiveData<List<Preferences>> preferencesLiveData;
     private LiveData<List<WeatherForecastDaily>> weatherForecastDailyLiveData;
 
+    private final Context context;
+
     public WeatherRespository(Application application) {
 
         WeatherDatabase weatherDatabase = WeatherDatabase.getInstance(application);
@@ -53,6 +57,8 @@ public class WeatherRespository {
         preferencesLiveData = weatherForecastDAO.getPreferences();
 
         weatherForecastDailyLiveData = weatherForecastDAO.getAllWeatherForecastDaily();
+
+        context = application.getApplicationContext();
 
     }
 
@@ -143,6 +149,10 @@ public class WeatherRespository {
                                     required.setPrecipProbability(weatherCurrent.getPrecipProbability());
                                     required.setDateTime(weatherCurrent.getDateTime());
                                     required.setFlyStatus(getFlyStatusColor(required, preference));
+
+                                    String[] cityName = MyApplication.getCityName(context, weatherCurrent.getLatitude(), weatherCurrent.getLongitude());
+                                    required.setCityName(cityName[1] + "," + cityName[2]);
+
                                     return required;
                                 }
                                 return null;
@@ -360,7 +370,7 @@ public class WeatherRespository {
                                             }
                                             float sunshine = 0.0f;
                                             if (index != -1) {
-                                                sunshine = (1 - forecast.getCloudCover()) * 100.0f;
+                                                sunshine = (1 - forecast.getCloudCover()) * 60.0f;
                                             }
                                             if (sunshine < preferences1.getSunshineThresold()) {
                                                 i++;
@@ -420,12 +430,18 @@ public class WeatherRespository {
 
     public static class RePopulateDbAsyncTask extends AsyncTask<Void, Void, Void> {
 
+        private Location location;
+
+        public RePopulateDbAsyncTask(Location location) {
+            this.location = location;
+        }
+
         @Override
         protected Void doInBackground(Void... voids) {
 
             DatabaseUtils databaseUtils = new DatabaseUtils();
 
-            String dataFromUrl = databaseUtils.getDataFromUrl(MyApplication.getLongLat(), MyApplication.getQuery());
+            String dataFromUrl = databaseUtils.getDataFromUrl(location.getLatitude() + "," + location.getLongitude(), MyApplication.getQuery());
 
             List<WeatherForecast> weatherForecastList = databaseUtils.convertJsonToWeatherForecastList(dataFromUrl);
             WeatherCurrent weatherCurrent = databaseUtils.convertJsonToWeatherCurrent(dataFromUrl);

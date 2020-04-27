@@ -22,10 +22,12 @@ public class WeatherCurrent {
     private Float cloudCover;
     private Float visibility;
     private String dateTime;
+    private Double latitude;
+    private Double longitude;
 
     public WeatherCurrent(@NonNull Long timeInMillis, @NonNull Float precipIntensity, @NonNull Float precipProbability,
                           @NonNull Float temperature, @NonNull Float pressure, @NonNull Float windSpeed,
-                          @NonNull Float windGust, @NonNull Float cloudCover, @NonNull Float visibility) {
+                          @NonNull Float windGust, @NonNull Float cloudCover, @NonNull Float visibility, @NonNull Double latitude, @NonNull Double longitude) {
         this.precipIntensity = precipIntensity;
         this.precipProbability = precipProbability;
         this.temperature = temperature;
@@ -35,6 +37,8 @@ public class WeatherCurrent {
         this.cloudCover = cloudCover;
         this.visibility = visibility;
         this.timeInMillis = timeInMillis;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.dateTime = MyApplication.getSimpleDateWithTimeFormat().format(timeInMillis * 1000);
     }
 
@@ -81,6 +85,14 @@ public class WeatherCurrent {
 
     public Long getTimeInMillis() {
         return timeInMillis;
+    }
+
+    public Double getLatitude() {
+        return latitude;
+    }
+
+    public Double getLongitude() {
+        return longitude;
     }
 
     @NonNull

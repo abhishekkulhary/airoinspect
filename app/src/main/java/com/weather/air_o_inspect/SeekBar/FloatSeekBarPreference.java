@@ -140,7 +140,7 @@ public class FloatSeekBarPreference extends Preference {
         view.itemView.setOnKeyListener(mSeekBarKeyListener);
         mSeekBar = (SeekBar) view.findViewById(R.id.seekbar);
         mSeekBarValueTextView = (TextView) view.findViewById(R.id.seekbar_value);
-        mSeekBarValueTextView.setWidth(150);
+        mSeekBarValueTextView.setWidth(200);
 
         if (mShowSeekBarValue) {
             mSeekBarValueTextView.setVisibility(View.VISIBLE);

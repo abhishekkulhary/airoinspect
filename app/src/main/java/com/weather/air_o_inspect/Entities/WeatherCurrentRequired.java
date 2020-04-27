@@ -9,6 +9,7 @@ public class WeatherCurrentRequired {
     private Float precipIntensity;
     private Float precipProbability;
     private String dateTime;
+    private String cityName;
     private int flyStatus;
 
     public Float getSunshine() {
@@ -73,5 +74,13 @@ public class WeatherCurrentRequired {
 
     public void setFlyStatus(int flyStatus) {
         this.flyStatus = flyStatus;
+    }
+
+    public String getCityName() {
+        return cityName;
+    }
+
+    public void setCityName(String cityName) {
+        this.cityName = cityName;
     }
 }

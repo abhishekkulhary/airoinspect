@@ -66,7 +66,7 @@ public class DatabaseUtils {
                 JSONObject obj = (JSONObject) finalResultJson.get(i);
 
                 weatherForecast = new WeatherForecast(i, obj.getLong("time"),
-                        Float.valueOf("" + obj.get("precipIntensity")), Float.valueOf("" + obj.get("precipProbability")),
+                        Float.valueOf("" + obj.get("precipIntensity")), Float.parseFloat("" + obj.get("precipProbability")) * 100.0f,
                         Float.valueOf("" + obj.get("temperature")), Float.valueOf("" + obj.get("pressure")),
                         Float.valueOf("" + obj.get("windSpeed")),
                         Float.valueOf("" + obj.get("windGust")), Float.valueOf("" + obj.get("cloudCover")),
@@ -88,11 +88,12 @@ public class DatabaseUtils {
             JSONObject obj = resultJson.getJSONObject("currently");
 
             weatherCurrent = new WeatherCurrent(obj.getLong("time"),
-                    Float.valueOf("" + obj.get("precipIntensity")), Float.valueOf("" + obj.get("precipProbability")),
+                    Float.valueOf("" + obj.get("precipIntensity")), Float.parseFloat("" + obj.get("precipProbability")) * 100.0f,
                     Float.valueOf("" + obj.get("temperature")), Float.valueOf("" + obj.get("pressure")),
                     Float.valueOf("" + obj.get("windSpeed")),
                     Float.valueOf("" + obj.get("windGust")), Float.valueOf("" + obj.get("cloudCover")),
-                    Float.valueOf("" + obj.get("visibility")));
+                    Float.valueOf("" + obj.get("visibility")), Double.valueOf("" + resultJson.get("latitude")),
+                    Double.valueOf("" + resultJson.get("longitude")));
 
         } catch (JSONException e) {
             Log.e("convertJsonToCSV", "", e);
@@ -115,7 +116,7 @@ public class DatabaseUtils {
                 weatherForecastDaily = new WeatherForecastDaily(i, obj.getLong("time"), obj.getLong("sunriseTime"),
                         obj.getLong("sunsetTime"), Float.valueOf("" + obj.get("moonPhase")),
                         Float.valueOf("" + obj.get("precipIntensity")), Float.valueOf("" + obj.get("precipIntensityMax")),
-                        obj.getLong("precipIntensityMaxTime"), Float.valueOf("" + obj.get("precipProbability")),
+                        obj.getLong("precipIntensityMaxTime"), Float.parseFloat("" + obj.get("precipProbability")) * 100.0f,
                         obj.getString("precipType"), Float.valueOf("" + obj.get("temperatureHigh")),
                         obj.getLong("temperatureHighTime"), Float.valueOf("" + obj.get("temperatureLow")),
                         obj.getLong("temperatureLowTime"), Float.valueOf("" + obj.get("dewPoint")),

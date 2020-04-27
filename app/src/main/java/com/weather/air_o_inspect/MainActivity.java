@@ -5,15 +5,16 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -58,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView currentTemperature;
     private TextView currentRainStatus;
     private TextView currentWind;
-    Float translationY = 100f;
     private TextView currentTimePlace;
     private RecyclerView allCharts;
     private BarChart flyingStatusChart;
@@ -69,15 +69,11 @@ public class MainActivity extends AppCompatActivity {
     private CardView headerView;
     private CardView statusCard;
     private ProgressBar progressBar;
-    OvershootInterpolator interpolator = new OvershootInterpolator();
-    Boolean isMenuOpen = false;
     private TextView currentSunshine;
     private SwipeRefreshLayout refreshLayout;
 
     private String lastRefreshTime = "";
     private FloatingActionsMenu floatingActionMenu;
-    private FloatingActionButton floatingActionButton1;
-    private FloatingActionButton floatingActionButton2;
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -123,8 +119,8 @@ public class MainActivity extends AppCompatActivity {
         allCharts.setVisibility(View.GONE);
         headerView.setVisibility(View.GONE);
 
-        floatingActionButton1 = findViewById(R.id.fab_1);
-        floatingActionButton2 = findViewById(R.id.fab_2);
+        FloatingActionButton floatingActionButton1 = findViewById(R.id.fab_1);
+        FloatingActionButton floatingActionButton2 = findViewById(R.id.fab_2);
 
         if (ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -134,6 +130,10 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
                     MyApplication.getREQUEST_CODE());
+        }
+
+        if (!MyApplication.getInstance().isInternetAvailable(getApplicationContext())) {
+            Toast.makeText(MainActivity.this, "Please check the internet connectivity", Toast.LENGTH_SHORT).show();
         }
 
         floatingActionMenu.post(new Runnable() {
@@ -146,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
         floatingActionButton1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                floatingActionMenu.collapse();
 
                 getSupportFragmentManager().beginTransaction()
                         .replace(android.R.id.content, new SettingsFragment())
@@ -157,6 +158,7 @@ public class MainActivity extends AppCompatActivity {
         floatingActionButton2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                floatingActionMenu.collapse();
 
                 getSupportFragmentManager().beginTransaction()
                         .replace(android.R.id.content, new WeatherForecastDailyFragment())
@@ -176,13 +178,14 @@ public class MainActivity extends AppCompatActivity {
         weatherViewModel.getWeatherCurrentLiveData().observe(this, new Observer<WeatherCurrentRequired>() {
             @SuppressLint("SetTextI18n")
             @Override
-            public void onChanged(WeatherCurrentRequired weatherCurrent) {
+            public void onChanged(final WeatherCurrentRequired weatherCurrent) {
                 if (weatherCurrent != null) {
+
                     currentTemperature.setText("" + Math.round(weatherCurrent.getTemperature()) + " " + MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(MyApplication.getTemperatureColumn())));
                     currentRainStatus.setText("" + Math.round(weatherCurrent.getPrecipProbability()) + " " + MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(MyApplication.getPrecipProbabilityColumn())));
                     currentWind.setText("" + Math.round(weatherCurrent.getWindSpeed()) + " " + MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(MyApplication.getWindSpeedColumn())));
                     currentSunshine.setText("" + Math.round(weatherCurrent.getSunshine()) + " " + MyApplication.getUNITS().get(MyApplication.getCOLUMNS().indexOf(MyApplication.getSunshineColumn())));
-                    currentTimePlace.setText("" + weatherCurrent.getDateTime());
+                    currentTimePlace.setText(weatherCurrent.getDateTime() + ", " + weatherCurrent.getCityName());
                     if (weatherCurrent.getFlyStatus() == Color.GREEN) {
                         currentFlyStatus.setImageResource(R.drawable.ic_fly_foreground);
                     } else {
@@ -221,6 +224,7 @@ public class MainActivity extends AppCompatActivity {
                     xAxis.setDrawLabels(true);
                     xAxis.setValueFormatter(new ValueFormatter() {
                         String temp = "";
+
                         @Override
                         public String getFormattedValue(float value) {
                             if (value >= 0 && value < xValues.size()) {
@@ -244,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
 
                     YAxis leftAxis = flyingStatusChart.getAxisLeft();
                     leftAxis.setTextColor(Color.WHITE);
-                    leftAxis.enableGridDashedLine(10f, 5f, 0f);
+                    leftAxis.setDrawGridLines(false);
                     leftAxis.setDrawLimitLinesBehindData(true);
                     leftAxis.setDrawLabels(true);
                     leftAxis.setMinWidth(40f);
@@ -374,7 +378,18 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (!lastRefreshTime.equals(MyApplication.getSimpleDateWithTimeFormat().format(Calendar.getInstance().getTimeInMillis()))) {
-                            new WeatherRespository.RePopulateDbAsyncTask().execute();
+                            if (MyApplication.getInstance().isInternetAvailable(getApplicationContext())) {
+                                MyLocation.LocationResult locationResult = new MyLocation.LocationResult() {
+                                    @Override
+                                    public void gotLocation(Location location) {
+                                        new WeatherRespository.RePopulateDbAsyncTask(location).execute();
+                                    }
+                                };
+                                MyLocation myLocation = new MyLocation();
+                                myLocation.getLocation(getApplicationContext(), locationResult);
+                            } else {
+                                Toast.makeText(MainActivity.this, "Please check the internet connectivity", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 });

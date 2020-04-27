@@ -70,7 +70,7 @@
             android:key="precipitation_intensity_seek"
             android:summary="Max. Precipitation allowed for Flight."
             android:title="Precipitation Intensity"
-            app:maxValue="1.0"
+            app:maxValue="10.0"
             app:minValue="0.0"
             app:showSeekBarValue="true" />
 
@@ -80,7 +80,7 @@
             android:key="precipitation_probability_seek"
             android:summary="Max. Precipitation Probability allowed for Flight."
             android:title="Precipitation Probability"
-            app:maxValue="1.0"
+            app:maxValue="100.0"
             app:minValue="0.0"
             app:showSeekBarValue="true" />
 

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Build;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -18,10 +17,7 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.github.mikephil.charting.listener.ChartTouchListener;
-import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.weather.air_o_inspect.Entities.ChartsData;
-import com.weather.air_o_inspect.MainActivity;
 import com.weather.air_o_inspect.MyApplication;
 import com.weather.air_o_inspect.R;
 
@@ -102,12 +98,7 @@ public class ChartDataAdapter extends RecyclerView.Adapter<ChartViewHolder> {
             leftAxis.setMinWidth(40f);
             leftAxis.setMaxWidth(40f);
             leftAxis.setTextColor(Color.WHITE);
-
-            if (data.getYMax() == 0.0f) {
-                leftAxis.setAxisMaximum(1f);
-            } else {
-                leftAxis.setAxisMaximum(data.getYMax()*1.2f );
-            }
+            leftAxis.setAxisMaximum(MyApplication.getChartMaxyValue().get(position));
 
             leftAxis.setAxisMinimum(0f);
 
