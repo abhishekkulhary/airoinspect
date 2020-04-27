@@ -46,7 +46,7 @@
                         android:id="@+id/status_card"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
-                        app:cardBackgroundColor="@color/tab_indicator"
+                        app:cardBackgroundColor="@color/colorPrimaryDark"
                         app:cardMaxElevation="20dp"
                         app:cardPreventCornerOverlap="true">
 
@@ -62,6 +62,7 @@
                                 android:layout_marginStart="5dp"
                                 android:layout_weight="1"
                                 android:gravity="start"
+                                android:textColor="@color/colorWhite"
                                 android:text="@string/unit_for_chart"
                                 tools:ignore="NestedWeights">
 
@@ -75,6 +76,7 @@
                                 android:layout_weight="1"
                                 android:gravity="end"
                                 android:text="@string/maximum_unit"
+                                android:textColor="@color/colorWhite"
                                 tools:ignore="NestedWeights">
 
                             </TextView>

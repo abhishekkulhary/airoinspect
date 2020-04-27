@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="200dp"
     android:layout_marginTop="2dp"
-    app:cardBackgroundColor="@color/tab_indicator"
+    app:cardBackgroundColor="@color/colorPrimary"
     app:cardMaxElevation="20dp"
     app:cardPreventCornerOverlap="true">
 
@@ -21,6 +21,7 @@
             android:layout_height="25dp"
             android:layout_marginStart="5dp"
             android:layout_weight="1"
+            android:textColor="@color/colorWhite"
             android:gravity="start"
             android:text="@string/unit_for_chart"
             tools:ignore="NestedWeights">
@@ -33,6 +34,7 @@
             android:layout_height="25dp"
             android:layout_marginEnd="5dp"
             android:layout_weight="1"
+            android:textColor="@color/colorWhite"
             android:gravity="end"
             android:text="@string/maximum_unit"
             tools:ignore="NestedWeights">
