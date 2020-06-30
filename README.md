@@ -8,6 +8,9 @@ AIR-O-INSPECT means inspection of the air/weather is a fluid, material-designed 
 
 ![alt text](https://github.com/abhishekkulhary/airoinspect/blob/master/Home.jpeg?raw=true)
 
+Fly status bar color red meaning not recommended to fly
+Fly status bar color greed meaning recommended to fly
+
 ![alt text](https://github.com/abhishekkulhary/airoinspect/blob/master/Home_1.jpeg?raw=true)
 
 
